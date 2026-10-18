@@ -2,6 +2,10 @@
 
 Un moteur de présentation moderne, autonome et zéro-dépendance locale, conçu pour générer des slides web au format 16:9 widescreen avec console présentateur synchronisée et export PDF haute fidélité.
 
+
+ ### ⚠️ AVERTISSEMENT STRICT & RÈGLE D'OR D'ÉDITION
+**NE RIEN MODIFIER DANS CONSIGNES_TEMPLATES AVANT LA SECTION SUIVANTE :**
+`## 📝 3. Schéma & Contenu des Slides`
 ---
 
 ## 🎯 Philosophie & Fonctionnement
@@ -100,11 +104,6 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 
 
 ## Générer la présentation HTML
-
-[!CAUTION]
- ### ⚠️ AVERTISSEMENT STRICT & RÈGLE D'OR D'ÉDITION
-**NE RIEN MODIFIER AVANT LA SECTION SUIVANTE :**
-`## 📝 3. Schéma & Contenu des Slides`
 
 Prompt dans votre agent : 
 
