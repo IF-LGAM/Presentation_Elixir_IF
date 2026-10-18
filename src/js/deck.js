@@ -129,14 +129,14 @@ function ensureDeckStructure() {
     const footer = document.createElement('footer');
     footer.className = 'deck-footer';
     footer.innerHTML = `
-      <div style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.8rem; color: var(--text-dim);">
+      <div style="display: flex; gap: 0.5rem; align-items: center; font-size: 11px; color: var(--text-dim);">
         <span>Navigation : <kbd>&larr;</kbd> <kbd>&rarr;</kbd> ou <kbd>Espace</kbd></span>
         <span>&bull;</span>
         <span>Présentateur : <kbd>S</kbd></span>
         <span>&bull;</span>
         <span>Export : <kbd>P</kbd></span>
       </div>
-      <div style="display: flex; gap: 0.4rem;">
+      <div style="display: flex; gap: 0.35rem;">
         <button id="prevBtn" class="ctrl-btn">&larr; Précédent</button>
         <button id="nextBtn" class="ctrl-btn">Suivant &rarr;</button>
       </div>

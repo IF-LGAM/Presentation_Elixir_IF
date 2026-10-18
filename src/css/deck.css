@@ -67,20 +67,32 @@
       background-color: var(--bg-dark);
       color: var(--text-main);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 15.5px;
+      font-size: 17.5px;
       -webkit-font-smoothing: antialiased;
     }
 
-    @media (min-width: 1400px) and (min-height: 850px) {
-
+    @media (min-width: 1350px) and (min-height: 800px) {
       html,
       body {
-        font-size: 17px;
+        font-size: 18.5px;
       }
     }
 
-    @media (max-height: 750px) {
+    @media (min-width: 1650px) and (min-height: 920px) {
+      html,
+      body {
+        font-size: 20px;
+      }
+    }
 
+    @media (max-height: 760px) {
+      html,
+      body {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-height: 670px) {
       html,
       body {
         font-size: 13.5px;
@@ -105,7 +117,7 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 40px;
+      height: 33px;
       background: var(--header-bg);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -113,14 +125,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 1.5rem;
+      padding: 0 1rem;
       z-index: 9999;
     }
 
     .brand-wrap {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.45rem;
     }
 
     .brand-pill {
@@ -128,16 +140,17 @@
       color: #FFF;
       font-family: 'Montserrat', sans-serif;
       font-weight: 900;
-      font-size: 0.65rem;
+      font-size: 10px;
       letter-spacing: 0.08em;
-      padding: 0.15rem 0.5rem;
-      border-radius: 4px;
+      padding: 1.5px 5.5px;
+      border-radius: 3px;
+      line-height: 1.3;
     }
 
     .brand-title {
       font-family: 'Montserrat', sans-serif;
       font-weight: 800;
-      font-size: 0.85rem;
+      font-size: 12.5px;
       color: var(--text-main);
     }
 
@@ -148,59 +161,68 @@
     .header-center {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.45rem;
     }
 
     .slide-badge-title {
       display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.35rem;
       background: var(--card-bg);
       border: 1px solid var(--border-dark);
-      padding: 0.2rem 0.75rem;
+      padding: 1.5px 7px;
       border-radius: 9999px;
-      font-size: 0.72rem;
+      font-size: 11px;
       color: var(--text-muted);
       font-weight: 600;
+      line-height: 1.4;
     }
 
     .pulse-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: var(--accent-primary);
-      box-shadow: 0 0 6px var(--accent-primary);
+      box-shadow: 0 0 5px var(--accent-primary);
     }
 
     .slide-counter {
       background: var(--card-bg);
       border: 1px solid var(--border-dark);
-      padding: 0.2rem 0.75rem;
+      padding: 1.5px 7px;
       border-radius: 9999px;
-      font-size: 0.74rem;
+      font-size: 11px;
       font-weight: 700;
+      line-height: 1.4;
     }
 
     .deck-controls {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.3rem;
     }
 
     .ctrl-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.28rem;
       background: var(--card-bg);
       border: 1px solid var(--border-dark);
       color: var(--text-main);
-      font-size: 0.72rem;
+      font-size: 11px;
       font-weight: 600;
-      padding: 0.25rem 0.6rem;
-      border-radius: 5px;
+      padding: 2px 7px;
+      height: 23px;
+      border-radius: 4px;
       cursor: pointer;
       transition: all 0.2s ease;
       font-family: inherit;
+      line-height: 1;
+    }
+
+    .ctrl-btn svg {
+      width: 12px;
+      height: 12px;
     }
 
     .ctrl-btn:hover {
@@ -239,8 +261,8 @@
        ========================================================================== */
     .slides-viewport {
       position: absolute;
-      top: 40px;
-      bottom: 24px;
+      top: 33px;
+      bottom: 20px;
       left: 0;
       right: 0;
       overflow: hidden;
@@ -253,7 +275,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 1.8rem 3.5rem;
+      padding: 1.25rem 2.5rem;
       opacity: 0;
       visibility: hidden;
       transform: translateX(35px);
@@ -276,7 +298,7 @@
 
     .slide-content {
       width: 100%;
-      max-width: 1240px;
+      max-width: 1350px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -300,6 +322,7 @@
       font-size: 3.2rem;
       line-height: 1.1;
       margin-bottom: 0.5rem;
+      max-width: 1080px;
     }
 
     .slide-subtitle-hero {
@@ -307,19 +330,20 @@
       font-weight: 700;
       color: var(--accent-primary);
       margin-bottom: 1.4rem;
+      max-width: 980px;
     }
 
     .slide-header {
-      margin-bottom: 1rem;
+      margin-bottom: 0.85rem;
     }
 
     .slide-header h2 {
-      font-size: 1.95rem;
+      font-size: 2.15rem;
       margin-top: 0.2rem;
     }
 
     .slide-header p {
-      font-size: 0.98rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
       margin-top: 0.2rem;
       line-height: 1.4;
@@ -356,19 +380,19 @@
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 1.15rem;
     }
 
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
+      gap: 1.15rem;
     }
 
     .grid-4 {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0.9rem;
+      gap: 1.25rem;
     }
 
     /* Cartes */
@@ -376,7 +400,7 @@
       background: var(--card-bg);
       border: 1px solid var(--border-dark);
       border-radius: 12px;
-      padding: 1.1rem 1.3rem;
+      padding: 1.2rem 1.4rem;
       position: relative;
     }
 
@@ -386,14 +410,14 @@
     }
 
     .x-card h3 {
-      font-size: 1.15rem;
-      margin-bottom: 0.4rem;
+      font-size: 1.22rem;
+      margin-bottom: 0.45rem;
     }
 
     .x-card p,
     .x-card li {
-      font-size: 0.92rem;
-      line-height: 1.5;
+      font-size: 0.96rem;
+      line-height: 1.52;
       color: var(--text-main);
     }
 
@@ -493,7 +517,7 @@
     .notes-drawer {
       position: fixed;
       right: 0;
-      top: 40px;
+      top: 33px;
       bottom: 0;
       width: 420px;
       max-width: 85vw;
@@ -684,7 +708,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 24px;
+      height: 20px;
       background: var(--footer-bg);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
@@ -692,17 +716,27 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 1rem;
-      font-size: 0.65rem;
+      padding: 0 0.85rem;
+      font-size: 11px;
       color: var(--text-dim);
       z-index: 9990;
+      line-height: 1;
+    }
+
+    .deck-footer .ctrl-btn {
+      font-size: 10px;
+      padding: 1px 6px;
+      height: 16px;
+      gap: 0.2rem;
+      border-radius: 3px;
     }
 
     kbd {
       background: var(--border-dark);
       border: 1px solid #383838;
       border-radius: 3px;
-      padding: 0.08rem 0.25rem;
+      padding: 1px 4px;
+      font-size: 10px;
       font-family: monospace;
       color: var(--text-main);
     }
@@ -775,9 +809,39 @@
         page-break-after: always !important;
         break-after: page !important;
         page-break-inside: avoid !important;
-        break-inside: avoid !important;
         background-color: var(--bg-dark) !important;
         color: var(--text-main) !important;
+      }
+
+      .slide-content {
+        max-width: 1240px !important;
+      }
+
+      .slide-hero {
+        max-width: 1240px !important;
+      }
+
+      .grid-4 {
+        gap: 0.85rem !important;
+      }
+
+      .slide-header h2 {
+        font-size: 1.95rem !important;
+      }
+
+      .x-card p,
+      .x-card li {
+        font-size: 0.92rem !important;
+        line-height: 1.5 !important;
+      }
+
+      .summary-box {
+        font-size: 0.95rem !important;
+        padding: 0.75rem 1.1rem !important;
+      }
+
+      .data-table {
+        font-size: 0.9rem !important;
       }
 
       /* Synchronisation Thème Clair en Export PDF */
@@ -1038,7 +1102,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      max-width: 960px;
+      max-width: 1350px;
+      width: 100%;
       margin: 0 auto;
     }
 
@@ -1071,7 +1136,7 @@
       border-left: 4px solid var(--accent-primary);
       border-radius: 8px;
       padding: 0.85rem 1.25rem;
-      font-size: 0.95rem;
+      font-size: 1.02rem;
       color: var(--text-main);
       display: flex;
       align-items: center;
@@ -1087,7 +1152,7 @@
       border-radius: 8px;
       overflow: hidden;
       border: 1px solid var(--border-dark);
-      font-size: 0.9rem;
+      font-size: 0.98rem;
     }
 
     .data-table th {
