@@ -53,7 +53,9 @@ Le moteur de présentation (`Deck Engine`) inspecte en temps réel chaque slide 
    - **Navigation fluide** : flèches `←` / `→`, touches `Espace`, `PageUp` / `PageDown`.
    - **Mode plein écran** : touche `F` ou bouton dédié.
    - **Vue globale en grille (Overview)** : touche `O` ou `Échap` avec vignettes cliquables.
-   - **Export PDF haute fidélité** : touche `P` ou bouton dédié (mode paysage 16:9 strict, exactement 1 page par slide, fond sombre forcé, 0 coupure de page).
+   - **Bascule manuelle Thème Clair / Sombre** : touche `T` ou bouton dédié dans le header.
+   - **Personnalisation en direct de la Couleur d'accentuation** : touche `C` ou menu palette dans le header (palette de presets vibrants : Rouge Crimson, Bleu Cobalt, Vert Émeraude, Violet Cyber, Ambre, Rose Néon, Cyan + sélecteur libre sur-mesure, persistance `localStorage`, paramètre URL `?color=...`, et synchronisation temps réel dual-screen).
+   - **Export PDF haute fidélité** : touche `P` ou bouton dédié (mode paysage 16:9 strict, exactement 1 page par slide, respect fidèle du thème clair/sombre de chaque slide, 0 coupure de page).
    - **Fenêtre d'aide des raccourcis** : touche `?`.
    - **Barre de progression dynamique & compteur** de slides dans le header.
 4. **🎙️ Mode Présentateur Avancé (Dual-Screen / Speaker View)** :

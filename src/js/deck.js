@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     deckChannel = new BroadcastChannel('deck_channel_sync');
     deckChannel.onmessage = (event) => {
+      if (event.data && event.data.type === 'accentColor' && event.data.color) { setAccentColor(event.data.color, false); }
       if (event.data && typeof event.data.slideIndex === 'number') {
         goToSlide(event.data.slideIndex, false);
       }
@@ -53,6 +54,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 2.2 Gestion globale du Thème (Clair / Sombre) & Persistance
   let userManualTheme = localStorage.getItem('deck_user_theme'); // 'light', 'dark', ou null
+
+  // 2.3 Personnalisation dynamique de la Couleur du Thème (Palette en direct)
+  function lightenColor(col, percent) {
+    if (!col || !col.startsWith('#')) return col;
+    let num = parseInt(col.replace('#', ''), 16);
+    if (isNaN(num)) return col;
+    let r = (num >> 16) + Math.round(255 * (percent / 100));
+    let g = ((num >> 8) & 0x00FF) + Math.round(255 * (percent / 100));
+    let b = (num & 0x0000FF) + Math.round(255 * (percent / 100));
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  const ACCENT_PRESETS = [
+    { name: 'Rouge Crimson', hex: '#E50914' },
+    { name: 'Bleu Cobalt', hex: '#2563EB' },
+    { name: 'Vert Émeraude', hex: '#10B981' },
+    { name: 'Violet Cyber', hex: '#8B5CF6' },
+    { name: 'Ambre & Or', hex: '#F59E0B' },
+    { name: 'Rose Néon', hex: '#EC4899' },
+    { name: 'Cyan Futuriste', hex: '#06B6D4' }
+  ];
+
+  let currentAccentColor = localStorage.getItem('deck_accent_color') || '#E50914';
+
+  function setAccentColor(colorHex, save = true) {
+    if (!colorHex) return;
+    currentAccentColor = colorHex;
+    document.documentElement.style.setProperty('--accent-primary', colorHex);
+    document.documentElement.style.setProperty('--accent-hover', lightenColor(colorHex, 16));
+    const containerEl = document.querySelector('.deck-container');
+    if (containerEl) {
+      containerEl.style.setProperty('--accent-primary', colorHex);
+      containerEl.style.setProperty('--accent-hover', lightenColor(colorHex, 16));
+    }
+
+    if (save) {
+      localStorage.setItem('deck_accent_color', colorHex);
+      localStorage.setItem('deck_sync_accent_color', colorHex);
+    }
+
+    const dot = document.getElementById('currentColorDot');
+    if (dot) dot.style.background = colorHex;
+
+    const input = document.getElementById('customColorPickerInput');
+    if (input) input.value = colorHex;
+
+    document.querySelectorAll('.palette-dot').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-color')?.toLowerCase() === colorHex.toLowerCase());
+    });
+
+    if (deckChannel) {
+      deckChannel.postMessage({ type: 'accentColor', color: colorHex });
+    }
+  }
+
+  function cycleAccentColor() {
+    const norm = currentAccentColor.toLowerCase();
+    const currIdx = ACCENT_PRESETS.findIndex(p => p.hex.toLowerCase() === norm);
+    const nextIdx = (currIdx + 1) % ACCENT_PRESETS.length;
+    setAccentColor(ACCENT_PRESETS[nextIdx].hex, true);
+  }
+
 
   function applyTheme(theme, save = true) {
     const container = document.querySelector('.deck-container') || document.body;
@@ -96,6 +162,14 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme(themeParam, true);
   } else if (userManualTheme) {
     applyTheme(userManualTheme, false);
+  }
+
+  const colorParam = urlParams.get('color') || urlParams.get('accent');
+  if (colorParam) {
+    const formattedColor = colorParam.startsWith('#') ? colorParam : ('#' + colorParam);
+    setAccentColor(formattedColor, true);
+  } else if (currentAccentColor) {
+    setAccentColor(currentAccentColor, false);
   }
 
   // 2.1 Adaptation automatique du thème Clair/Foncé en fonction de la slide
@@ -151,14 +225,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Propagation automatique d'une couleur d'accent propre à la slide si présente
-    const customAccent = slide.getAttribute('data-accent') || slide.style.getPropertyValue('--accent-primary');
+    const customAccent = slide.getAttribute('data-accent');
     if (customAccent) {
       container.style.setProperty('--accent-primary', customAccent);
       const customHover = slide.getAttribute('data-accent-hover') || customAccent;
       container.style.setProperty('--accent-hover', customHover);
     } else {
-      container.style.removeProperty('--accent-primary');
-      container.style.removeProperty('--accent-hover');
+      container.style.setProperty('--accent-primary', currentAccentColor);
+      container.style.setProperty('--accent-hover', lightenColor(currentAccentColor, 16));
     }
   }
 
@@ -250,6 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
       case 't':
       case 'T':
         toggleTheme(); break;
+      case 'c':
+      case 'C':
+        e.preventDefault(); cycleAccentColor(); break;
       case 's':
       case 'S':
         if (typeof openSpeakerWindow === 'function') openSpeakerWindow();
@@ -383,6 +460,40 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('nextBtn')?.addEventListener('click', nextSlide);
   document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
   document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
+  // Contrôles du sélecteur de couleur en direct
+  const colorPickerBtn = document.getElementById('colorPickerBtn');
+  const colorPalettePopover = document.getElementById('colorPalettePopover');
+  const customColorPickerInput = document.getElementById('customColorPickerInput');
+
+  colorPickerBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    colorPalettePopover?.classList.toggle('open');
+  });
+
+  document.querySelectorAll('.palette-dot').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const col = btn.getAttribute('data-color');
+      if (col) {
+        setAccentColor(col, true);
+        colorPalettePopover?.classList.remove('open');
+      }
+    });
+  });
+
+  customColorPickerInput?.addEventListener('input', (e) => {
+    setAccentColor(e.target.value, false);
+  });
+
+  customColorPickerInput?.addEventListener('change', (e) => {
+    setAccentColor(e.target.value, true);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#colorPickerWrap')) {
+      colorPalettePopover?.classList.remove('open');
+    }
+  });
   document.getElementById('speakerWindowBtn')?.addEventListener('click', () => {
     if (typeof openSpeakerWindow === 'function') openSpeakerWindow();
     else if (window.openSpeakerWindow) window.openSpeakerWindow();

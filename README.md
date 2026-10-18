@@ -21,13 +21,18 @@ Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HT
   - Synchronisation bidirectionnelle en temps réel via l'API native `BroadcastChannel` (avec fallback automatique sur `localStorage`).
   - Aperçu direct de la slide actuelle et de la slide suivante (*Next Slide*).
   - Chronomètre de séance (Play/Pause/Reset), horloge réelle et réglage dynamique de la taille des notes (`A+` / `A-`).
+- **Bascule Thème Clair / Sombre (`T`)** :
+  - Adaptation automatique ou bascule manuelle en un clic (mode sombre contrasté `#141414` ou mode clair épuré `#F8FAFC`).
+- **Personnalisation en direct de la Couleur d'Accent (`C`)** :
+  - Palette de couleurs vibrantes (Rouge Crimson, Bleu Cobalt, Vert Émeraude, Violet Cyber, Ambre, Rose Néon, Cyan) ou sélecteur libre sur mesure.
+  - Persistance automatique en `localStorage`, support des paramètres URL (`?color=...`) et synchronisation instantanée avec la console présentateur.
 - **Tiroir de Notes Écran Unique (`N`)** :
   - Panneau latéral rétractable pour consulter les notes de chaque slide lorsqu'aucun second écran n'est branché.
 - **Vue Globale / Overview (`O` ou `Échap`)** :
   - Modal avec vue en grille de toutes les vignettes pour sauter instantanément à n'importe quelle étape du diaporama.
 - **Export PDF 16:9 Haute Fidélité (`P`)** :
   - Feuille de style dédiée `@media print` calibrée en format paysage 16:9 (`16in x 9in`).
-  - Strictement 1 page par slide, fond sombre forcé, éléments d'interface masqués et zéro coupure de contenu.
+  - Strictement 1 page par slide, respect fidèle du thème clair/sombre, éléments d'interface masqués et zéro coupure de contenu.
 - **Coloration Syntaxique Intégrée** :
   - Rendu de code optimisé via Prism.js (thème sombre *Tomorrow*).
 - **Composants Interactifs Intégrés** :

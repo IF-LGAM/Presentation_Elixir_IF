@@ -60,6 +60,30 @@
           <span id="themeToggleTxt">Thème</span>
         </button>
 
+        <!-- Sélecteur de Thème de Couleur (Palette en direct, Touche C) -->
+        <div class="color-picker-wrap" id="colorPickerWrap">
+          <button id="colorPickerBtn" class="ctrl-btn" title="Changer la couleur d'accent du thème (Touche C)">
+            <span class="color-swatch-current" id="currentColorDot"></span>
+            <span>Couleur</span>
+          </button>
+          <div class="color-palette-popover" id="colorPalettePopover">
+            <div class="palette-title">Palette d'accent</div>
+            <div class="palette-swatches">
+              <button class="palette-dot active" data-color="#E50914" title="Rouge Crimson (Défaut)" style="--dot-color: #E50914;"></button>
+              <button class="palette-dot" data-color="#2563EB" title="Bleu Cobalt" style="--dot-color: #2563EB;"></button>
+              <button class="palette-dot" data-color="#10B981" title="Vert Émeraude" style="--dot-color: #10B981;"></button>
+              <button class="palette-dot" data-color="#8B5CF6" title="Violet Cyber" style="--dot-color: #8B5CF6;"></button>
+              <button class="palette-dot" data-color="#F59E0B" title="Ambre & Or" style="--dot-color: #F59E0B;"></button>
+              <button class="palette-dot" data-color="#EC4899" title="Rose Néon" style="--dot-color: #EC4899;"></button>
+              <button class="palette-dot" data-color="#06B6D4" title="Cyan Futuriste" style="--dot-color: #06B6D4;"></button>
+            </div>
+            <div class="palette-custom-row">
+              <span class="palette-custom-label">Sur mesure :</span>
+              <input type="color" id="customColorPickerInput" value="#E50914" title="Choisir une couleur personnalisée">
+            </div>
+          </div>
+        </div>
+
         <button id="speakerWindowBtn" class="ctrl-btn" onclick="openSpeakerWindow()" title="Ouvrir la vue présentateur dual-screen (Touche S)">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
@@ -564,6 +588,10 @@ end</code></pre>
           <div
             style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
             <span>Thème Clair / Sombre</span> <kbd>T</kbd>
+          </div>
+          <div
+            style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Couleur d'accent</span> <kbd>C</kbd>
           </div>
           <div
             style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">

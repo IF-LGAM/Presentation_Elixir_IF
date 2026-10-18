@@ -14,6 +14,10 @@ function populateSpeakerWindow(speakerWindow) {
                         document.body.classList.contains('theme-light') ||
                         document.documentElement.classList.contains('theme-light');
 
+  const currentAccentColor = localStorage.getItem('deck_accent_color') ||
+    getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() ||
+    '#E50914';
+
   // 1. Récupération des styles inline éventuels
   const parentStyles = Array.from(document.querySelectorAll('style')).map(s => s.innerHTML).join('\n');
 
@@ -53,6 +57,11 @@ function populateSpeakerWindow(speakerWindow) {
     ${parentStyles}
 
     /* VARIABLES SPÉCIFIQUES CONSOLE PRÉSENTATEUR (SOMBRE & CLAIR) */
+    :root {
+      --accent-primary: ;
+      --accent-hover: ;
+    }
+
     :root, body.theme-dark {
       --sp-bg: #121212;
       --sp-panel: #1A1A1A;
@@ -330,6 +339,10 @@ function populateSpeakerWindow(speakerWindow) {
       if (e.data) {
         if (typeof e.data.theme === 'string') {
           setConsoleTheme(e.data.theme);
+        }
+        if (e.data.type === 'accentColor' && e.data.color) {
+          document.documentElement.style.setProperty('--accent-primary', e.data.color);
+          document.documentElement.style.setProperty('--accent-hover', e.data.color);
         }
         if (typeof e.data.slideIndex === 'number') {
           updateUI(e.data.slideIndex, false);
