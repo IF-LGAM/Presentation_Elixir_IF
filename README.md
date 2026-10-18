@@ -7,7 +7,7 @@ Un moteur de présentation moderne, autonome et zéro-dépendance locale, conçu
 ## 🎯 Philosophie & Fonctionnement
 
 L'outil repose sur une séparation stricte entre le fond et la forme :
-1. **`CONSIGNES_TEMPLATE.md`** : Le cahier des charges et le template de contenu. Tu ne touches qu'à la section contenu pour renseigner tes textes, snippets de code, quiz et liens.
+1. **`CONSIGNES_TEMPLATE.md`** : Le cahier des charges et le template de contenu. Tu ne touches qu'à la section 3. Schéma & Contenu des Slides pour renseigner tes textes, snippets de code, quiz et liens.
 2. **`presentation.html`** : Le squelette autonome embarquant le moteur d'affichage, le design system, les scripts de navigation, la vue présentateur multi-écrans et les styles d'impression.
 
 Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HTML s'exécute directement par un double-clic dans n'importe quel navigateur moderne (compatible protocole `file://`).
@@ -97,3 +97,15 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
    ```bash
    git clone git@github.com:antonindeloison/html-slides-template.git
    cd html-slides-template
+
+
+## Générer la présentation HTML
+
+[!CAUTION]
+ ### ⚠️ AVERTISSEMENT STRICT & RÈGLE D'OR D'ÉDITION
+**NE RIEN MODIFIER AVANT LA SECTION SUIVANTE :**
+`## 📝 3. Schéma & Contenu des Slides`
+
+Prompt dans votre agent : 
+
+Génères une présentation HTML en te basant sur le contenu de CONSIGNES_TEMPLATE.md. 
