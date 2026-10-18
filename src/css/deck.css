@@ -1045,15 +1045,13 @@
     .split-code {
       display: grid;
       grid-template-columns: 1fr 1.15fr;
-      gap: 1.75rem;
-      align-items: center;
+      gap: 1.25rem;
+      align-items: stretch;
       width: 100%;
     }
 
-    @media (max-width: 900px) {
-      .split-code {
-        grid-template-columns: 1fr;
-      }
+    .split-code > * {
+      min-width: 0;
     }
 
     /* 2. Cartes spécialisées */
