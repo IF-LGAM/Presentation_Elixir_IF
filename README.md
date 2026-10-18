@@ -74,9 +74,16 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 
 ```text
 .
-├── CONSIGNES_TEMPLATE.md   # Schéma et prompt-type pour la génération du contenu
-├── presentation.html       # Squelette générique et moteur JavaScript/CSS complet
-└── README.md               # Documentation du projet
+├── CONSIGNES_TEMPLATE.md          # Schéma et prompt-type pour la génération du contenu
+├── template_presentation.html     # Squelette HTML épuré des slides et composants
+├── src/
+│   ├── css/
+│   │   └── deck.css               # Design system, layout, responsive & styles print PDF
+│   └── js/
+│       ├── deck.js                # Moteur de navigation, raccourcis clavier & modales
+│       ├── speaker.js             # Console présentateur dual-screen & synchro BroadcastChannel
+│       └── interactive.js         # Widgets interactifs (Quizz cliquable, copie terminal)
+└── README.md                      # Documentation du projet
 ```
 
 ## 🚀 Prise en Main Rapide
