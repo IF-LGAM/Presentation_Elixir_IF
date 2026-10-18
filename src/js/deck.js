@@ -50,6 +50,58 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('deck_sync_slide', index.toString());
   }
 
+  // 2.1 Adaptation automatique du thème Clair/Foncé en fonction de la slide
+  function updateAutoTheme(slide) {
+    if (!slide) return;
+    const container = document.querySelector('.deck-container') || document.body;
+
+    // 1. Détection prioritaire par attributs ou classes explicites
+    let isLight = false;
+    const explicitTheme = slide.getAttribute('data-theme') || document.body.getAttribute('data-theme');
+    if (explicitTheme === 'light' || slide.classList.contains('light') || slide.classList.contains('theme-light')) {
+      isLight = true;
+    } else if (explicitTheme === 'dark' || slide.classList.contains('dark') || slide.classList.contains('theme-dark')) {
+      isLight = false;
+    } else {
+      // 2. Détection intelligente transparente par calcul de luminance du fond
+      const targets = [slide, slide.querySelector('.slide-content'), slide.querySelector('.x-card')].filter(Boolean);
+      for (const el of targets) {
+        const bg = window.getComputedStyle(el).backgroundColor;
+        const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+        if (m) {
+          const r = parseInt(m[1], 10);
+          const g = parseInt(m[2], 10);
+          const b = parseInt(m[3], 10);
+          const a = m[4] !== undefined ? parseFloat(m[4]) : 1;
+          if (a > 0.1 && (r > 0 || g > 0 || b > 0 || bg.includes('rgb'))) {
+            const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+            isLight = lum > 0.55;
+            break;
+          }
+        }
+      }
+    }
+
+    if (isLight) {
+      container.classList.add('theme-light');
+      container.classList.remove('theme-dark');
+    } else {
+      container.classList.add('theme-dark');
+      container.classList.remove('theme-light');
+    }
+
+    // Propagation automatique d'une couleur d'accent propre à la slide si présente
+    const customAccent = slide.getAttribute('data-accent') || slide.style.getPropertyValue('--accent-primary');
+    if (customAccent) {
+      container.style.setProperty('--accent-primary', customAccent);
+      const customHover = slide.getAttribute('data-accent-hover') || customAccent;
+      container.style.setProperty('--accent-hover', customHover);
+    } else {
+      container.style.removeProperty('--accent-primary');
+      container.style.removeProperty('--accent-hover');
+    }
+  }
+
   // 3. Cœur de la navigation
   function goToSlide(index, shouldBroadcast = true) {
     if (index < 0) index = 0;
@@ -63,6 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
     currentIndex = index;
     const activeSlide = slides[currentIndex];
     if (activeSlide) activeSlide.classList.add('active');
+
+    // Détection et adaptation automatique du thème Clair/Foncé en fonction de la slide
+    updateAutoTheme(activeSlide);
 
     // Mise à jour de l'interface
     if (currentSlideNumEl) currentSlideNumEl.textContent = currentIndex + 1;
