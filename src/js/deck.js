@@ -363,8 +363,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const isLight = theme === 'light';
     container.classList.toggle('theme-light', isLight);
     container.classList.toggle('theme-dark', !isLight);
+    container.setAttribute('data-theme', theme);
     document.body.classList.toggle('theme-light', isLight);
     document.body.classList.toggle('theme-dark', !isLight);
+    document.body.setAttribute('data-theme', theme);
 
     if (save) {
       userManualTheme = theme;
@@ -389,17 +391,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function toggleTheme() {
     const container = document.querySelector('.deck-container') || document.body;
-    const isCurrentlyLight = container.classList.contains('theme-light');
+    const isCurrentlyLight = container.classList.contains('theme-light') || container.getAttribute('data-theme') === 'light';
     applyTheme(isCurrentlyLight ? 'dark' : 'light', true);
   }
 
-  // Initialisation du thème : paramètre URL (?theme=light|dark) ou localStorage
+  // Initialisation du thème : paramètre URL (?theme=light|dark), localStorage (choix manuel), ou attribut data-theme sur .deck-container
   const urlParams = new URLSearchParams(window.location.search);
   const themeParam = urlParams.get('theme');
+  const initialContainer = document.querySelector('.deck-container') || document.body;
+  const configuredGlobalTheme = initialContainer.getAttribute('data-theme') || (initialContainer.classList.contains('theme-light') ? 'light' : null);
+
   if (themeParam === 'light' || themeParam === 'dark') {
     applyTheme(themeParam, true);
   } else if (userManualTheme) {
     applyTheme(userManualTheme, false);
+  } else if (configuredGlobalTheme) {
+    applyTheme(configuredGlobalTheme, false);
+  } else {
+    applyTheme('dark', false);
   }
 
   const colorParam = urlParams.get('color') || urlParams.get('accent');
@@ -414,52 +423,44 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateAutoTheme(slide) {
     if (!slide) return;
     const container = document.querySelector('.deck-container') || document.body;
+    const defaultDeckTheme = container.getAttribute('data-theme') || 'dark';
 
-    // Priorité 1 : attribut data-theme explicite sur la slide
-    const explicitTheme = slide.getAttribute('data-theme');
-    if (explicitTheme) {
-      applyTheme(explicitTheme, false);
-      return;
-    }
-
-    // Priorité 2 : choix manuel persistant de l'utilisateur
+    // Priorité 1 : Choix manuel explicite de l'utilisateur (touche T ou bouton Thème)
     if (userManualTheme) {
       applyTheme(userManualTheme, false);
-      return;
-    }
-
-    // 1. Détection par classe explicite si pas de data-theme
-    let isLight = false;
-    if (slide.classList.contains('light') || slide.classList.contains('theme-light')) {
-      isLight = true;
-    } else if (slide.classList.contains('dark') || slide.classList.contains('theme-dark')) {
-      isLight = false;
     } else {
-      // 2. Détection intelligente transparente par calcul de luminance du fond
-      const targets = [slide, slide.querySelector('.slide-content'), slide.querySelector('.x-card')].filter(Boolean);
-      for (const el of targets) {
-        const bg = window.getComputedStyle(el).backgroundColor;
-        const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-        if (m) {
-          const r = parseInt(m[1], 10);
-          const g = parseInt(m[2], 10);
-          const b = parseInt(m[3], 10);
-          const a = m[4] !== undefined ? parseFloat(m[4]) : 1;
-          if (a > 0.1 && (r > 0 || g > 0 || b > 0 || bg.includes('rgb'))) {
-            const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-            isLight = lum > 0.55;
-            break;
+      // Priorité 2 : Surcharge locale explicite sur la slide (exception ponctuelle)
+      const explicitTheme = slide.getAttribute('data-theme');
+      if (explicitTheme) {
+        applyTheme(explicitTheme, false);
+      } else if (slide.classList.contains('light') || slide.classList.contains('theme-light')) {
+        applyTheme('light', false);
+      } else if (slide.classList.contains('dark') || slide.classList.contains('theme-dark')) {
+        applyTheme('dark', false);
+      } else if (defaultDeckTheme) {
+        // Priorité 3 : Thème global défini au niveau du conteneur du diaporama (.deck-container)
+        applyTheme(defaultDeckTheme, false);
+      } else {
+        // Priorité 4 : Détection intelligente transparente par calcul de luminance du fond
+        let isLight = false;
+        const targets = [slide, slide.querySelector('.slide-content'), slide.querySelector('.x-card')].filter(Boolean);
+        for (const el of targets) {
+          const bg = window.getComputedStyle(el).backgroundColor;
+          const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+          if (m) {
+            const r = parseInt(m[1], 10);
+            const g = parseInt(m[2], 10);
+            const b = parseInt(m[3], 10);
+            const a = m[4] !== undefined ? parseFloat(m[4]) : 1;
+            if (a > 0.1 && (r > 0 || g > 0 || b > 0 || bg.includes('rgb'))) {
+              const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+              isLight = lum > 0.55;
+              break;
+            }
           }
         }
+        applyTheme(isLight ? 'light' : 'dark', false);
       }
-    }
-
-    if (isLight) {
-      container.classList.add('theme-light');
-      container.classList.remove('theme-dark');
-    } else {
-      container.classList.add('theme-dark');
-      container.classList.remove('theme-light');
     }
 
     // Propagation automatique d'une couleur d'accent propre à la slide si présente
@@ -755,7 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 9. Synchronisation avant export PDF (Print)
   window.addEventListener('beforeprint', () => {
     const container = document.querySelector('.deck-container') || document.body;
-    const isLight = container.classList.contains('theme-light') || (userManualTheme === 'light');
+    const isLight = container.classList.contains('theme-light') || container.getAttribute('data-theme') === 'light' || (userManualTheme === 'light');
     document.body.classList.toggle('theme-light', isLight);
     document.body.classList.toggle('theme-dark', !isLight);
     container.classList.toggle('theme-light', isLight);

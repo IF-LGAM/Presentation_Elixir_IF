@@ -8,7 +8,8 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 
 | Alias court | Classe / Balise HTML | Utilisation & Description |
 | :--- | :--- | :--- |
-| `slide` | `<section class="slide" data-theme="light">` | Conteneur racine d'une diapositive (format 16:9). |
+| `deck` / `container` | `<div class="deck-container" data-theme="dark">` | Conteneur racine du diaporama. Définit le thème global (`dark` ou `light`). |
+| `slide` | `<section class="slide">` | Conteneur racine d'une diapositive (format 16:9). Hérite automatiquement du thème global. |
 | `grid-2` | `<div class="grid-2">` | Grille à 2 colonnes égales (comparatifs, problème/solution). |
 | `grid-3` | `<div class="grid-3">` | Grille à 3 colonnes (triades, processus en 3 étapes). |
 | `grid-4` | `<div class="grid-4">` | Grille à 4 colonnes (piliers, métriques, KPIs). |
@@ -106,11 +107,12 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 ---
 
 ## 10. Métadonnées d'Orateur & Système
-
+ 
 | Alias court | Attribut / Balise | Utilisation & Description |
 | :--- | :--- | :--- |
 | `notes` | `data-notes="..."` ou `<aside class="speaker-notes">` | Notes d'orateur lues par le Speaker Engine (`S` ou tiroir `N`). |
-| `theme` | `data-theme="light"` | Force l'adaptation automatique du moteur vers les couleurs claires. |
+| `theme-global` | `data-theme="dark\|light"` sur `.deck-container` | **Thème global du deck** (sombre par défaut ou clair). |
+| `theme-slide` | `data-theme="light\|dark"` sur `.slide` | **OPTIONNEL / EXCEPTIONNEL** : surcharge ponctuelle pour une slide isolée différente du deck. |
 | `title-slide` | `<h2 class="slide-title">` | Titre standardisé en Montserrat gras avec accent vert. |
 | `subtitle-slide`| `<p class="slide-subtitle">` | Sous-titre explicatif en Inter ardoise moyen (`#475569`). |
 

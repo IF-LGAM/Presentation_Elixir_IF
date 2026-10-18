@@ -11,6 +11,7 @@ function populateSpeakerWindow(speakerWindow) {
 
   // Détection du thème du document parent
   const isParentLight = document.querySelector('.deck-container')?.classList.contains('theme-light') ||
+                        document.querySelector('.deck-container')?.getAttribute('data-theme') === 'light' ||
                         document.body.classList.contains('theme-light') ||
                         document.documentElement.classList.contains('theme-light');
 

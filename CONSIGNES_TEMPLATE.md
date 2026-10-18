@@ -21,25 +21,29 @@ Génère une présentation complète au format fichier unique HTML (`presentatio
 
 ---
 
-## 🎨 1. Système de Design & Détection Automatique du Thème (Clair / Foncé)
+## 🎨 1. Système de Design & Thème Global (Clair / Foncé)
 
-### 1.1 Principe « Zéro Configuration » pour la Structure
-> **RÈGLE FONDAMENTALE — L'UTILISATEUR NE GÈRE QUE SON CONTENU** :
-> L'utilisateur ne touche **jamais** à la structure de l'outil (header, footer, barre de progression, boutons de navigation, modales, tiroir de notes).
-> **La structure du site s'adapte automatiquement (mode clair ou mode sombre) en fonction du design des slides**, sans aucune configuration manuelle requise.
+### 1.1 Principe « Thème Global & Zéro Configuration »
+> **RÈGLE FONDAMENTALE — LE THÈME SE DÉFINIT AU GLOBAL** :
+> 1. Le thème graphique par défaut de la présentation est défini **au niveau global** sur le conteneur racine : `<div class="deck-container" data-theme="dark">` (mode sombre par défaut) ou `data-theme="light"` (mode clair).
+> 2. **Toutes les diapositives héritent automatiquement du thème global.**
+> 3. **Interdiction de répéter le thème sur chaque slide** : Ne mettez JAMAIS `data-theme="dark"` ou `data-theme="light"` sur les balises `<section class="slide">` lorsque toute la présentation partage le même thème.
+> 4. La structure du site (header, footer, barre de progression, boutons de navigation, modales, tiroir de notes) s'adapte automatiquement au thème actif sans aucune configuration manuelle requise.
 
 ---
 
-### 1.2 Fonctionnement de l'Auto-Adaptation Dynamique
-Le moteur de présentation (`Deck Engine`) inspecte en temps réel chaque slide affichée et bascule instantanément l'habillage du site :
+### 1.2 Fonctionnement & Exceptions Ponctuelles
+Le moteur de présentation (`Deck Engine`) applique le thème de manière hiérarchique et fluide :
 
-1. **Slide à fond clair** (ou si la slide porte la classe `light` / `theme-light`, l'attribut `data-theme="light"`, ou un fond blanc/clair détecté automatiquement) :
-   - Le header, le footer et les modales passent **automatiquement en mode clair** (surfaces blanc-cassé / blanc pur semi-transparentes avec effet de flou *glassmorphism*, textes ardoise sombre contrastés `#0F172A`, bordures fines et soignées).
-   - Les boutons de commande, les badges et le tiroir de notes s'ajustent instantanément pour une lisibilité irréprochable.
-2. **Slide à fond sombre** (ou par défaut) :
-   - L'outil reste / bascule **automatiquement en mode sombre contrasté** (fond noir mat `#141414`, cartes anthracite `#1F1F1F`, textes blancs, séparateurs discrets).
-3. **Mixité & Transitions slide par slide** :
-   - Si une présentation mélange des slides sombres (ex: slide de titre Hero) et des slides claires (ex: ateliers, diagrammes, cas d'usage), **l'interface de l'outil effectue la transition de manière fluide et automatique** lors du passage d'une slide à l'autre.
+1. **Héritage global (Cas standard)** :
+   - Par défaut, toutes les slides `<section class="slide">` adoptent le thème défini sur `.deck-container`.
+   - En mode sombre (`dark`), fond noir mat `#141414`, cartes anthracite `#1F1F1F`, textes blancs, séparateurs discrets.
+   - En mode clair (`light`), fond blanc-cassé `#F8FAFC`, cartes blanches `#FFFFFF`, textes ardoise `#0F172A`, ombres douces.
+2. **Exception ponctuelle par slide (Cas particulier)** :
+   - Si et seulement si une slide spécifique nécessite un contraste inverse du reste du diaporama (ex: une diapositive de schéma blanc au sein d'un deck sombre), vous pouvez lui attribuer localement `data-theme="light"` ou `data-theme="dark"`.
+   - Le moteur basculera alors l'habillage de manière fluide lors de l'affichage de cette diapositive, puis rétablira le thème global sur les diapositives suivantes.
+3. **Bascule manuelle par l'orateur (`T`)** :
+   - L'utilisateur peut basculer manuellement entre mode clair et mode sombre à tout moment via la touche `T` ou le bouton du header. Ce choix utilisateur prévaut sur toute la présentation.
 4. **Héritage automatique des accents de couleur** :
    - Si une slide ou son contenu utilise une couleur d'accent propre (ex: vert menthe `#10B981`, bleu `#2563EB`, ou rouge `#E50914`), la barre de progression, les badges et les contours actifs l'adoptent automatiquement.
 
@@ -109,9 +113,15 @@ Le moteur de présentation (`Deck Engine`) inspecte en temps réel chaque slide 
 
 ### Métadonnées Générales :
 - **Titre de la présentation** : [Ex: Titre du sujet]
-- **Sous-titre / Thème** : [Ex: Présentation technique / Conférence]
+- **Sous-titre / Sujet** : [Ex: Présentation technique / Conférence]
+- **Thème visuel global** : Sombre (par défaut) | Clair
 - **Durée totale estimée** : [Ex: 45 min]
 - **Public visé** : [Ex: Développeurs, Étudiants, Équipe Produit]
+
+> ⚠️ **RÈGLE CRITIQUE POUR LA GÉNÉRATION DES SLIDES** :
+> - **Le thème visuel est défini UNE SEULE FOIS au global** (dans les métadonnées et sur `<div class="deck-container" data-theme="dark|light">`).
+> - **NE JAMAIS écrire ni répéter `theme: dark` ou `theme: light` sur chaque slide** dans le plan Markdown ou dans le code HTML.
+> - Seule une slide faisant l'objet d'une exception délibérée de contraste par rapport au reste du diaporama peut porter un attribut `data-theme` unitaire.
 
 ### Structure des Slides :
 

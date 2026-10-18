@@ -9,7 +9,8 @@
     }
 
     :root,
-    .deck-container.theme-dark {
+    .deck-container.theme-dark,
+    .deck-container[data-theme="dark"] {
       --bg-dark: #141414;
       --card-bg: #1F1F1F;
       --card-hover: #2B2B2B;
@@ -22,9 +23,11 @@
       --footer-bg: rgba(20, 20, 20, 0.92);
     }
 
-    /* Thème clair automatique : activé automatiquement sur .theme-light */
+    /* Thème clair automatique : activé automatiquement sur .theme-light ou data-theme="light" */
     .deck-container.theme-light,
+    .deck-container[data-theme="light"],
     body.theme-light,
+    body[data-theme="light"],
     [data-theme="light"] {
       --bg-dark: #F8FAFC;
       --card-bg: #FFFFFF;
@@ -794,6 +797,7 @@
 
       body.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]),
       .deck-container.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]),
+      .deck-container[data-theme="light"] .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]),
       .slide.theme-light,
       .slide.light,
       .slide[data-theme="light"] {
@@ -811,6 +815,7 @@
 
       body.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .x-card,
       .deck-container.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .x-card,
+      .deck-container[data-theme="light"] .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .x-card,
       .slide.theme-light .x-card,
       .slide.light .x-card,
       .slide[data-theme="light"] .x-card {
@@ -822,6 +827,7 @@
 
       body.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .slide-title-hero,
       .deck-container.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .slide-title-hero,
+      .deck-container[data-theme="light"] .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .slide-title-hero,
       .slide.theme-light .slide-title-hero,
       .slide.light .slide-title-hero,
       .slide[data-theme="light"] .slide-title-hero {
@@ -830,7 +836,8 @@
 
       /* Synchronisation Thème Sombre en Export PDF */
       body.theme-dark,
-      .deck-container.theme-dark {
+      .deck-container.theme-dark,
+      .deck-container[data-theme="dark"] {
         --bg-dark: #141414 !important;
         --card-bg: #1F1F1F !important;
         --card-hover: #2B2B2B !important;
@@ -845,6 +852,7 @@
 
       body.theme-dark .slide:not(.theme-light):not(.light):not([data-theme="light"]),
       .deck-container.theme-dark .slide:not(.theme-light):not(.light):not([data-theme="light"]),
+      .deck-container[data-theme="dark"] .slide:not(.theme-light):not(.light):not([data-theme="light"]),
       .slide.theme-dark,
       .slide.dark,
       .slide[data-theme="dark"] {
@@ -862,6 +870,7 @@
 
       body.theme-dark .slide:not(.theme-light):not(.light):not([data-theme="light"]) .x-card,
       .deck-container.theme-dark .slide:not(.theme-light):not(.light):not([data-theme="light"]) .x-card,
+      .deck-container[data-theme="dark"] .slide:not(.theme-light):not(.light):not([data-theme="light"]) .x-card,
       .slide.theme-dark .x-card,
       .slide.dark .x-card,
       .slide[data-theme="dark"] .x-card {
