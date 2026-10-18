@@ -1,7 +1,245 @@
 /**
  * Deck Engine Core Navigation & Keyboard Controls
  */
+function ensureDeckStructure() {
+  const container = document.querySelector('.deck-container') || document.body;
+  const brand = container.getAttribute('data-brand') || 'DECK';
+  const fullTitle = container.getAttribute('data-title') || document.title.replace(/ - Deck Engine$/, '') || 'TITRE FORMATION';
+
+  // Formatage du titre brand (dernier mot avec span coloré si plusieurs mots)
+  const titleParts = fullTitle.trim().split(' ');
+  let brandTitleHtml = fullTitle;
+  if (titleParts.length > 1) {
+    const lastWord = titleParts.pop();
+    brandTitleHtml = `${titleParts.join(' ')} <span>${lastWord}</span>`;
+  }
+
+  // 1. Header persistant
+  if (!document.querySelector('.deck-header')) {
+    const header = document.createElement('header');
+    header.className = 'deck-header';
+    header.innerHTML = `
+      <div class="brand-wrap">
+        <span class="brand-pill" id="deckBrandPill">${brand}</span>
+        <div class="brand-title" id="deckBrandTitle">${brandTitleHtml}</div>
+      </div>
+
+      <div class="header-center">
+        <div class="slide-badge-title">
+          <span class="pulse-dot"></span>
+          <span id="headerSlideTitle">Introduction</span>
+        </div>
+        <div class="slide-counter">
+          <span id="currentSlideNum">1</span> / <span id="totalSlidesNum">6</span>
+        </div>
+      </div>
+
+      <div class="deck-controls">
+        <button id="pdfExportBtn" class="ctrl-btn primary" title="Exporter en PDF 16:9 paysage (Touche P)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <polyline points="9 15 12 18 15 15"></polyline>
+          </svg>
+          <span>Export PDF</span>
+        </button>
+
+        <button id="themeToggleBtn" class="ctrl-btn" title="Basculer Mode Clair / Sombre (Touche T)">
+          <span id="themeToggleIcon">☀️</span>
+          <span id="themeToggleTxt">Thème</span>
+        </button>
+
+        <div class="color-picker-wrap" id="colorPickerWrap">
+          <button id="colorPickerBtn" class="ctrl-btn" title="Changer la couleur d'accent du thème (Touche C)">
+            <span class="color-swatch-current" id="currentColorDot"></span>
+            <span>Couleur</span>
+          </button>
+          <div class="color-palette-popover" id="colorPalettePopover">
+            <div class="palette-title">Palette d'accent</div>
+            <div class="palette-swatches">
+              <button class="palette-dot active" data-color="#E50914" title="Rouge Crimson (Défaut)" style="--dot-color: #E50914;"></button>
+              <button class="palette-dot" data-color="#2563EB" title="Bleu Cobalt" style="--dot-color: #2563EB;"></button>
+              <button class="palette-dot" data-color="#10B981" title="Vert Émeraude" style="--dot-color: #10B981;"></button>
+              <button class="palette-dot" data-color="#8B5CF6" title="Violet Cyber" style="--dot-color: #8B5CF6;"></button>
+              <button class="palette-dot" data-color="#F59E0B" title="Ambre & Or" style="--dot-color: #F59E0B;"></button>
+              <button class="palette-dot" data-color="#EC4899" title="Rose Néon" style="--dot-color: #EC4899;"></button>
+              <button class="palette-dot" data-color="#06B6D4" title="Cyan Futuriste" style="--dot-color: #06B6D4;"></button>
+            </div>
+            <div class="palette-custom-row">
+              <span class="palette-custom-label">Sur mesure :</span>
+              <input type="color" id="customColorPickerInput" value="#E50914" title="Choisir une couleur personnalisée">
+            </div>
+          </div>
+        </div>
+
+        <button id="speakerWindowBtn" class="ctrl-btn" title="Ouvrir la vue présentateur dual-screen (Touche S)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>Présentateur (S)</span>
+        </button>
+
+        <button id="speakerNotesBtn" class="ctrl-btn" title="Tiroir de notes rapide écran unique (Touche N)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span>Notes (N)</span>
+        </button>
+
+        <button id="overviewBtn" class="ctrl-btn" title="Vue globale des slides (Touche O / Échap)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Grille (O)</span>
+        </button>
+
+        <button id="shortcutsBtn" class="ctrl-btn" title="Aide des raccourcis clavier (Touche ?)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+
+        <button id="fullscreenBtn" class="ctrl-btn" title="Plein écran (Touche F)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="progress-track">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    `;
+    container.insertBefore(header, container.firstChild);
+  }
+
+  // 2. Footer persistant
+  if (!document.querySelector('.deck-footer')) {
+    const footer = document.createElement('footer');
+    footer.className = 'deck-footer';
+    footer.innerHTML = `
+      <div style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.8rem; color: var(--text-dim);">
+        <span>Navigation : <kbd>&larr;</kbd> <kbd>&rarr;</kbd> ou <kbd>Espace</kbd></span>
+        <span>&bull;</span>
+        <span>Présentateur : <kbd>S</kbd></span>
+        <span>&bull;</span>
+        <span>Export : <kbd>P</kbd></span>
+      </div>
+      <div style="display: flex; gap: 0.4rem;">
+        <button id="prevBtn" class="ctrl-btn">&larr; Précédent</button>
+        <button id="nextBtn" class="ctrl-btn">Suivant &rarr;</button>
+      </div>
+    `;
+    container.appendChild(footer);
+  }
+
+  // 3. Drawer de Notes (Touche N)
+  if (!document.getElementById('notesDrawer')) {
+    const drawer = document.createElement('aside');
+    drawer.id = 'notesDrawer';
+    drawer.className = 'notes-drawer';
+    drawer.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-dark); padding-bottom: 0.8rem; margin-bottom: 1.1rem;">
+        <h3 style="font-size: 1.15rem; color: var(--text-main);">Notes de Présentation (Rapide)</h3>
+        <button id="closeNotesBtn" style="background: none; border: none; color: #aaa; font-size: 1.4rem; cursor: pointer;">&times;</button>
+      </div>
+      <div style="font-size: 0.85rem; color: var(--accent-primary); font-weight: 700; margin-bottom: 0.6rem;">
+        Slide <span id="notesSlideIndex">1</span> sur <span id="notesTotalSlides">1</span>
+      </div>
+      <div id="notesContent" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main);"></div>
+    `;
+    container.appendChild(drawer);
+  }
+
+  // 4. Modale Vue d'ensemble en Grille (Touche O / Echap)
+  if (!document.getElementById('overviewModal')) {
+    const ovModal = document.createElement('div');
+    ovModal.id = 'overviewModal';
+    ovModal.className = 'modal-overlay';
+    ovModal.innerHTML = `
+      <div class="x-card" style="max-width: 1200px; width: 95vw; max-height: 90vh; border: 1px solid var(--border-dark); box-shadow: 0 10px 45px rgba(0,0,0,0.25); display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-dark); padding-bottom: 0.8rem; margin-bottom: 0.85rem; flex-shrink: 0; gap: 1rem; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 0.8rem;">
+            <h3 style="font-size: 1.25rem; color: var(--text-main);">Vue d'ensemble de la présentation</h3>
+            <span class="pill-tag" id="overviewSlideCountBadge">Slides</span>
+          </div>
+
+          <div class="overview-slider-bar-wrap" style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 0.78rem; color: var(--text-dim);">Faire défiler :</span>
+            <input type="range" id="overviewRangeSlider" min="1" max="1" value="1" class="overview-range-slider" title="Faites glisser pour faire défiler rapidement les slides">
+            <span id="overviewSliderVal" style="font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--accent-primary); font-weight: 700; min-width: 48px;">1 / 1</span>
+          </div>
+
+          <button id="closeOverviewBtn" style="background: none; border: none; color: #aaa; font-size: 1.4rem; cursor: pointer; line-height: 1;">&times;</button>
+        </div>
+        <div id="overviewGrid" class="overview-grid"></div>
+      </div>
+    `;
+    container.appendChild(ovModal);
+  }
+
+  // 5. Modale d'aide des Raccourcis (Touche ?)
+  if (!document.getElementById('shortcutsModal')) {
+    const scModal = document.createElement('div');
+    scModal.id = 'shortcutsModal';
+    scModal.className = 'modal-overlay';
+    scModal.innerHTML = `
+      <div class="x-card" style="max-width: 560px; width: 100%; border: 1px solid var(--border-dark); box-shadow: 0 10px 45px rgba(0,0,0,0.25);">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-dark); padding-bottom: 0.8rem; margin-bottom: 1.1rem;">
+          <h3 style="font-size: 1.2rem; color: var(--text-main);">Raccourcis Clavier</h3>
+          <button id="closeShortcutsBtn" style="background: none; border: none; color: #aaa; font-size: 1.4rem; cursor: pointer;">&times;</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.9rem;">
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Slide suivante</span> <kbd>&rarr; / Espace</kbd>
+          </div>
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Slide précédente</span> <kbd>&larr;</kbd>
+          </div>
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Thème Clair / Sombre</span> <kbd>T</kbd>
+          </div>
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Couleur d'accent</span> <kbd>C</kbd>
+          </div>
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Mode Présentateur</span> <kbd>S</kbd>
+          </div>
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Tiroir de Notes</span> <kbd>N</kbd>
+          </div>
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Grille Overview</span> <kbd>O / Échap</kbd>
+          </div>
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Plein Écran</span> <kbd>F</kbd>
+          </div>
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+            <span>Export PDF 16:9</span> <kbd>P</kbd>
+          </div>
+          <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center; grid-column: span 2;">
+            <span>Aide Raccourcis</span> <kbd>?</kbd>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(scModal);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  ensureDeckStructure();
   // 1. Initialisation des variables de navigation
   const slides = document.querySelectorAll('.slide');
   const totalSlides = slides.length;

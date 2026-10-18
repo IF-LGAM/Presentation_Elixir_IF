@@ -66,7 +66,11 @@ Le moteur de présentation (`Deck Engine`) inspecte en temps réel chaque slide 
 
 ## ⚙️ 2. Spécifications Techniques & Fonctionnalités du Fichier
 
-1. **Fichier HTML autonome** : Fonctionne directement via un simple double-clic dans le navigateur (aucune installation de serveur nécessaire, compatible `file://`).
+1. **Fichier HTML 100% Découplé & Autonome** :
+   - Fonctionne directement via un simple double-clic dans le navigateur (aucune installation de serveur nécessaire, compatible `file://`).
+   - **Découplage Total du Template** : L'auteur ou l'agent de génération n'écrit **QUE** le contenu des diapositives (`<section class="slide">`) à l'intérieur du conteneur `<div class="deck-container"><main class="slides-viewport">`.
+   - **Injection Automatique du Deck Engine** : Le script `src/js/deck.js` génère et injecte automatiquement l'intégralité de la structure d'habillage (Header persistant avec indicateurs, boutons de commandes et barre de progression, Footer de navigation, Modale d'Overview avec slider de défilement, Drawer de notes d'orateur, Modale des raccourcis, sélecteur de couleur et bascule de thème clair/sombre).
+   - **Conformité Stricte au Dictionnaire** : Tous les éléments insérés dans les diapositives doivent suivre rigoureusement les classes et structures standardisées de [`COMPOSANTS_DICTIONNAIRE.md`](COMPOSANTS_DICTIONNAIRE.md).
 2. **Bibliothèques externes (via CDN)** :
    - Prism.js (thème sombre `prism-tomorrow`) pour la coloration syntaxique.
    - Google Fonts (Montserrat, Inter, Fira Code).
