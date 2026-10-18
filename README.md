@@ -70,6 +70,15 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 
 ---
 
+## 📂 Structure du Projet
+
+```text
+.
+├── CONSIGNES_TEMPLATE.md   # Schéma et prompt-type pour la génération du contenu
+├── presentation.html       # Squelette générique et moteur JavaScript/CSS complet
+└── README.md               # Documentation du projet
+```
+
 ## 🚀 Prise en Main Rapide
 
 1. Clone ou duplique le projet :

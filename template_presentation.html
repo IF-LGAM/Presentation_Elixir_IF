@@ -1390,15 +1390,18 @@ end</code></pre>
       document.getElementById('shortcutsBtn')?.addEventListener('click', () => shortcutsModal?.classList.toggle('open'));
       document.getElementById('closeShortcutsBtn')?.addEventListener('click', () => shortcutsModal?.classList.remove('open'));
 
-      // 9. Fenêtre Dédiée Mode Présentateur Dual-Screen (Touche S)
+      // 9. Fenêtre Dédiée Mode Présentateur Dual-Screen (Touche S) Corrigée
       function openSpeakerWindow() {
-        const speakerWindow = window.open('', 'DeckSpeakerView', 'width=1150,height=750,menubar=no,toolbar=no,location=no');
+        const speakerWindow = window.open('', 'DeckSpeakerView', 'width=1180,height=760,menubar=no,toolbar=no,location=no');
         if (!speakerWindow) {
           alert('Veuillez autoriser les fenêtres pop-up pour afficher la vue Présentateur.');
           return;
         }
 
-        // Récupération des données sérialisées de toutes les slides
+        // 1. Récupération des styles de la présentation principale
+        const parentStyles = document.querySelector('style') ? document.querySelector('style').innerHTML : '';
+
+        // 2. Récupération des données sérialisées de toutes les slides
         const slidesData = [];
         slides.forEach((s, idx) => {
           slidesData.push({
@@ -1409,7 +1412,7 @@ end</code></pre>
           });
         });
 
-        // Injection du code complet de l'interface présentateur
+        // 3. Injection du code avec les styles complets et un centrage 16:9 rigide
         speakerWindow.document.open();
         speakerWindow.document.write(`
 <!DOCTYPE html>
@@ -1418,120 +1421,195 @@ end</code></pre>
   <meta charset="UTF-8">
   <title>Console Présentateur - Dual Screen</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  
   <style>
+    /* STYLES HÉRITÉS DU SLIDE DECK PRINCIPAL */
+    ${parentStyles}
+
+    /* OVERRIDES & INTERFACE SPÉCIFIQUE DU PRÉSENTATEUR */
     :root {
-      --bg: #121212; --card: #1C1C1C; --border: #333; --accent: #E50914; --text: #FFF; --muted: #A3A3A3;
+      --sp-bg: #121212;
+      --sp-panel: #1A1A1A;
+      --sp-border: #333333;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
-      height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+    html, body {
+      width: 100vw !important;
+      height: 100vh !important;
+      background: var(--sp-bg) !important;
+      color: #FFF !important;
+      font-family: 'Inter', sans-serif !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
     }
-    header {
-      background: #181818; border-bottom: 1px solid var(--border);
-      height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.2rem;
+    header.sp-header {
+      background: #181818;
+      border-bottom: 1px solid var(--sp-border);
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      flex-shrink: 0;
     }
-    .timer-wrap { display: flex; align-items: center; gap: 0.8rem; font-family: 'Fira Code', monospace; }
-    .timer-val { font-size: 1.25rem; font-weight: 700; color: #4ADE80; }
-    .clock-val { font-size: 1rem; color: var(--muted); }
-    .btn {
-      background: #2A2A2A; border: 1px solid var(--border); color: #FFF;
-      padding: 0.25rem 0.65rem; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: 600;
+    .sp-timer-wrap { display: flex; align-items: center; gap: 0.75rem; font-family: 'Fira Code', monospace; }
+    .sp-timer-val { font-size: 1.25rem; font-weight: 700; color: #4ADE80; }
+    .sp-clock-val { font-size: 0.95rem; color: #888888; }
+    
+    .sp-btn {
+      background: #262626; border: 1px solid var(--sp-border); color: #FFF;
+      padding: 0.3rem 0.7rem; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: 600;
+      transition: background 0.2s;
     }
-    .btn:hover { background: #383838; }
-    .btn.primary { background: var(--accent); border-color: var(--accent); }
-    main {
-      flex: 1; display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; padding: 1rem; overflow: hidden;
+    .sp-btn:hover { background: #333; }
+    .sp-btn.primary { background: #E50914; border-color: #E50914; }
+
+    main.sp-main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      overflow: hidden;
     }
-    .panel {
-      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-      display: flex; flex-direction: column; overflow: hidden;
+    .sp-panel {
+      background: var(--sp-panel);
+      border: 1px solid var(--sp-border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
-    .panel-header {
-      background: #161616; border-bottom: 1px solid var(--border);
-      padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--muted);
-      display: flex; justify-content: space-between; align-items: center;
+    .sp-panel-header {
+      background: #161616;
+      border-bottom: 1px solid var(--sp-border);
+      padding: 0.5rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
     }
-    .slide-preview-box {
-      flex: 1; position: relative; background: #0A0A0A; overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
+
+    /* Cadres d'aperçus avec centrage flex */
+    .sp-preview-box {
+      flex: 1;
+      position: relative;
+      background: #0D0D0D;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .slide-preview-inner {
-      width: 1240px; transform-origin: top left; pointer-events: none; padding: 1.5rem;
+    .sp-preview-inner {
+      width: 1240px;
+      height: 700px;
+      position: absolute;
+      transform-origin: center center;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      background: #141414;
+      border: 1px solid #222;
+      border-radius: 8px;
+      box-sizing: border-box;
     }
-    .notes-box {
-      flex: 1; padding: 1.2rem; overflow-y: auto; font-size: 1.15rem; line-height: 1.65; color: #E5E7EB;
+
+    .sp-notes-box {
+      flex: 1;
+      padding: 1.4rem;
+      overflow-y: auto;
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: #E5E7EB;
+      white-space: pre-wrap;
     }
-    footer {
-      background: #181818; border-top: 1px solid var(--border);
-      height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.2rem;
+
+    footer.sp-footer {
+      background: #181818;
+      border-top: 1px solid var(--sp-border);
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      flex-shrink: 0;
     }
-    select {
-      background: #252525; border: 1px solid var(--border); color: #FFF;
-      padding: 0.3rem 0.6rem; border-radius: 5px; font-family: inherit; font-size: 0.85rem;
+    select.sp-select {
+      background: #262626; border: 1px solid var(--sp-border); color: #FFF;
+      padding: 0.35rem 0.75rem; border-radius: 5px; font-family: inherit; font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.95rem;">
-      CONSOLE <span style="color: var(--accent);">PRÉSENTATEUR</span>
+  <header class="sp-header">
+    <div style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.92rem;">
+      CONSOLE <span style="color: #E50914;">PRÉSENTATEUR</span>
     </div>
-    <div class="timer-wrap">
-      <span>⏱ <span id="timerText" class="timer-val">00:00:00</span></span>
-      <button id="pauseTimerBtn" class="btn">Pause</button>
-      <button id="resetTimerBtn" class="btn">Reset</button>
-      <span style="margin-left: 1rem;">🕒 <span id="clockText" class="clock-val">--:--:--</span></span>
+    
+    <div class="sp-timer-wrap">
+      <span>⏱ <span id="timerText" class="sp-timer-val">00:00:00</span></span>
+      <button id="pauseTimerBtn" class="sp-btn">Pause</button>
+      <button id="resetTimerBtn" class="sp-btn">Reset</button>
+      <span style="margin-left: 0.8rem;">🕒 <span id="clockText" class="sp-clock-val">--:--:--</span></span>
     </div>
+
     <div style="display: flex; gap: 0.4rem; align-items: center;">
-      <span style="font-size: 0.75rem; color: var(--muted);">Zoom Notes :</span>
-      <button id="notesMinusBtn" class="btn">A-</button>
-      <button id="notesPlusBtn" class="btn">A+</button>
+      <span style="font-size: 0.75rem; color: #888;">Notes :</span>
+      <button id="notesMinusBtn" class="sp-btn">A-</button>
+      <button id="notesPlusBtn" class="sp-btn">A+</button>
     </div>
   </header>
 
-  <main>
-    <!-- Colonne Gauche : Aperçus Slides -->
+  <main class="sp-main">
+    <!-- Colonne Gauche : Aperçus Slides (Actuelle & Suivante) -->
     <div style="display: flex; flex-direction: column; gap: 1rem; overflow: hidden;">
-      <div class="panel" style="flex: 1.2;">
-        <div class="panel-header">
+      <div class="sp-panel" style="flex: 1.25;">
+        <div class="sp-panel-header">
           <span>Slide Actuelle (<span id="currSlideIdxTxt">1</span> / ${totalSlides})</span>
           <span id="currSlideTitleTxt" style="color: #FFF;">-</span>
         </div>
-        <div class="slide-preview-box" id="currentBox">
-          <div id="currentSlideContent" class="slide-preview-inner"></div>
+        <div class="sp-preview-box" id="currentBox">
+          <div id="currentSlideContent" class="sp-preview-inner slide-content"></div>
         </div>
       </div>
 
-      <div class="panel" style="flex: 0.8;">
-        <div class="panel-header">
+      <div class="sp-panel" style="flex: 0.75;">
+        <div class="sp-panel-header">
           <span>Slide Suivante (Next)</span>
-          <span id="nextSlideTitleTxt" style="color: var(--accent);">-</span>
+          <span id="nextSlideTitleTxt" style="color: #E50914;">-</span>
         </div>
-        <div class="slide-preview-box" id="nextBox">
-          <div id="nextSlideContent" class="slide-preview-inner"></div>
+        <div class="sp-preview-box" id="nextBox">
+          <div id="nextSlideContent" class="sp-preview-inner slide-content"></div>
         </div>
       </div>
     </div>
 
-    <!-- Colonne Droite : Notes grand format -->
-    <div class="panel">
-      <div class="panel-header">
+    <!-- Colonne Droite : Notes d'orateur -->
+    <div class="sp-panel">
+      <div class="sp-panel-header">
         <span>Notes de l'Orateur</span>
-        <span style="font-size: 0.7rem; color: var(--accent);">Synchronisation Active</span>
+        <span style="font-size: 0.7rem; color: #10B981;">● Synchronisé</span>
       </div>
-      <div id="speakerNotesArea" class="notes-box"></div>
+      <div id="speakerNotesArea" class="sp-notes-box"></div>
     </div>
   </main>
 
-  <footer>
-    <div style="display: flex; align-items: center; gap: 0.8rem;">
-      <button id="prevSlideBtn" class="btn">&larr; Précédente</button>
-      <button id="nextSlideBtn" class="btn primary">Suivante &rarr;</button>
-      <select id="jumpSlideSelect"></select>
+  <footer class="sp-footer">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <button id="prevSlideBtn" class="sp-btn">&larr; Précédente</button>
+      <button id="nextSlideBtn" class="sp-btn primary">Suivante &rarr;</button>
+      <select id="jumpSlideSelect" class="sp-select"></select>
     </div>
-    <div style="font-size: 0.75rem; color: var(--muted);">
-      Synchronisé en direct avec l'écran projeté
+    <div style="font-size: 0.75rem; color: #888;">
+      Touches Clavier actives (<kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>Espace</kbd>)
     </div>
   </footer>
 
@@ -1540,7 +1618,6 @@ end</code></pre>
     let activeIdx = ${currentIndex};
     let currentFontSize = 1.15;
 
-    // Synchronisation
     const channel = new BroadcastChannel('deck_channel_sync');
     channel.onmessage = (e) => {
       if (e.data && typeof e.data.slideIndex === 'number') {
@@ -1561,7 +1638,6 @@ end</code></pre>
       updateUI(activeIdx, false);
     }
 
-    // Sélecteur de saut
     const jumpSelect = document.getElementById('jumpSlideSelect');
     slidesData.forEach((s, idx) => {
       const opt = document.createElement('option');
@@ -1571,7 +1647,14 @@ end</code></pre>
     });
     jumpSelect.addEventListener('change', (e) => sendSlideChange(parseInt(e.target.value, 10)));
 
-    // Rendu UI
+    function scaleElement(boxId, contentId) {
+      const box = document.getElementById(boxId);
+      const content = document.getElementById(contentId);
+      if (!box || !content) return;
+      const scale = Math.min((box.clientWidth - 30) / 1240, (box.clientHeight - 30) / 700);
+      content.style.transform = 'scale(' + Math.max(scale, 0.1) + ')';
+    }
+
     function updateUI(idx, notify = true) {
       if (idx < 0) idx = 0;
       if (idx >= slidesData.length) idx = slidesData.length - 1;
@@ -1583,39 +1666,28 @@ end</code></pre>
       document.getElementById('currentSlideContent').innerHTML = slidesData[activeIdx].html;
       document.getElementById('speakerNotesArea').textContent = slidesData[activeIdx].notes;
 
-      // Next slide
       if (activeIdx < slidesData.length - 1) {
         document.getElementById('nextSlideTitleTxt').textContent = slidesData[activeIdx + 1].title;
         document.getElementById('nextSlideContent').innerHTML = slidesData[activeIdx + 1].html;
       } else {
         document.getElementById('nextSlideTitleTxt').textContent = 'Fin de la présentation';
-        document.getElementById('nextSlideContent').innerHTML = '<h2 style="color:#666;text-align:center;margin-top:2rem;">Fin des slides</h2>';
+        document.getElementById('nextSlideContent').innerHTML = '<div style="text-align:center;color:#666;font-size:2rem;font-weight:800;">FIN DES SLIDES</div>';
       }
 
-      // Mise à l'échelle automatique des aperçus
-      scalePreview('currentBox', 'currentSlideContent');
-      scalePreview('nextBox', 'nextSlideContent');
+      scaleElement('currentBox', 'currentSlideContent');
+      scaleElement('nextBox', 'nextSlideContent');
 
       if (notify) sendSlideChange(activeIdx);
     }
 
-    function scalePreview(boxId, contentId) {
-      const box = document.getElementById(boxId);
-      const content = document.getElementById(contentId);
-      if (!box || !content) return;
-      const s = Math.min(box.clientWidth / 1240, box.clientHeight / 680);
-      content.style.transform = 'scale(' + (s > 0 ? s : 0.25) + ')';
-    }
-
     window.addEventListener('resize', () => {
-      scalePreview('currentBox', 'currentSlideContent');
-      scalePreview('nextBox', 'nextSlideContent');
+      scaleElement('currentBox', 'currentSlideContent');
+      scaleElement('nextBox', 'nextSlideContent');
     });
 
     document.getElementById('prevSlideBtn').onclick = () => { if (activeIdx > 0) sendSlideChange(activeIdx - 1); };
     document.getElementById('nextSlideBtn').onclick = () => { if (activeIdx < slidesData.length - 1) sendSlideChange(activeIdx + 1); };
 
-    // Clavier orateur
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
         e.preventDefault(); if (activeIdx < slidesData.length - 1) sendSlideChange(activeIdx + 1);
@@ -1624,7 +1696,6 @@ end</code></pre>
       }
     });
 
-    // Zoom des notes
     document.getElementById('notesPlusBtn').onclick = () => {
       currentFontSize += 0.1;
       document.getElementById('speakerNotesArea').style.fontSize = currentFontSize + 'rem';
@@ -1636,32 +1707,30 @@ end</code></pre>
       }
     };
 
-    // Chronomètre & Horloge
-    let secondsElapsed = 0;
-    let timerRunning = true;
+    let seconds = 0;
+    let running = true;
     setInterval(() => {
-      if (timerRunning) {
-        secondsElapsed++;
-        const h = String(Math.floor(secondsElapsed / 3600)).padStart(2, '0');
-        const m = String(Math.floor((secondsElapsed % 3600) / 60)).padStart(2, '0');
-        const s = String(secondsElapsed % 60).padStart(2, '0');
+      if (running) {
+        seconds++;
+        const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
+        const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+        const s = String(seconds % 60).padStart(2, '0');
         document.getElementById('timerText').textContent = h + ':' + m + ':' + s;
       }
-      const now = new Date();
-      document.getElementById('clockText').textContent = now.toLocaleTimeString();
+      document.getElementById('clockText').textContent = new Date().toLocaleTimeString();
     }, 1000);
 
     const pauseBtn = document.getElementById('pauseTimerBtn');
     pauseBtn.onclick = () => {
-      timerRunning = !timerRunning;
-      pauseBtn.textContent = timerRunning ? 'Pause' : 'Play';
+      running = !running;
+      pauseBtn.textContent = running ? 'Pause' : 'Play';
     };
     document.getElementById('resetTimerBtn').onclick = () => {
-      secondsElapsed = 0;
+      seconds = 0;
       document.getElementById('timerText').textContent = '00:00:00';
     };
 
-    updateUI(activeIdx, false);
+    setTimeout(() => updateUI(activeIdx, false), 50);
   <\/script>
 </body>
 </html>
