@@ -101,6 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const num = parseInt(window.location.hash.replace('#slide-', ''), 10);
     if (!isNaN(num) && num >= 1 && num <= totalSlides) goToSlide(num - 1, false);
     else goToSlide(0, false);
+  } else if (window.location.hash === '#overview') {
+    goToSlide(0, false);
+    setTimeout(toggleOverview, 100);
   } else {
     goToSlide(0, false);
   }
@@ -157,27 +160,104 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 7. Vue globale (Overview)
+  // 7. Vue globale (Overview) avec prévisualisation 16:9 et barre de défilement
   function buildOverview() {
     if (!overviewGrid) return;
     overviewGrid.innerHTML = '';
+
+    const slideCountBadge = document.getElementById('overviewSlideCountBadge');
+    if (slideCountBadge) slideCountBadge.textContent = `${totalSlides} slides`;
+
+    const slider = document.getElementById('overviewRangeSlider');
+    const sliderVal = document.getElementById('overviewSliderVal');
+    if (slider) {
+      slider.max = totalSlides;
+      slider.value = currentIndex + 1;
+      if (sliderVal) sliderVal.textContent = `${currentIndex + 1} / ${totalSlides}`;
+
+      slider.oninput = (e) => {
+        const targetIdx = parseInt(e.target.value, 10) - 1;
+        if (sliderVal) sliderVal.textContent = `${targetIdx + 1} / ${totalSlides}`;
+        const targetCard = overviewGrid.children[targetIdx];
+        if (targetCard) {
+          targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      };
+    }
+
     slides.forEach((slide, idx) => {
       const card = document.createElement('div');
       card.className = `overview-card ${idx === currentIndex ? 'current' : ''}`;
+      card.setAttribute('data-idx', idx);
+
+      const title = slide.getAttribute('data-title') || `Slide ${idx + 1}`;
+      const contentHtml = slide.querySelector('.slide-content')?.innerHTML || '';
+
       card.innerHTML = `
-        <div style="font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; margin-bottom: 0.25rem;">Slide ${idx + 1}</div>
-        <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${slide.getAttribute('data-title') || ''}</div>
+        <div class="overview-thumb-wrap">
+          <div class="overview-thumb-scaler slide-content">
+            ${contentHtml}
+          </div>
+        </div>
+        <div class="overview-card-meta">
+          <div class="overview-card-badge">Slide ${idx + 1}</div>
+          <div class="overview-card-title" title="${title}">${title}</div>
+        </div>
       `;
-      card.onclick = () => { goToSlide(idx); overviewModal.classList.remove('open'); };
+
+      card.onclick = () => {
+        goToSlide(idx);
+        overviewModal.classList.remove('open');
+      };
+
       overviewGrid.appendChild(card);
+    });
+
+    scaleOverviewThumbs();
+
+    // Mettre à jour la barre de glissement au scroll de la grille
+    overviewGrid.onscroll = () => {
+      if (!slider || !overviewGrid.children.length) return;
+      const cardHeight = overviewGrid.children[0]?.offsetHeight || 180;
+      const cardsPerRow = Math.max(1, Math.floor(overviewGrid.clientWidth / 260));
+      const scrolledRows = Math.floor(overviewGrid.scrollTop / cardHeight);
+      const estIdx = Math.min(totalSlides, Math.max(1, (scrolledRows * cardsPerRow) + 1));
+      slider.value = estIdx;
+      if (sliderVal) sliderVal.textContent = `${estIdx} / ${totalSlides}`;
+    };
+  }
+
+  function scaleOverviewThumbs() {
+    if (!overviewGrid) return;
+    const wraps = overviewGrid.querySelectorAll('.overview-thumb-wrap');
+    wraps.forEach(wrap => {
+      const scaler = wrap.querySelector('.overview-thumb-scaler');
+      if (scaler && wrap.clientWidth > 0) {
+        const s = (wrap.clientWidth - 10) / 1240;
+        scaler.style.transform = `scale(${s > 0 ? s : 0.2})`;
+      }
     });
   }
 
   function toggleOverview() {
     buildOverview();
-    if (overviewModal) overviewModal.classList.toggle('open');
+    if (overviewModal) {
+      overviewModal.classList.toggle('open');
+      if (overviewModal.classList.contains('open')) {
+        setTimeout(() => {
+          scaleOverviewThumbs();
+          const curCard = overviewGrid.children[currentIndex];
+          if (curCard) curCard.scrollIntoView({ behavior: 'auto', block: 'center' });
+        }, 50);
+      }
+    }
   }
 
+  window.addEventListener('resize', () => {
+    if (overviewModal && overviewModal.classList.contains('open')) {
+      scaleOverviewThumbs();
+    }
+  });
   // 8. Boutons d'interface
   document.getElementById('prevBtn')?.addEventListener('click', prevSlide);
   document.getElementById('nextBtn')?.addEventListener('click', nextSlide);
