@@ -4,6 +4,23 @@ Génère une présentation complète au format fichier unique HTML (`presentatio
 
 ---
 
+> 📚 **RÉFÉRENTIEL DES OBJETS & COMPOSANTS : `COMPOSANTS_DICTIONNAIRE.md`**
+> Un dictionnaire complet de composants prêts à l'emploi est formalisé dans le fichier [`COMPOSANTS_DICTIONNAIRE.md`](COMPOSANTS_DICTIONNAIRE.md).
+> **RÈGLE OBLIGATOIRE POUR LA CRÉATION DES SLIDES** :
+> Pour concevoir et structurer le contenu des diapositives, vous devez **systématiquement vous appuyer sur ce dictionnaire** pour instancier les objets souhaités :
+> - **Mises en page & Layouts** : `slide`, `grid-2`, `grid-3`, `grid-4`, `split-code`, `hero`
+> - **Cartes & Conteneurs** : `x-card`, `x-card.featured`, `x-card.metric`, `summary-box`
+> - **Données & Tableaux** : `data-table`, `metric-value` (KPI), `progress-track`
+> - **Frises & Processus** : `stepper-horizontal` (`step-node`), `timeline-vertical` (`timeline-card`)
+> - **Boucles & Cycles** : `virtuous-circle` (`cycle-core`, `cycle-step`)
+> - **Actions & Liens** : `text-link`, `btn-action`, `link-card`, `repo-link`
+> - **Développeur & Terminal** : `code-box` (Prism.js), `code-header`, `terminal-box`, `inline-code`
+> - **Badges & Typo** : `pill-tag`, `pill-tag.solid`, `pill-tag.gray`, `bullet-check`
+> - **Interactivité** : `quiz-container`, `quiz-opt-btn`, `quiz-explanation-box`
+> - **Métadonnées** : `data-notes`, `data-theme="light|dark"`, `slide-title`, `slide-subtitle`
+
+---
+
 ## 🎨 1. Système de Design & Détection Automatique du Thème (Clair / Foncé)
 
 ### 1.1 Principe « Zéro Configuration » pour la Structure
@@ -34,11 +51,15 @@ Le moteur de présentation (`Deck Engine`) inspecte en temps réel chaque slide 
   - Corps de texte : Inter (400, 500, 600)
   - Code et terminaux : Fira Code ou monospace
 - **Mise en page** : Ratio 16:9 widescreen, conteneur centré (`max-width: 1240px`), marges et paddings aérés (adaptatifs en hauteur et largeur pour éviter tout effet de bord collé).
-- **Composants prêts à l'emploi pour le contenu** :
-  - Cartes génériques (`.x-card`, `.x-card.featured`)
-  - Grilles modulables (`.grid-2`, `.grid-3`, `.grid-4`)
-  - Badges pills (`.pill-tag`, `.pill-tag.solid`, `.pill-tag.gray`)
-  - Blocs de code annotés (`.code-box`)
+- **Dictionnaire & Bibliothèque de composants** :
+  - **Référentiel complet disponible dans [`COMPOSANTS_DICTIONNAIRE.md`](COMPOSANTS_DICTIONNAIRE.md)** avec tous les alias et structures HTML standardisées.
+  - Cartes génériques (`.x-card`, `.x-card.featured`, `.x-card.metric`, `.summary-box`)
+  - Grilles modulables (`.grid-2`, `.grid-3`, `.grid-4`, `.split-code`)
+  - Frises & Étapes (`.stepper-horizontal`, `.step-node`, `.timeline-vertical`)
+  - Cycles vertueux & Boucles systémiques (`.virtuous-circle`, `.cycle-core`, `.cycle-step`)
+  - Tableaux de données & KPIs (`.data-table`, `.metric-value`)
+  - Badges pills (`.pill-tag`, `.pill-tag.solid`, `.pill-tag.gray`, `.bullet-check`)
+  - Blocs de code & Terminaux annotés (`.code-box`, `.terminal-box`)
   - Quizz interactifs avec feedback immédiat (`.quiz-opt-btn`, `.quiz-explanation-box`)
 
 ---
