@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Titre de la Présentation - Deck Engine</title>
+
+  <!-- Google Fonts : Montserrat, Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Prism.js Syntax Highlighting (Dark Tomorrow) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+  <style>
+    /* ==========================================================================
+       1. VARIABLES DU DESIGN SYSTEM (DARK CONTRASTÉ & ACCENT ROUGE)
+       ========================================================================== */
+    :root {
+      --bg-dark: #141414;
+      --card-bg: #1F1F1F;
+      --card-hover: #2B2B2B;
+      --border-dark: #333333;
+      --accent-primary: #E50914;
+      --accent-hover: #FF2A2A;
+      --accent-success: #10B981;
+      --accent-error: #EF4444;
+      --code-bg: #0B0B0B;
+      --text-main: #FFFFFF;
+      --text-muted: #A3A3A3;
+      --text-dim: #737373;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 15.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @media (min-width: 1400px) and (min-height: 850px) {
+
+      html,
+      body {
+        font-size: 17px;
+      }
+    }
+
+    @media (max-height: 750px) {
+
+      html,
+      body {
+        font-size: 13.5px;
+      }
+    }
+
+    /* ==========================================================================
+       2. CONTENEUR PRINCIPAL & HEADER PERSISTANT
+       ========================================================================== */
+    .deck-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg-dark);
+    }
+
+    .deck-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: rgba(20, 20, 20, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      z-index: 9999;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .brand-pill {
+      background: var(--accent-primary);
+      color: #FFF;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .brand-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: #FFF;
+    }
+
+    .brand-title span {
+      color: var(--accent-primary);
+    }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .slide-badge-title {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: #1C1C1C;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.2rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      box-shadow: 0 0 6px var(--accent-primary);
+    }
+
+    .slide-counter {
+      background: #1C1C1C;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.2rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .deck-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .ctrl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #1C1C1C;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #CBD5E1;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .ctrl-btn:hover {
+      background: var(--card-hover);
+      color: #FFF;
+    }
+
+    .ctrl-btn.primary {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #FFF;
+    }
+
+    .ctrl-btn.primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .progress-track {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #202020;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-primary), #FF5555);
+      transition: width 0.3s ease;
+    }
+
+    /* ==========================================================================
+       3. VIEWPORT & DISPOSITION DES SLIDES (16:9 WIDESCREEN)
+       ========================================================================== */
+    .slides-viewport {
+      position: absolute;
+      top: 40px;
+      bottom: 24px;
+      left: 0;
+      right: 0;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1.8rem 3.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(35px);
+      transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s ease;
+      pointer-events: none;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .slide.prev-slide {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-35px);
+    }
+
+    .slide-content {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* ==========================================================================
+       4. TYPOGRAPHIE, COMPOSANTS & GRILLES
+       ========================================================================== */
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      color: #FFF;
+      letter-spacing: -0.02em;
+    }
+
+    .slide-title-hero {
+      font-size: 3.2rem;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .slide-subtitle-hero {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 1.4rem;
+    }
+
+    .slide-header {
+      margin-bottom: 1rem;
+    }
+
+    .slide-header h2 {
+      font-size: 1.95rem;
+      margin-top: 0.2rem;
+    }
+
+    .slide-header p {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+      line-height: 1.4;
+    }
+
+    .pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(229, 9, 20, 0.16);
+      color: #FF5555;
+      border: 1px solid rgba(229, 9, 20, 0.45);
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .pill-tag.solid {
+      background: var(--accent-primary);
+      color: #FFF;
+      border: none;
+    }
+
+    .pill-tag.gray {
+      background: #252525;
+      color: #D4D4D4;
+      border: 1px solid #404040;
+    }
+
+    /* Grilles standard */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+    }
+
+    /* Cartes */
+    .x-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 1.1rem 1.3rem;
+      position: relative;
+    }
+
+    .x-card.featured {
+      border-color: rgba(229, 9, 20, 0.45);
+      box-shadow: 0 4px 20px rgba(229, 9, 20, 0.12);
+    }
+
+    .x-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .x-card p,
+    .x-card li {
+      font-size: 0.92rem;
+      line-height: 1.5;
+      color: #E2E8F0;
+    }
+
+    /* Blocs de code */
+    .code-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      padding: 0.85rem 1.1rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      overflow-x: auto;
+    }
+
+    .code-box pre,
+    .code-box code {
+      font-family: 'Fira Code', monospace;
+      background: transparent !important;
+    }
+
+    /* Quizz */
+    .quiz-opt-btn {
+      width: 100%;
+      text-align: left;
+      padding: 0.95rem 1.2rem;
+      background: #1B1B1B;
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      color: #E2E8F0;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-family: inherit;
+    }
+
+    .quiz-opt-btn:hover {
+      background: #282828;
+      border-color: #555;
+    }
+
+    .quiz-opt-btn .opt-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #2C2C2C;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .quiz-opt-btn.correct {
+      background: #112918 !important;
+      border-color: var(--accent-success) !important;
+      color: #FFF !important;
+    }
+
+    .quiz-opt-btn.correct .opt-badge {
+      background: var(--accent-success) !important;
+    }
+
+    .quiz-opt-btn.wrong {
+      background: #2D1416 !important;
+      border-color: var(--accent-error) !important;
+      color: #FFF !important;
+    }
+
+    .quiz-opt-btn.wrong .opt-badge {
+      background: var(--accent-error) !important;
+    }
+
+    .quiz-explanation-box {
+      margin-top: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      background: #142318;
+      border: 1px solid var(--accent-success);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #D1FAE5;
+      display: none;
+    }
+
+    .quiz-explanation-box.visible {
+      display: block;
+    }
+
+    /* Tiroir de notes rapide (Écran unique) */
+    .notes-drawer {
+      position: fixed;
+      right: 0;
+      top: 40px;
+      bottom: 0;
+      width: 420px;
+      max-width: 85vw;
+      background: #1A1A1A;
+      border-left: 1px solid var(--border-dark);
+      padding: 1.5rem;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 99998;
+      overflow-y: auto;
+      box-shadow: -10px 0 35px rgba(0, 0, 0, 0.6);
+    }
+
+    .notes-drawer.open {
+      transform: translateX(0);
+    }
+
+    /* Modales (Overview & Shortcuts) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      max-height: 75vh;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+
+    .overview-card {
+      background: #181818;
+      border: 1px solid var(--border-dark);
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .overview-card:hover {
+      background: #252525;
+      transform: scale(1.02);
+    }
+
+    .overview-card.current {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 12px rgba(229, 9, 20, 0.4);
+    }
+
+    /* Footer & Navigation */
+    .deck-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      background: rgba(20, 20, 20, 0.9);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      font-size: 0.65rem;
+      color: #737373;
+      z-index: 9990;
+    }
+
+    kbd {
+      background: #202020;
+      border: 1px solid #383838;
+      border-radius: 3px;
+      padding: 0.08rem 0.25rem;
+      font-family: monospace;
+      color: #CBD5E1;
+    }
+
+    /* ==========================================================================
+       5. EXPORT PDF HAUTE FIDÉLITÉ (PAYSAGE 16:9 SANS DÉBORDEMENT)
+       ========================================================================== */
+    @media print {
+      @page {
+        size: 16in 9in;
+        margin: 0;
+      }
+
+      *,
+      *::before,
+      *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        animation: none !important;
+        transition: none !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+
+      html,
+      body {
+        font-size: 18.5px !important;
+        width: 16in !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        background-color: var(--bg-dark) !important;
+        color: #FFF !important;
+      }
+
+      .deck-header,
+      .deck-footer,
+      .progress-track,
+      .notes-drawer,
+      .modal-overlay,
+      .interactive-controls {
+        display: none !important;
+      }
+
+      .slides-viewport,
+      .deck-container {
+        display: block !important;
+        width: 16in !important;
+        height: auto !important;
+        position: static !important;
+      }
+
+      .slide {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        position: relative !important;
+        width: 16in !important;
+        height: 9in !important;
+        min-width: 16in !important;
+        min-height: 9in !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        padding: 0.6in 0.95in !important;
+        box-sizing: border-box !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        background-color: #141414 !important;
+      }
+
+      .slide:last-child {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+
+      .quiz-explanation-box {
+        display: block !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="deck-container" id="deckContainer">
+
+    <!-- =====================================================================
+         HEADER PERSISTANT SUPÉRIEUR
+         ===================================================================== -->
+    <header class="deck-header">
+      <div class="brand-wrap">
+        <span class="brand-pill">DECK</span>
+        <div class="brand-title">TITRE <span>FORMATION</span></div>
+      </div>
+
+      <div class="header-center">
+        <div class="slide-badge-title">
+          <span class="pulse-dot"></span>
+          <span id="headerSlideTitle">Introduction</span>
+        </div>
+        <div class="slide-counter">
+          <span id="currentSlideNum">1</span> / <span id="totalSlidesNum">6</span>
+        </div>
+      </div>
+
+      <div class="deck-controls">
+        <button id="pdfExportBtn" class="ctrl-btn primary" title="Exporter en PDF 16:9 paysage (Touche P)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <polyline points="9 15 12 18 15 15"></polyline>
+          </svg>
+          <span>Export PDF</span>
+        </button>
+
+        <button id="speakerModeBtn" class="ctrl-btn" title="Ouvrir la vue présentateur dual-screen (Touche S)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>Présentateur (S)</span>
+        </button>
+
+        <button id="speakerNotesBtn" class="ctrl-btn" title="Tiroir de notes rapide écran unique (Touche N)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span>Notes (N)</span>
+        </button>
+
+        <button id="overviewBtn" class="ctrl-btn" title="Vue globale des slides (Touche O / Échap)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Grille (O)</span>
+        </button>
+
+        <button id="shortcutsBtn" class="ctrl-btn" title="Aide des raccourcis clavier (Touche ?)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+
+        <button id="fullscreenBtn" class="ctrl-btn" title="Plein écran (Touche F)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+            </path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="progress-track">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    </header>
+
+    <!-- =====================================================================
+         MAIN SLIDES VIEWPORT : SQUELETTE MODULAIRE À COMPLÉTER
+         ===================================================================== -->
+    <main class="slides-viewport" id="viewport">
+
+      <!-- ==========================================
+           SLIDE 1 : TITRE & SOMMAIRE (HERO)
+           ========================================== -->
+      <section class="slide active" data-slide="1" data-title="Introduction & Sommaire"
+        data-notes="Accueillir l'auditoire, poser le cadre général, énoncer les pré-requis et clarifier le découpage horaire de la séance.">
+        <div class="slide-content">
+          <div style="margin-bottom: 0.85rem;">
+            <span class="pill-tag solid">Présentation Technique</span>
+            <span class="pill-tag gray" style="margin-left: 0.6rem;">⏱ Durée totale : ~45 min</span>
+          </div>
+
+          <h1 class="slide-title-hero">Titre de la Présentation</h1>
+          <div class="slide-subtitle-hero">Sous-titre d'accroche ou proposition de valeur technologique</div>
+
+          <div class="grid-3" style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
+            <div class="x-card featured">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                <span
+                  style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800;">01</span>
+                <span class="pill-tag">15 min</span>
+              </div>
+              <h3>Partie 1 : Fondations</h3>
+              <p>Contexte, historique, limites des approches existantes et changement de paradigme.</p>
+            </div>
+
+            <div class="x-card featured">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                <span
+                  style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800;">02</span>
+                <span class="pill-tag">20 min</span>
+              </div>
+              <h3>Partie 2 : Architecture & Code</h3>
+              <p>Piliers clés d'ingénierie, syntaxe, flux de données réactifs et démonstrations en direct.</p>
+            </div>
+
+            <div class="x-card featured">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                <span
+                  style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800;">03</span>
+                <span class="pill-tag">10 min</span>
+              </div>
+              <h3>Partie 3 : Quizz & TP</h3>
+              <p>Validation collective des notions à main levée puis mise en pratique immédiate sur machine.</p>
+            </div>
+          </div>
+
+          <div
+            style="border-top: 1px solid #333333; padding-top: 0.9rem; display: flex; justify-content: space-between; font-size: 0.85rem; color: #888888;">
+            <span>Utilisez les touches <kbd>&larr;</kbd> et <kbd>&rarr;</kbd> ou <kbd>Espace</kbd> pour naviguer</span>
+            <span>Appuyez sur <kbd>S</kbd> pour la vue présentateur dual-screen &bull; <kbd>P</kbd> pour exporter en
+              PDF</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2 : CONTEXTE / PROBLÉMATIQUE (GRID-2)
+           ========================================== -->
+      <section class="slide" data-slide="2" data-title="Contexte & Problématique"
+        data-notes="Mettre en évidence la friction subie par les équipes avant la nouvelle approche. Souligner les coûts cachés en maintenance et en consommation mémoire.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 1 : FONDATIONS</span>
+              <span class="pill-tag gray">⏱ 5 min &bull; Slide 2/6</span>
+            </div>
+            <h2>Contexte & Limites des Approches Traditionnelles</h2>
+            <p>Pourquoi les architectures monolithiques ou les piles complexes atteignent leurs limites.</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="x-card" style="border-left: 5px solid #666666;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="color: #D1D5DB;">L'Ancien Modèle / La Limite</h3>
+                <span class="pill-tag gray">Friction constatée</span>
+              </div>
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
+                <li>• <strong>Complexité accidentelle :</strong> multiplication des couches d'abstractions,
+                  sérialisation permanente et friction entre frontend et backend.</li>
+                <li>• <strong>Coût mémoire prohibitif :</strong> chaque thread lourd consomme des ressources excessives
+                  et bloque sous forte concurrence.</li>
+                <li>• <strong>Maintenance chronophage :</strong> synchronisation fragile entre plusieurs dépôts et
+                  gestion d'états asynchrones dispersés.</li>
+              </ul>
+            </div>
+
+            <div class="x-card featured" style="border-left: 5px solid var(--accent-primary);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="color: #FFFFFF;">La Rupture Technologique</h3>
+                <span class="pill-tag">Solution moderne</span>
+              </div>
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
+                <li>• <strong>Modèle unifié :</strong> une base de code unique où le serveur pilote l'interface
+                  utilisateur sans boilerplate d'API REST.</li>
+                <li>• <strong>Concurrence ultra-légère :</strong> des millions de processus indépendants isolés ne
+                  partageant aucune mémoire sensible.</li>
+                <li>• <strong>Résilience industrielle :</strong> détection immédiate des pannes locales et redémarrage
+                  automatique dans un état initial sain.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3 : ARCHITECTURE & PILIERS (GRID-4)
+           ========================================== -->
+      <section class="slide" data-slide="3" data-title="Piliers Fondamentaux"
+        data-notes="Parcourir les 4 piliers de gauche à droite. Insister sur la simplicité opérationnelle : moins de serveurs, moins d'outils tiers à manager.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 2 : ARCHITECTURE</span>
+              <span class="pill-tag gray">⏱ 5 min &bull; Slide 3/6</span>
+            </div>
+            <h2>Les 4 Piliers Fondamentaux du Système</h2>
+            <p>Les briques indispensables pour garantir montée en charge, clarté et sécurité du code.</p>
+          </div>
+
+          <div class="grid-4" style="margin-bottom: 1.25rem;">
+            <div class="x-card">
+              <div style="color: var(--accent-primary); font-size: 1.8rem; font-weight: 900; margin-bottom: 0.4rem;">01
+              </div>
+              <h3>Immuabilité</h3>
+              <p>Données 100% immuables : zéro effet de bord masqué. Toute modification produit une nouvelle valeur
+                prédictible.</p>
+            </div>
+
+            <div class="x-card">
+              <div style="color: var(--accent-primary); font-size: 1.8rem; font-weight: 900; margin-bottom: 0.4rem;">02
+              </div>
+              <h3>Isolation Pure</h3>
+              <p>Chaque tâche tourne dans son propre micro-processus. Le crash de l'un n'affecte en rien les requêtes
+                voisines.</p>
+            </div>
+
+            <div class="x-card featured">
+              <div style="color: var(--accent-primary); font-size: 1.8rem; font-weight: 900; margin-bottom: 0.4rem;">03
+              </div>
+              <h3>Temps Réel Natif</h3>
+              <p>Mise à jour granulaire du DOM via WebSockets permanents : seuls les octets modifiés transitent sur le
+                réseau.</p>
+            </div>
+
+            <div class="x-card featured">
+              <div style="color: var(--accent-primary); font-size: 1.8rem; font-weight: 900; margin-bottom: 0.4rem;">04
+              </div>
+              <h3>Supervision</h3>
+              <p>Philosophie « Let it crash » : des superviseurs surveillent en continu la santé de chaque composant
+                critique.</p>
+            </div>
+          </div>
+
+          <div
+            style="background: #181818; border: 1px solid var(--border-dark); border-radius: 12px; padding: 1rem 1.4rem; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 0.85rem;">
+              <span style="font-size: 1.6rem;">⚡</span>
+              <p style="margin: 0; font-size: 0.98rem; color: #E5E7EB;">
+                <strong>Constat opérationnel :</strong> Une pile réactive et fonctionnelle divise fréquemment les coûts
+                d'infrastructure par 5 à 10 par rapport aux frameworks web traditionnels.
+              </p>
+            </div>
+            <span class="pill-tag" style="white-space: nowrap;">Haute Performance</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4 : CODE & SPLIT TECHNIQUE
+           ========================================== -->
+      <section class="slide" data-slide="4" data-title="Implémentation & Code"
+        data-notes="Décortiquer le snippet de code ligne par ligne. Montrer comment la lisibilité séquentielle remplace les blocs conditionnels complexes imbriqués.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 2 : DÉVELOPPEMENT</span>
+              <span class="pill-tag gray">⏱ 8 min &bull; Slide 4/6</span>
+            </div>
+            <h2>Syntaxe Déclarative & Flux de Données</h2>
+            <p>Transformer le code emboîté en pipelines clairs, lisibles de haut en bas.</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="x-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <h3 style="margin-bottom: 0.85rem;">Principes d'Écriture :</h3>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.8rem; color: #CBD5E1;">
+                  <li>• <strong>Dispatch déclaratif :</strong> plusieurs têtes de fonctions distinctes pour séparer
+                    naturellement les cas d'erreur du cas nominal.</li>
+                  <li>• <strong>Opérateur de flux (`|>`) :</strong> passage transparent du résultat de l'étape
+                    précédente comme premier argument de la suivante.</li>
+                  <li>• <strong>Typage strict & prévisible :</strong> validation des données en amont sans exceptions
+                    non interceptées.</li>
+                </ul>
+              </div>
+
+              <div
+                style="background: #141414; padding: 0.9rem; border-radius: 8px; border: 1px solid #2B2B2B; margin-top: 1rem;">
+                <strong style="color: var(--accent-primary);">Bonne pratique :</strong> Éviter les variables locales
+                éphémères inutiles, laisser la transformation circuler librement.
+              </div>
+            </div>
+
+            <div class="code-box">
+              <pre><code class="language-elixir">defmodule MonService do
+  @doc "Traite une requête entrante en pipeline clair"
+  def executer(donnees) do
+    donnees
+    |> valider_structure()
+    |> enrichir_metadonnees()
+    |> persister_en_base()
+    |> diffuser_temps_reel()
+  end
+
+  defp valider_structure(%{statut: :actif} = payload), do: {:ok, payload}
+  defp valider_structure(_invalide), do: {:error, "Données non conformes"}
+end</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 5 : QUIZZ INTERACTIF (MAIN LEVÉE)
+           ========================================== -->
+      <section class="slide" data-slide="5" data-title="Quizz Interactif"
+        data-notes="Interroger l'auditoire pour les options A, B, C, D. Cliquer sur l'option B pour faire apparaître la validation et les explications détaillées.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 3 : QUIZZ COLLECTIF</span>
+              <span class="pill-tag gray">⏱ 2 min &bull; Slide 5/6</span>
+            </div>
+            <h2>Question : Quelle est la grande force d'une architecture orientée processus légers ?</h2>
+            <p>Analysez les propositions ci-dessous avant d'afficher la réponse argumentée :</p>
+          </div>
+
+          <div class="grid-2" style="margin-top: 1rem; margin-bottom: 0.85rem;">
+            <button class="quiz-opt-btn" onclick="revealQuiz(1, 'A', false)">
+              <span class="opt-badge">A</span>
+              <span>Elle oblige à compiler tout le code en WebAssembly pour tourner sur le poste client.</span>
+            </button>
+            <button class="quiz-opt-btn" onclick="revealQuiz(1, 'B', true)">
+              <span class="opt-badge">B</span>
+              <span>L'isolation totale de la mémoire empêche qu'un crash local ne fasse tomber tout le serveur.</span>
+            </button>
+            <button class="quiz-opt-btn" onclick="revealQuiz(1, 'C', false)">
+              <span class="opt-badge">C</span>
+              <span>Elle supprime définitivement le besoin d'effectuer des tests unitaires ou d'intégration.</span>
+            </button>
+            <button class="quiz-opt-btn" onclick="revealQuiz(1, 'D', false)">
+              <span class="opt-badge">D</span>
+              <span>Elle stocke toutes les variables de session dans un unique thread global partagé.</span>
+            </button>
+          </div>
+
+          <div id="quizExplain1" class="quiz-explanation-box">
+            <strong style="color: var(--accent-success); font-size: 1.05rem;">✔ Réponse exacte : Option B (Isolation
+              totale et résilience)</strong>
+            <p style="margin-top: 0.35rem;">
+              Dans un modèle où chaque entité ou connexion possède son propre micro-processus ne partageant pas de
+              mémoire, toute anomalie est circonscrite. Les superviseurs rétablissent immédiatement le composant
+              défaillant dans un état propre sans impacter les autres utilisateurs.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6 : CONCLUSION & LANCEMENT DU TP
+           ========================================== -->
+      <section class="slide" data-slide="6" data-title="Lancement du TP"
+        data-notes="Inviter les participants à cloner le dépôt et exécuter la commande de build pour valider leur environnement.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 3 : ATELIER PRATIQUE</span>
+              <span class="pill-tag gray">⏱ 5 min &bull; Slide 6/6</span>
+            </div>
+            <h2>Lancement de l'Atelier Pratique (TP)</h2>
+            <p>Mettez en application les notions abordées à travers deux exercices concrets.</p>
+          </div>
+
+          <div class="grid-2">
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <div class="x-card featured">
+                <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.45rem;">
+                  <span
+                    style="width: 28px; height: 28px; border-radius: 6px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem;">1</span>
+                  <h3>Exercice 1 : Manipulation de Flux</h3>
+                </div>
+                <p>Création d'un module de traitement avec fonctions pures, déstructuration de données et pipelines de
+                  filtrage.</p>
+              </div>
+
+              <div class="x-card featured">
+                <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.45rem;">
+                  <span
+                    style="width: 28px; height: 28px; border-radius: 6px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem;">2</span>
+                  <h3>Exercice 2 : Composant Réactif Live</h3>
+                </div>
+                <p>Mise en place d'un compteur interactif ou mini-dashboard temps réel multi-utilisateurs sans code JS
+                  client complexe.</p>
+              </div>
+            </div>
+
+            <div class="x-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span class="pill-tag" style="margin-bottom: 0.65rem;">Commandes Terminal</span>
+                <div
+                  style="background: #0B0B0B; border: 1px solid #333; border-radius: 10px; padding: 0.95rem; font-family: monospace; font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.5rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #4ADE80;">$ git clone https://github.com/formation/atelier.git</span>
+                    <button onclick="copyCommand('git clone https://github.com/formation/atelier.git')"
+                      style="background: none; border: none; color: var(--accent-primary); font-size: 0.8rem; cursor: pointer; font-weight: 700;">copier</button>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #4ADE80;">$ cd atelier &amp;&amp; npm install</span>
+                    <button onclick="copyCommand('cd atelier && npm install')"
+                      style="background: none; border: none; color: var(--accent-primary); font-size: 0.8rem; cursor: pointer; font-weight: 700;">copier</button>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #4ADE80;">$ npm run start</span>
+                    <button onclick="copyCommand('npm run start')"
+                      style="background: none; border: none; color: var(--accent-primary); font-size: 0.8rem; cursor: pointer; font-weight: 700;">copier</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- QR Code d'accès propre en SVG pur -->
+              <div
+                style="background: #161616; border: 1px solid #333; border-radius: 10px; padding: 0.85rem; text-align: center; margin-top: 1rem;">
+                <div style="font-size: 0.88rem; font-weight: 700; margin-bottom: 0.4rem;">Accéder au dépôt et ressources
+                  :</div>
+                <div style="display: inline-block; background: #FFF; padding: 0.4rem; border-radius: 6px;">
+                  <svg width="84" height="84" viewBox="0 0 100 100" fill="none">
+                    <rect width="100" height="100" fill="#FFFFFF" />
+                    <rect x="5" y="5" width="28" height="28" fill="#141414" />
+                    <rect x="9" y="9" width="20" height="20" fill="#FFFFFF" />
+                    <rect x="13" y="13" width="12" height="12" fill="#E50914" />
+
+                    <rect x="67" y="5" width="28" height="28" fill="#141414" />
+                    <rect x="71" y="9" width="20" height="20" fill="#FFFFFF" />
+                    <rect x="75" y="13" width="12" height="12" fill="#E50914" />
+
+                    <rect x="5" y="67" width="28" height="28" fill="#141414" />
+                    <rect x="9" y="71" width="20" height="20" fill="#FFFFFF" />
+                    <rect x="13" y="75" width="12" height="12" fill="#E50914" />
+
+                    <rect x="38" y="10" width="6" height="6" fill="#141414" />
+                    <rect x="48" y="10" width="6" height="6" fill="#141414" />
+                    <rect x="42" y="42" width="16" height="16" fill="#E50914" />
+                    <rect x="68" y="42" width="6" height="6" fill="#141414" />
+                    <rect x="40" y="68" width="6" height="6" fill="#141414" />
+                    <rect x="60" y="82" width="6" height="6" fill="#141414" />
+                  </svg>
+                </div>
+                <div style="font-size: 0.8rem; color: #888; margin-top: 0.3rem; font-family: monospace;">
+                  github.com/formation/atelier</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- =====================================================================
+         FOOTER INFÉRIEUR DISCRET
+         ===================================================================== -->
+    <footer class="deck-footer">
+      <div>
+        <span>Navigation : <kbd>&larr;</kbd> <kbd>&rarr;</kbd> ou <kbd>Espace</kbd></span>
+        <span style="margin-left: 1.2rem;">Présentateur : <kbd>S</kbd></span>
+        <span style="margin-left: 1.2rem;">Export : <kbd>P</kbd></span>
+      </div>
+      <div style="display: flex; gap: 0.4rem;">
+        <button id="prevBtn" class="ctrl-btn">&larr; Précédent</button>
+        <button id="nextBtn" class="ctrl-btn">Suivant &rarr;</button>
+      </div>
+    </footer>
+
+    <!-- =====================================================================
+         DRAWER DE NOTES RAPIDE (POUR CAS À UN SEUL ÉCRAN - TOUCHE N)
+         ===================================================================== -->
+    <aside id="notesDrawer" class="notes-drawer">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 0.8rem; margin-bottom: 1.1rem;">
+        <h3 style="font-size: 1.15rem; color: #fff;">Notes de Présentation (Rapide)</h3>
+        <button id="closeNotesBtn"
+          style="background: none; border: none; color: #aaa; font-size: 1.4rem; cursor: pointer;">&times;</button>
+      </div>
+      <div style="font-size: 0.85rem; color: var(--accent-primary); font-weight: 700; margin-bottom: 0.6rem;">
+        Slide <span id="notesSlideIndex">1</span> sur <span id="notesTotalSlides">6</span>
+      </div>
+      <div id="notesContent" style="font-size: 0.95rem; line-height: 1.6; color: #E2E8F0;"></div>
+    </aside>
+
+    <!-- =====================================================================
+         MODALE DE VUE GLOBALE EN GRILLE (TOUCHE O / ÉCHAP)
+         ===================================================================== -->
+    <div id="overviewModal" class="modal-overlay">
+      <div class="x-card"
+        style="max-width: 1050px; width: 100%; border: 1px solid #444; box-shadow: 0 10px 45px rgba(0,0,0,0.85);">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 0.8rem; margin-bottom: 1.1rem;">
+          <h3 style="font-size: 1.25rem; color: #fff;">Vue d'ensemble de la présentation</h3>
+          <button id="closeOverviewBtn"
+            style="background: none; border: none; color: #aaa; font-size: 1.4rem; cursor: pointer;">&times;</button>
+        </div>
+        <div id="overviewGrid" class="overview-grid"></div>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         MODALE D'AIDE DES RACCOURCIS CLAVIER (TOUCHE ?)
+         ===================================================================== -->
+    <div id="shortcutsModal" class="modal-overlay">
+      <div class="x-card" style="max-width: 560px; width: 100%; border: 1px solid #444;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 0.8rem; margin-bottom: 1.1rem;">
+          <h3 style="font-size: 1.2rem; color: #fff;">Raccourcis Clavier</h3>
+          <button id="closeShortcutsBtn"
+            style="background: none; border: none; color: #aaa; font-size: 1.4rem; cursor: pointer;">&times;</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.9rem;">
+          <div
+            style="background: #141414; padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid #2B2B2B; display: flex; justify-content: space-between;">
+            <span>Slide suivante</span> <kbd>&rarr; / Espace</kbd>
+          </div>
+          <div
+            style="background: #141414; padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid #2B2B2B; display: flex; justify-content: space-between;">
+            <span>Slide précédente</span> <kbd>&larr;</kbd>
+          </div>
+          <div
+            style="background: #141414; padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid #2B2B2B; display: flex; justify-content: space-between;">
+            <span>Mode Présentateur</span> <kbd>S</kbd>
+          </div>
+          <div
+            style="background: #141414; padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid #2B2B2B; display: flex; justify-content: space-between;">
+            <span>Tiroir de Notes</span> <kbd>N</kbd>
+          </div>
+          <div
+            style="background: #141414; padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid #2B2B2B; display: flex; justify-content: space-between;">
+            <span>Grille Overview</span> <kbd>O / Échap</kbd>
+          </div>
+          <div
+            style="background: #141414; padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid #2B2B2B; display: flex; justify-content: space-between;">
+            <span>Plein Écran</span> <kbd>F</kbd>
+          </div>
+          <div
+            style="background: #141414; padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid #2B2B2B; display: flex; justify-content: space-between;">
+            <span>Export PDF 16:9</span> <kbd>P</kbd>
+          </div>
+          <div
+            style="background: #141414; padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid #2B2B2B; display: flex; justify-content: space-between;">
+            <span>Aide Raccourcis</span> <kbd>?</kbd>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Prism Syntax Highlighter Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+  <!-- =====================================================================
+       MOTEUR DE PRÉSENTATION & SYNCHRONISATION MULTI-ÉCRANS
+       ===================================================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Initialisation des variables de navigation
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      let currentIndex = 0;
+
+      // Éléments du Header
+      const currentSlideNumEl = document.getElementById('currentSlideNum');
+      const totalSlidesNumEl = document.getElementById('totalSlidesNum');
+      const progressFill = document.getElementById('progressFill');
+      const headerSlideTitle = document.getElementById('headerSlideTitle');
+
+      // Modales & Panels
+      const notesDrawer = document.getElementById('notesDrawer');
+      const notesContent = document.getElementById('notesContent');
+      const notesSlideIndex = document.getElementById('notesSlideIndex');
+      const notesTotalSlides = document.getElementById('notesTotalSlides');
+      const overviewModal = document.getElementById('overviewModal');
+      const overviewGrid = document.getElementById('overviewGrid');
+      const shortcutsModal = document.getElementById('shortcutsModal');
+
+      if (totalSlidesNumEl) totalSlidesNumEl.textContent = totalSlides;
+      if (notesTotalSlides) notesTotalSlides.textContent = totalSlides;
+
+      // 2. Synchronisation temps réel (BroadcastChannel + Fallback localStorage)
+      let deckChannel = null;
+      try {
+        deckChannel = new BroadcastChannel('deck_channel_sync');
+        deckChannel.onmessage = (event) => {
+          if (event.data && typeof event.data.slideIndex === 'number') {
+            goToSlide(event.data.slideIndex, false);
+          }
+        };
+      } catch (err) {
+        console.warn('BroadcastChannel non supporté, fallback storage actif');
+      }
+
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'deck_sync_slide' && event.newValue !== null) {
+          const idx = parseInt(event.newValue, 10);
+          if (!isNaN(idx)) goToSlide(idx, false);
+        }
+      });
+
+      function broadcastSlide(index) {
+        if (deckChannel) deckChannel.postMessage({ slideIndex: index });
+        localStorage.setItem('deck_sync_slide', index.toString());
+      }
+
+      // 3. Cœur de la navigation
+      function goToSlide(index, shouldBroadcast = true) {
+        if (index < 0) index = 0;
+        if (index >= totalSlides) index = totalSlides - 1;
+
+        slides.forEach((slide, i) => {
+          slide.classList.remove('active', 'prev-slide');
+          if (i < index) slide.classList.add('prev-slide');
+        });
+
+        currentIndex = index;
+        const activeSlide = slides[currentIndex];
+        activeSlide.classList.add('active');
+
+        // Mise à jour de l'interface
+        if (currentSlideNumEl) currentSlideNumEl.textContent = currentIndex + 1;
+        if (progressFill) progressFill.style.width = `${((currentIndex + 1) / totalSlides) * 100}%`;
+        const title = activeSlide.getAttribute('data-title') || `Slide ${currentIndex + 1}`;
+        if (headerSlideTitle) headerSlideTitle.textContent = title;
+
+        // Mise à jour des notes d'orateur
+        if (notesSlideIndex) notesSlideIndex.textContent = currentIndex + 1;
+        if (notesContent) {
+          notesContent.textContent = activeSlide.getAttribute('data-notes') || 'Aucune note spécifique rédigée pour cette slide.';
+        }
+
+        history.replaceState(null, null, `#slide-${currentIndex + 1}`);
+
+        // Notification des fenêtres synchronisées
+        if (shouldBroadcast) broadcastSlide(currentIndex);
+
+        // Mise à jour de la grille d'overview
+        document.querySelectorAll('.overview-card').forEach((card, idx) => {
+          card.classList.toggle('current', idx === currentIndex);
+        });
+      }
+
+      function nextSlide() { if (currentIndex < totalSlides - 1) goToSlide(currentIndex + 1); }
+      function prevSlide() { if (currentIndex > 0) goToSlide(currentIndex - 1); }
+
+      // 4. Initialisation via Hash URL
+      if (window.location.hash.startsWith('#slide-')) {
+        const num = parseInt(window.location.hash.replace('#slide-', ''), 10);
+        if (!isNaN(num) && num >= 1 && num <= totalSlides) goToSlide(num - 1, false);
+        else goToSlide(0, false);
+      } else {
+        goToSlide(0, false);
+      }
+
+      // 5. Gestion des raccourcis clavier
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        switch (e.key) {
+          case 'ArrowRight':
+          case ' ':
+          case 'PageDown':
+            e.preventDefault(); nextSlide(); break;
+          case 'ArrowLeft':
+          case 'PageUp':
+            e.preventDefault(); prevSlide(); break;
+          case 'Home':
+            e.preventDefault(); goToSlide(0); break;
+          case 'End':
+            e.preventDefault(); goToSlide(totalSlides - 1); break;
+          case 'p':
+          case 'P':
+            e.preventDefault(); window.print(); break;
+          case 'f':
+          case 'F':
+            toggleFullscreen(); break;
+          case 's':
+          case 'S':
+            openSpeakerWindow(); break;
+          case 'n':
+          case 'N':
+            if (notesDrawer) notesDrawer.classList.toggle('open'); break;
+          case 'o':
+          case 'O':
+            toggleOverview(); break;
+          case '?':
+            if (shortcutsModal) shortcutsModal.classList.toggle('open'); break;
+          case 'Escape':
+            if (overviewModal) overviewModal.classList.remove('open');
+            if (shortcutsModal) shortcutsModal.classList.remove('open');
+            if (notesDrawer) notesDrawer.classList.remove('open');
+            break;
+        }
+      });
+
+      // 6. Plein écran
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => { });
+        } else {
+          document.exitFullscreen().catch(() => { });
+        }
+      }
+
+      // 7. Vue globale (Overview)
+      function buildOverview() {
+        if (!overviewGrid) return;
+        overviewGrid.innerHTML = '';
+        slides.forEach((slide, idx) => {
+          const card = document.createElement('div');
+          card.className = `overview-card ${idx === currentIndex ? 'current' : ''}`;
+          card.innerHTML = `
+            <div style="font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; margin-bottom: 0.25rem;">Slide ${idx + 1}</div>
+            <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${slide.getAttribute('data-title') || ''}</div>
+          `;
+          card.onclick = () => { goToSlide(idx); overviewModal.classList.remove('open'); };
+          overviewGrid.appendChild(card);
+        });
+      }
+
+      function toggleOverview() {
+        buildOverview();
+        if (overviewModal) overviewModal.classList.toggle('open');
+      }
+
+      // 8. Boutons d'interface
+      document.getElementById('prevBtn')?.addEventListener('click', prevSlide);
+      document.getElementById('nextBtn')?.addEventListener('click', nextSlide);
+      document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
+      document.getElementById('pdfExportBtn')?.addEventListener('click', () => window.print());
+      document.getElementById('speakerNotesBtn')?.addEventListener('click', () => notesDrawer?.classList.toggle('open'));
+      document.getElementById('closeNotesBtn')?.addEventListener('click', () => notesDrawer?.classList.remove('open'));
+      document.getElementById('overviewBtn')?.addEventListener('click', toggleOverview);
+      document.getElementById('closeOverviewBtn')?.addEventListener('click', () => overviewModal?.classList.remove('open'));
+      document.getElementById('shortcutsBtn')?.addEventListener('click', () => shortcutsModal?.classList.toggle('open'));
+      document.getElementById('closeShortcutsBtn')?.addEventListener('click', () => shortcutsModal?.classList.remove('open'));
+
+      // 9. Fenêtre Dédiée Mode Présentateur Dual-Screen (Touche S)
+      function openSpeakerWindow() {
+        const speakerWindow = window.open('', 'DeckSpeakerView', 'width=1150,height=750,menubar=no,toolbar=no,location=no');
+        if (!speakerWindow) {
+          alert('Veuillez autoriser les fenêtres pop-up pour afficher la vue Présentateur.');
+          return;
+        }
+
+        // Récupération des données sérialisées de toutes les slides
+        const slidesData = [];
+        slides.forEach((s, idx) => {
+          slidesData.push({
+            index: idx,
+            title: s.getAttribute('data-title') || `Slide ${idx + 1}`,
+            notes: s.getAttribute('data-notes') || 'Aucune note disponible.',
+            html: s.querySelector('.slide-content')?.innerHTML || ''
+          });
+        });
+
+        // Injection du code complet de l'interface présentateur
+        speakerWindow.document.open();
+        speakerWindow.document.write(`
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Présentateur - Dual Screen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #121212; --card: #1C1C1C; --border: #333; --accent: #E50914; --text: #FFF; --muted: #A3A3A3;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
+      height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+    }
+    header {
+      background: #181818; border-bottom: 1px solid var(--border);
+      height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.2rem;
+    }
+    .timer-wrap { display: flex; align-items: center; gap: 0.8rem; font-family: 'Fira Code', monospace; }
+    .timer-val { font-size: 1.25rem; font-weight: 700; color: #4ADE80; }
+    .clock-val { font-size: 1rem; color: var(--muted); }
+    .btn {
+      background: #2A2A2A; border: 1px solid var(--border); color: #FFF;
+      padding: 0.25rem 0.65rem; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: 600;
+    }
+    .btn:hover { background: #383838; }
+    .btn.primary { background: var(--accent); border-color: var(--accent); }
+    main {
+      flex: 1; display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; padding: 1rem; overflow: hidden;
+    }
+    .panel {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .panel-header {
+      background: #161616; border-bottom: 1px solid var(--border);
+      padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--muted);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .slide-preview-box {
+      flex: 1; position: relative; background: #0A0A0A; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .slide-preview-inner {
+      width: 1240px; transform-origin: top left; pointer-events: none; padding: 1.5rem;
+    }
+    .notes-box {
+      flex: 1; padding: 1.2rem; overflow-y: auto; font-size: 1.15rem; line-height: 1.65; color: #E5E7EB;
+    }
+    footer {
+      background: #181818; border-top: 1px solid var(--border);
+      height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.2rem;
+    }
+    select {
+      background: #252525; border: 1px solid var(--border); color: #FFF;
+      padding: 0.3rem 0.6rem; border-radius: 5px; font-family: inherit; font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.95rem;">
+      CONSOLE <span style="color: var(--accent);">PRÉSENTATEUR</span>
+    </div>
+    <div class="timer-wrap">
+      <span>⏱ <span id="timerText" class="timer-val">00:00:00</span></span>
+      <button id="pauseTimerBtn" class="btn">Pause</button>
+      <button id="resetTimerBtn" class="btn">Reset</button>
+      <span style="margin-left: 1rem;">🕒 <span id="clockText" class="clock-val">--:--:--</span></span>
+    </div>
+    <div style="display: flex; gap: 0.4rem; align-items: center;">
+      <span style="font-size: 0.75rem; color: var(--muted);">Zoom Notes :</span>
+      <button id="notesMinusBtn" class="btn">A-</button>
+      <button id="notesPlusBtn" class="btn">A+</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Colonne Gauche : Aperçus Slides -->
+    <div style="display: flex; flex-direction: column; gap: 1rem; overflow: hidden;">
+      <div class="panel" style="flex: 1.2;">
+        <div class="panel-header">
+          <span>Slide Actuelle (<span id="currSlideIdxTxt">1</span> / ${totalSlides})</span>
+          <span id="currSlideTitleTxt" style="color: #FFF;">-</span>
+        </div>
+        <div class="slide-preview-box" id="currentBox">
+          <div id="currentSlideContent" class="slide-preview-inner"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="flex: 0.8;">
+        <div class="panel-header">
+          <span>Slide Suivante (Next)</span>
+          <span id="nextSlideTitleTxt" style="color: var(--accent);">-</span>
+        </div>
+        <div class="slide-preview-box" id="nextBox">
+          <div id="nextSlideContent" class="slide-preview-inner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne Droite : Notes grand format -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>Notes de l'Orateur</span>
+        <span style="font-size: 0.7rem; color: var(--accent);">Synchronisation Active</span>
+      </div>
+      <div id="speakerNotesArea" class="notes-box"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div style="display: flex; align-items: center; gap: 0.8rem;">
+      <button id="prevSlideBtn" class="btn">&larr; Précédente</button>
+      <button id="nextSlideBtn" class="btn primary">Suivante &rarr;</button>
+      <select id="jumpSlideSelect"></select>
+    </div>
+    <div style="font-size: 0.75rem; color: var(--muted);">
+      Synchronisé en direct avec l'écran projeté
+    </div>
+  </footer>
+
+  <script>
+    const slidesData = ${JSON.stringify(slidesData)};
+    let activeIdx = ${currentIndex};
+    let currentFontSize = 1.15;
+
+    // Synchronisation
+    const channel = new BroadcastChannel('deck_channel_sync');
+    channel.onmessage = (e) => {
+      if (e.data && typeof e.data.slideIndex === 'number') {
+        updateUI(e.data.slideIndex, false);
+      }
+    };
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'deck_sync_slide' && e.newValue !== null) {
+        updateUI(parseInt(e.newValue, 10), false);
+      }
+    });
+
+    function sendSlideChange(idx) {
+      activeIdx = idx;
+      channel.postMessage({ slideIndex: activeIdx });
+      localStorage.setItem('deck_sync_slide', activeIdx.toString());
+      updateUI(activeIdx, false);
+    }
+
+    // Sélecteur de saut
+    const jumpSelect = document.getElementById('jumpSlideSelect');
+    slidesData.forEach((s, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = (idx + 1) + '. ' + s.title;
+      jumpSelect.appendChild(opt);
+    });
+    jumpSelect.addEventListener('change', (e) => sendSlideChange(parseInt(e.target.value, 10)));
+
+    // Rendu UI
+    function updateUI(idx, notify = true) {
+      if (idx < 0) idx = 0;
+      if (idx >= slidesData.length) idx = slidesData.length - 1;
+      activeIdx = idx;
+
+      jumpSelect.value = activeIdx;
+      document.getElementById('currSlideIdxTxt').textContent = activeIdx + 1;
+      document.getElementById('currSlideTitleTxt').textContent = slidesData[activeIdx].title;
+      document.getElementById('currentSlideContent').innerHTML = slidesData[activeIdx].html;
+      document.getElementById('speakerNotesArea').textContent = slidesData[activeIdx].notes;
+
+      // Next slide
+      if (activeIdx < slidesData.length - 1) {
+        document.getElementById('nextSlideTitleTxt').textContent = slidesData[activeIdx + 1].title;
+        document.getElementById('nextSlideContent').innerHTML = slidesData[activeIdx + 1].html;
+      } else {
+        document.getElementById('nextSlideTitleTxt').textContent = 'Fin de la présentation';
+        document.getElementById('nextSlideContent').innerHTML = '<h2 style="color:#666;text-align:center;margin-top:2rem;">Fin des slides</h2>';
+      }
+
+      // Mise à l'échelle automatique des aperçus
+      scalePreview('currentBox', 'currentSlideContent');
+      scalePreview('nextBox', 'nextSlideContent');
+
+      if (notify) sendSlideChange(activeIdx);
+    }
+
+    function scalePreview(boxId, contentId) {
+      const box = document.getElementById(boxId);
+      const content = document.getElementById(contentId);
+      if (!box || !content) return;
+      const s = Math.min(box.clientWidth / 1240, box.clientHeight / 680);
+      content.style.transform = 'scale(' + (s > 0 ? s : 0.25) + ')';
+    }
+
+    window.addEventListener('resize', () => {
+      scalePreview('currentBox', 'currentSlideContent');
+      scalePreview('nextBox', 'nextSlideContent');
+    });
+
+    document.getElementById('prevSlideBtn').onclick = () => { if (activeIdx > 0) sendSlideChange(activeIdx - 1); };
+    document.getElementById('nextSlideBtn').onclick = () => { if (activeIdx < slidesData.length - 1) sendSlideChange(activeIdx + 1); };
+
+    // Clavier orateur
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault(); if (activeIdx < slidesData.length - 1) sendSlideChange(activeIdx + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault(); if (activeIdx > 0) sendSlideChange(activeIdx - 1);
+      }
+    });
+
+    // Zoom des notes
+    document.getElementById('notesPlusBtn').onclick = () => {
+      currentFontSize += 0.1;
+      document.getElementById('speakerNotesArea').style.fontSize = currentFontSize + 'rem';
+    };
+    document.getElementById('notesMinusBtn').onclick = () => {
+      if (currentFontSize > 0.8) {
+        currentFontSize -= 0.1;
+        document.getElementById('speakerNotesArea').style.fontSize = currentFontSize + 'rem';
+      }
+    };
+
+    // Chronomètre & Horloge
+    let secondsElapsed = 0;
+    let timerRunning = true;
+    setInterval(() => {
+      if (timerRunning) {
+        secondsElapsed++;
+        const h = String(Math.floor(secondsElapsed / 3600)).padStart(2, '0');
+        const m = String(Math.floor((secondsElapsed % 3600) / 60)).padStart(2, '0');
+        const s = String(secondsElapsed % 60).padStart(2, '0');
+        document.getElementById('timerText').textContent = h + ':' + m + ':' + s;
+      }
+      const now = new Date();
+      document.getElementById('clockText').textContent = now.toLocaleTimeString();
+    }, 1000);
+
+    const pauseBtn = document.getElementById('pauseTimerBtn');
+    pauseBtn.onclick = () => {
+      timerRunning = !timerRunning;
+      pauseBtn.textContent = timerRunning ? 'Pause' : 'Play';
+    };
+    document.getElementById('resetTimerBtn').onclick = () => {
+      secondsElapsed = 0;
+      document.getElementById('timerText').textContent = '00:00:00';
+    };
+
+    updateUI(activeIdx, false);
+  <\/script>
+</body>
+</html>
+        `);
+        speakerWindow.document.close();
+      }
+
+      document.getElementById('speakerModeBtn')?.addEventListener('click', openSpeakerWindow);
+    });
+
+    // 10. Fonctions interactives globales (Quizz & Copie)
+    function revealQuiz(qNum, selectedOpt, isCorrect) {
+      const explain = document.getElementById(`quizExplain${qNum}`);
+      if (explain) explain.classList.add('visible');
+
+      const slide = document.querySelector(`.slide[data-slide="5"]`);
+      if (slide) {
+        slide.querySelectorAll('.quiz-opt-btn').forEach(btn => {
+          const badge = btn.querySelector('.opt-badge')?.textContent.trim();
+          if (badge === selectedOpt) {
+            btn.classList.add(isCorrect ? 'correct' : 'wrong');
+          }
+        });
+      }
+    }
+
+    function copyCommand(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Commande copiée dans le presse-papiers : ' + text);
+      });
+    }
+  </script>
+</body>
+
+</html>
