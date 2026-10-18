@@ -46,8 +46,56 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function broadcastSlide(index) {
-    if (deckChannel) deckChannel.postMessage({ slideIndex: index });
+    const isLight = document.querySelector('.deck-container')?.classList.contains('theme-light') || document.body.classList.contains('theme-light');
+    if (deckChannel) deckChannel.postMessage({ slideIndex: index, theme: isLight ? 'light' : 'dark' });
     localStorage.setItem('deck_sync_slide', index.toString());
+  }
+
+  // 2.2 Gestion globale du Thème (Clair / Sombre) & Persistance
+  let userManualTheme = localStorage.getItem('deck_user_theme'); // 'light', 'dark', ou null
+
+  function applyTheme(theme, save = true) {
+    const container = document.querySelector('.deck-container') || document.body;
+    const isLight = theme === 'light';
+    container.classList.toggle('theme-light', isLight);
+    container.classList.toggle('theme-dark', !isLight);
+    document.body.classList.toggle('theme-light', isLight);
+    document.body.classList.toggle('theme-dark', !isLight);
+
+    if (save) {
+      userManualTheme = theme;
+      localStorage.setItem('deck_user_theme', theme);
+    }
+
+    if (deckChannel) {
+      deckChannel.postMessage({ theme: theme });
+    }
+    localStorage.setItem('deck_sync_theme', theme);
+
+    const icon = document.getElementById('themeToggleIcon');
+    const txt = document.getElementById('themeToggleTxt');
+    if (icon) icon.textContent = isLight ? '🌙' : '☀️';
+    if (txt) txt.textContent = isLight ? 'Sombre' : 'Clair';
+
+    // Réajustement des aperçus si l'overview est ouverte
+    if (overviewModal && overviewModal.classList.contains('open')) {
+      scaleOverviewThumbs();
+    }
+  }
+
+  function toggleTheme() {
+    const container = document.querySelector('.deck-container') || document.body;
+    const isCurrentlyLight = container.classList.contains('theme-light');
+    applyTheme(isCurrentlyLight ? 'dark' : 'light', true);
+  }
+
+  // Initialisation du thème : paramètre URL (?theme=light|dark) ou localStorage
+  const urlParams = new URLSearchParams(window.location.search);
+  const themeParam = urlParams.get('theme');
+  if (themeParam === 'light' || themeParam === 'dark') {
+    applyTheme(themeParam, true);
+  } else if (userManualTheme) {
+    applyTheme(userManualTheme, false);
   }
 
   // 2.1 Adaptation automatique du thème Clair/Foncé en fonction de la slide
@@ -55,12 +103,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!slide) return;
     const container = document.querySelector('.deck-container') || document.body;
 
-    // 1. Détection prioritaire par attributs ou classes explicites
+    // Priorité 1 : attribut data-theme explicite sur la slide
+    const explicitTheme = slide.getAttribute('data-theme');
+    if (explicitTheme) {
+      applyTheme(explicitTheme, false);
+      return;
+    }
+
+    // Priorité 2 : choix manuel persistant de l'utilisateur
+    if (userManualTheme) {
+      applyTheme(userManualTheme, false);
+      return;
+    }
+
+    // 1. Détection par classe explicite si pas de data-theme
     let isLight = false;
-    const explicitTheme = slide.getAttribute('data-theme') || document.body.getAttribute('data-theme');
-    if (explicitTheme === 'light' || slide.classList.contains('light') || slide.classList.contains('theme-light')) {
+    if (slide.classList.contains('light') || slide.classList.contains('theme-light')) {
       isLight = true;
-    } else if (explicitTheme === 'dark' || slide.classList.contains('dark') || slide.classList.contains('theme-dark')) {
+    } else if (slide.classList.contains('dark') || slide.classList.contains('theme-dark')) {
       isLight = false;
     } else {
       // 2. Détection intelligente transparente par calcul de luminance du fond
@@ -150,6 +210,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.goToSlide = goToSlide;
   window.nextSlide = nextSlide;
   window.prevSlide = prevSlide;
+  window.toggleTheme = toggleTheme;
+  window.applyTheme = applyTheme;
 
   // 4. Initialisation via Hash URL
   if (window.location.hash.startsWith('#slide-')) {
@@ -185,6 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'f':
       case 'F':
         toggleFullscreen(); break;
+      case 't':
+      case 'T':
+        toggleTheme(); break;
       case 's':
       case 'S':
         if (typeof openSpeakerWindow === 'function') openSpeakerWindow();
@@ -317,6 +382,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('prevBtn')?.addEventListener('click', prevSlide);
   document.getElementById('nextBtn')?.addEventListener('click', nextSlide);
   document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
+  document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
+  document.getElementById('speakerWindowBtn')?.addEventListener('click', () => {
+    if (typeof openSpeakerWindow === 'function') openSpeakerWindow();
+    else if (window.openSpeakerWindow) window.openSpeakerWindow();
+  });
+  document.getElementById('speakerModeBtn')?.addEventListener('click', () => {
+    if (typeof openSpeakerWindow === 'function') openSpeakerWindow();
+    else if (window.openSpeakerWindow) window.openSpeakerWindow();
+  });
+  document.getElementById('speakerWindowBtn')?.addEventListener('click', () => {
+    if (typeof openSpeakerWindow === 'function') openSpeakerWindow();
+    else if (window.openSpeakerWindow) window.openSpeakerWindow();
+  });
   document.getElementById('pdfExportBtn')?.addEventListener('click', () => window.print());
   document.getElementById('speakerNotesBtn')?.addEventListener('click', () => notesDrawer?.classList.toggle('open'));
   document.getElementById('closeNotesBtn')?.addEventListener('click', () => notesDrawer?.classList.remove('open'));
@@ -324,4 +402,31 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('closeOverviewBtn')?.addEventListener('click', () => overviewModal?.classList.remove('open'));
   document.getElementById('shortcutsBtn')?.addEventListener('click', () => shortcutsModal?.classList.toggle('open'));
   document.getElementById('closeShortcutsBtn')?.addEventListener('click', () => shortcutsModal?.classList.remove('open'));
+
+  // 9. Synchronisation avant export PDF (Print)
+  window.addEventListener('beforeprint', () => {
+    const container = document.querySelector('.deck-container') || document.body;
+    const isLight = container.classList.contains('theme-light') || (userManualTheme === 'light');
+    document.body.classList.toggle('theme-light', isLight);
+    document.body.classList.toggle('theme-dark', !isLight);
+    container.classList.toggle('theme-light', isLight);
+    container.classList.toggle('theme-dark', !isLight);
+
+    slides.forEach(slide => {
+      const explicitTheme = slide.getAttribute('data-theme');
+      if (explicitTheme === 'light' || slide.classList.contains('light')) {
+        slide.classList.add('theme-light');
+        slide.classList.remove('theme-dark');
+      } else if (explicitTheme === 'dark' || slide.classList.contains('dark')) {
+        slide.classList.add('theme-dark');
+        slide.classList.remove('theme-light');
+      } else if (isLight) {
+        slide.classList.add('theme-light');
+        slide.classList.remove('theme-dark');
+      } else {
+        slide.classList.add('theme-dark');
+        slide.classList.remove('theme-light');
+      }
+    });
+  });
 });

@@ -1,27 +1,77 @@
 /**
- * Composants Interactifs Globaux (Quiz & Copie)
+ * Composants Interactifs Globaux (Quiz & Copie de code)
  */
-// 10. Fonctions interactives globales (Quizz & Copie)
-    function revealQuiz(qNum, selectedOpt, isCorrect) {
-      const explain = document.getElementById(`quizExplain${qNum}`);
-      if (explain) explain.classList.add('visible');
 
-      const slide = document.querySelector(`.slide[data-slide="5"]`);
-      if (slide) {
-        slide.querySelectorAll('.quiz-opt-btn').forEach(btn => {
-          const badge = btn.querySelector('.opt-badge')?.textContent.trim();
-          if (badge === selectedOpt) {
-            btn.classList.add(isCorrect ? 'correct' : 'wrong');
-          }
-        });
-      }
-    }
+// Gestion flexible et universelle des Quizz
+function revealQuiz(arg1, arg2, arg3) {
+  // Signature 1 : revealQuiz(this, true, 'quizExplain1')
+  if (typeof arg1 === 'object' && arg1 !== null) {
+    const btn = arg1;
+    const isCorrect = !!arg2;
+    const explainId = arg3;
 
-    function copyCommand(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Commande copiée dans le presse-papiers : ' + text);
+    // Retirer les statuts des autres boutons du même conteneur
+    const parentContainer = btn.closest('.grid-2') || btn.parentElement;
+    if (parentContainer) {
+      parentContainer.querySelectorAll('.quiz-opt-btn').forEach(b => {
+        b.classList.remove('correct', 'wrong');
       });
     }
+
+    btn.classList.add(isCorrect ? 'correct' : 'wrong');
+
+    if (explainId) {
+      const explain = document.getElementById(explainId);
+      if (explain) explain.classList.add('visible');
+    }
+    return;
+  }
+
+  // Signature 2 (Héritée) : revealQuiz(qNum, selectedOpt, isCorrect)
+  const qNum = arg1;
+  const selectedOpt = arg2;
+  const isCorrect = !!arg3;
+
+  const explain = document.getElementById(`quizExplain${qNum}`) || document.getElementById(`quizExp${qNum}`);
+  if (explain) explain.classList.add('visible');
+
+  const activeSlide = document.querySelector('.slide.active') ||
+                      document.querySelector(`.slide[data-slide="${qNum}"]`) ||
+                      document.querySelector(`.slide[data-slide="5"]`);
+
+  if (activeSlide) {
+    activeSlide.querySelectorAll('.quiz-opt-btn').forEach(btn => {
+      const badge = btn.querySelector('.opt-badge')?.textContent.trim();
+      if (badge === selectedOpt) {
+        btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      } else {
+        btn.classList.remove('correct', 'wrong');
+      }
+    });
+  }
+}
+
+// Copie dans le presse-papier avec notification toast
+function copyCommand(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    let toast = document.getElementById('copyToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'copyToast';
+      toast.style.cssText = 'position:fixed;bottom:35px;right:25px;background:var(--accent-primary,#15803D);color:#FFF;padding:0.6rem 1.1rem;border-radius:8px;font-weight:700;font-size:0.85rem;box-shadow:0 8px 24px rgba(0,0,0,0.3);z-index:999999;transition:all 0.3s ease;transform:translateY(100px);opacity:0;pointer-events:none;';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = '✔ Copié dans le presse-papier !';
+    toast.style.transform = 'translateY(0)';
+    toast.style.opacity = '1';
+    setTimeout(() => {
+      toast.style.transform = 'translateY(100px)';
+      toast.style.opacity = '0';
+    }, 2200);
+  }).catch(() => {
+    alert('Commande copiée : ' + text);
+  });
+}
 
 window.revealQuiz = revealQuiz;
 window.copyCommand = copyCommand;

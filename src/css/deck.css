@@ -341,9 +341,9 @@
     }
 
     .pill-tag.gray {
-      background: #252525;
-      color: #D4D4D4;
-      border: 1px solid #404040;
+      background: var(--card-hover);
+      color: var(--text-muted);
+      border: 1px solid var(--border-dark);
     }
 
     /* Grilles standard */
@@ -414,10 +414,10 @@
       width: 100%;
       text-align: left;
       padding: 0.95rem 1.2rem;
-      background: #1B1B1B;
+      background: var(--card-bg);
       border: 1px solid var(--border-dark);
       border-radius: 12px;
-      color: #E2E8F0;
+      color: var(--text-main);
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -428,16 +428,17 @@
     }
 
     .quiz-opt-btn:hover {
-      background: #282828;
-      border-color: #555;
+      background: var(--card-hover);
+      border-color: var(--accent-primary);
     }
 
     .quiz-opt-btn .opt-badge {
       width: 32px;
       height: 32px;
       border-radius: 8px;
-      background: #2C2C2C;
-      color: #FFF;
+      background: var(--card-hover);
+      border: 1px solid var(--border-dark);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -470,11 +471,11 @@
       margin-top: 1rem;
       padding: 1rem 1.25rem;
       border-radius: 10px;
-      background: #142318;
+      background: color-mix(in srgb, var(--accent-success) 12%, var(--card-bg));
       border: 1px solid var(--accent-success);
       font-size: 0.95rem;
       line-height: 1.5;
-      color: #D1FAE5;
+      color: var(--text-main);
       display: none;
     }
 
@@ -600,7 +601,7 @@
       pointer-events: none;
       user-select: none;
       padding: 1.8rem;
-      background: #141414;
+      background: var(--bg-dark);
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
@@ -700,7 +701,7 @@
       color: var(--text-main);
     }
 
-    /* ==========================================================================
+        /* ==========================================================================
        5. EXPORT PDF HAUTE FIDÉLITÉ (PAYSAGE 16:9 SANS DÉBORDEMENT)
        ========================================================================== */
     @media print {
@@ -717,7 +718,6 @@
         color-adjust: exact !important;
         animation: none !important;
         transition: none !important;
-        box-shadow: none !important;
         text-shadow: none !important;
       }
 
@@ -730,7 +730,7 @@
         padding: 0 !important;
         overflow: visible !important;
         background-color: var(--bg-dark) !important;
-        color: #FFF !important;
+        color: var(--text-main) !important;
       }
 
       .deck-header,
@@ -748,6 +748,7 @@
         width: 16in !important;
         height: auto !important;
         position: static !important;
+        background-color: var(--bg-dark) !important;
       }
 
       .slide {
@@ -769,7 +770,101 @@
         break-after: page !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
+        background-color: var(--bg-dark) !important;
+        color: var(--text-main) !important;
+      }
+
+      /* Synchronisation Thème Clair en Export PDF */
+      body.theme-light,
+      .deck-container.theme-light {
+        --bg-dark: #F8FAFC !important;
+        --card-bg: #FFFFFF !important;
+        --card-hover: #F1F5F9 !important;
+        --border-dark: #E2E8F0 !important;
+        --text-main: #0F172A !important;
+        --text-muted: #475569 !important;
+        --text-dim: #94A3B8 !important;
+        --code-bg: #1E293B !important;
+        background-color: #F8FAFC !important;
+        color: #0F172A !important;
+      }
+
+      body.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]),
+      .deck-container.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]),
+      .slide.theme-light,
+      .slide.light,
+      .slide[data-theme="light"] {
+        --bg-dark: #F8FAFC;
+        --card-bg: #FFFFFF;
+        --card-hover: #F1F5F9;
+        --border-dark: #E2E8F0;
+        --text-main: #0F172A;
+        --text-muted: #475569;
+        --text-dim: #94A3B8;
+        --code-bg: #1E293B;
+        background-color: #F8FAFC !important;
+        color: #0F172A !important;
+      }
+
+      body.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .x-card,
+      .deck-container.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .x-card,
+      .slide.theme-light .x-card,
+      .slide.light .x-card,
+      .slide[data-theme="light"] .x-card {
+        background-color: #FFFFFF !important;
+        border-color: #E2E8F0 !important;
+        color: #0F172A !important;
+        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
+      }
+
+      body.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .slide-title-hero,
+      .deck-container.theme-light .slide:not(.theme-dark):not(.dark):not([data-theme="dark"]) .slide-title-hero,
+      .slide.theme-light .slide-title-hero,
+      .slide.light .slide-title-hero,
+      .slide[data-theme="light"] .slide-title-hero {
+        color: #0F172A !important;
+      }
+
+      /* Synchronisation Thème Sombre en Export PDF */
+      body.theme-dark,
+      .deck-container.theme-dark {
+        --bg-dark: #141414 !important;
+        --card-bg: #1F1F1F !important;
+        --card-hover: #2B2B2B !important;
+        --border-dark: #333333 !important;
+        --text-main: #FFFFFF !important;
+        --text-muted: #A3A3A3 !important;
+        --text-dim: #737373 !important;
+        --code-bg: #0B0B0B !important;
         background-color: #141414 !important;
+        color: #FFFFFF !important;
+      }
+
+      body.theme-dark .slide:not(.theme-light):not(.light):not([data-theme="light"]),
+      .deck-container.theme-dark .slide:not(.theme-light):not(.light):not([data-theme="light"]),
+      .slide.theme-dark,
+      .slide.dark,
+      .slide[data-theme="dark"] {
+        --bg-dark: #141414;
+        --card-bg: #1F1F1F;
+        --card-hover: #2B2B2B;
+        --border-dark: #333333;
+        --text-main: #FFFFFF;
+        --text-muted: #A3A3A3;
+        --text-dim: #737373;
+        --code-bg: #0B0B0B;
+        background-color: #141414 !important;
+        color: #FFFFFF !important;
+      }
+
+      body.theme-dark .slide:not(.theme-light):not(.light):not([data-theme="light"]) .x-card,
+      .deck-container.theme-dark .slide:not(.theme-light):not(.light):not([data-theme="light"]) .x-card,
+      .slide.theme-dark .x-card,
+      .slide.dark .x-card,
+      .slide[data-theme="dark"] .x-card {
+        background-color: #1F1F1F !important;
+        border-color: #333333 !important;
+        color: #FFFFFF !important;
       }
 
       .slide:last-child {
@@ -780,4 +875,9 @@
       .quiz-explanation-box {
         display: block !important;
       }
+    }
+
+
+    .deck-container.theme-light .x-card {
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
     }
