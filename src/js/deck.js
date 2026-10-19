@@ -57,7 +57,7 @@ function ensureDeckStructure() {
           </button>
           <div class="color-palette-popover" id="colorPalettePopover">
             <div class="palette-title">Palette d'accent</div>
-            <div class="palette-swatches">
+            <div class="palette-swatches" id="presetSwatches">
               <button class="palette-dot active" data-color="#E50914" title="Rouge Crimson (Défaut)" style="--dot-color: #E50914;"></button>
               <button class="palette-dot" data-color="#2563EB" title="Bleu Cobalt" style="--dot-color: #2563EB;"></button>
               <button class="palette-dot" data-color="#10B981" title="Vert Émeraude" style="--dot-color: #10B981;"></button>
@@ -66,9 +66,25 @@ function ensureDeckStructure() {
               <button class="palette-dot" data-color="#EC4899" title="Rose Néon" style="--dot-color: #EC4899;"></button>
               <button class="palette-dot" data-color="#06B6D4" title="Cyan Futuriste" style="--dot-color: #06B6D4;"></button>
             </div>
+
+            <div class="palette-custom-section" id="customColorsSection" style="display: none;">
+              <div class="palette-title" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Mes couleurs</span>
+                <button id="clearCustomColorsBtn" class="palette-clear-btn" title="Effacer mes couleurs personnalisées">Effacer</button>
+              </div>
+              <div class="palette-swatches" id="customSwatches"></div>
+            </div>
+
             <div class="palette-custom-row">
-              <span class="palette-custom-label">Sur mesure :</span>
-              <input type="color" id="customColorPickerInput" value="#E50914" title="Choisir une couleur personnalisée">
+              <div class="palette-custom-label">Couleur personnalisée (Hex) :</div>
+              <div class="palette-hex-control">
+                <div class="hex-input-wrap" id="hexInputWrap">
+                  <input type="color" id="customColorPickerInput" value="#E50914" title="Pipette / Sélecteur visuel">
+                  <input type="text" id="hexColorInput" value="#E50914" placeholder="#HEX" maxlength="7" spellcheck="false" title="Entrez un code hexadécimal (ex: #3B82F6 ou 3B82F6)">
+                </div>
+                <button id="applyHexColorBtn" class="palette-action-btn primary" title="Appliquer immédiatement cette couleur (Touche Entrée)">Appliquer</button>
+                <button id="addHexColorBtn" class="palette-action-btn secondary" title="Ajouter à Mes couleurs sans l'appliquer">+ Ajouter</button>
+              </div>
             </div>
           </div>
         </div>
@@ -317,44 +333,119 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Cyan Futuriste', hex: '#06B6D4' }
   ];
 
+  function normalizeHexColor(val) {
+    if (!val || typeof val !== 'string') return null;
+    let s = val.trim();
+    if (!s.startsWith('#')) s = '#' + s;
+    if (/^#[0-9A-Fa-f]{3}$/.test(s)) {
+      return ('#' + s[1] + s[1] + s[2] + s[2] + s[3] + s[3]).toUpperCase();
+    }
+    if (/^#[0-9A-Fa-f]{6}$/.test(s)) {
+      return s.toUpperCase();
+    }
+    return null;
+  }
+
+  function getCustomColors() {
+    try {
+      const stored = localStorage.getItem('deck_custom_colors');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveCustomColors(colors) {
+    try {
+      localStorage.setItem('deck_custom_colors', JSON.stringify(colors));
+    } catch (e) {
+      console.warn('Erreur sauvegarde custom colors:', e);
+    }
+  }
+
+  function renderCustomColors() {
+    const customSection = document.getElementById('customColorsSection');
+    const customSwatches = document.getElementById('customSwatches');
+    if (!customSwatches) return;
+
+    const colors = getCustomColors();
+    if (!colors || colors.length === 0) {
+      if (customSection) customSection.style.display = 'none';
+      customSwatches.innerHTML = '';
+      return;
+    }
+
+    if (customSection) customSection.style.display = 'flex';
+    customSwatches.innerHTML = colors.map(col => `
+      <div class="custom-dot-wrap">
+        <button class="palette-dot ${col.toUpperCase() === currentAccentColor.toUpperCase() ? 'active' : ''}" 
+                data-color="${col}" 
+                title="${col}" 
+                style="--dot-color: ${col};"></button>
+        <button class="custom-dot-delete" data-delete-color="${col}" title="Supprimer ${col}">&times;</button>
+      </div>
+    `).join('');
+  }
+
+  function addCustomColor(hex) {
+    const norm = normalizeHexColor(hex);
+    if (!norm) return false;
+    const colors = getCustomColors();
+    if (!colors.map(c => c.toUpperCase()).includes(norm)) {
+      colors.unshift(norm);
+      if (colors.length > 14) colors.pop();
+      saveCustomColors(colors);
+    }
+    renderCustomColors();
+    return true;
+  }
+
   let currentAccentColor = localStorage.getItem('deck_accent_color') || '#E50914';
 
   function setAccentColor(colorHex, save = true) {
     if (!colorHex) return;
-    currentAccentColor = colorHex;
-    document.documentElement.style.setProperty('--accent-primary', colorHex);
-    document.documentElement.style.setProperty('--accent-hover', lightenColor(colorHex, 16));
+    const norm = normalizeHexColor(colorHex) || colorHex;
+    currentAccentColor = norm;
+    document.documentElement.style.setProperty('--accent-primary', norm);
+    document.documentElement.style.setProperty('--accent-hover', lightenColor(norm, 16));
     const containerEl = document.querySelector('.deck-container');
     if (containerEl) {
-      containerEl.style.setProperty('--accent-primary', colorHex);
-      containerEl.style.setProperty('--accent-hover', lightenColor(colorHex, 16));
+      containerEl.style.setProperty('--accent-primary', norm);
+      containerEl.style.setProperty('--accent-hover', lightenColor(norm, 16));
     }
 
     if (save) {
-      localStorage.setItem('deck_accent_color', colorHex);
-      localStorage.setItem('deck_sync_accent_color', colorHex);
+      localStorage.setItem('deck_accent_color', norm);
+      localStorage.setItem('deck_sync_accent_color', norm);
     }
 
     const dot = document.getElementById('currentColorDot');
-    if (dot) dot.style.background = colorHex;
+    if (dot) dot.style.background = norm;
 
     const input = document.getElementById('customColorPickerInput');
-    if (input) input.value = colorHex;
+    if (input) input.value = norm;
+
+    const hexInput = document.getElementById('hexColorInput');
+    if (hexInput && document.activeElement !== hexInput) {
+      hexInput.value = norm.toUpperCase();
+    }
 
     document.querySelectorAll('.palette-dot').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-color')?.toLowerCase() === colorHex.toLowerCase());
+      btn.classList.toggle('active', btn.getAttribute('data-color')?.toUpperCase() === norm.toUpperCase());
     });
 
     if (deckChannel) {
-      deckChannel.postMessage({ type: 'accentColor', color: colorHex });
+      deckChannel.postMessage({ type: 'accentColor', color: norm });
     }
   }
 
   function cycleAccentColor() {
-    const norm = currentAccentColor.toLowerCase();
-    const currIdx = ACCENT_PRESETS.findIndex(p => p.hex.toLowerCase() === norm);
-    const nextIdx = (currIdx + 1) % ACCENT_PRESETS.length;
-    setAccentColor(ACCENT_PRESETS[nextIdx].hex, true);
+    const customColors = getCustomColors();
+    const allPresets = [...ACCENT_PRESETS, ...customColors.map(c => ({ name: c, hex: c }))];
+    const norm = currentAccentColor.toUpperCase();
+    const currIdx = allPresets.findIndex(p => p.hex.toUpperCase() === norm);
+    const nextIdx = (currIdx + 1) % allPresets.length;
+    setAccentColor(allPresets[nextIdx].hex, true);
   }
 
 
@@ -699,33 +790,137 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('nextBtn')?.addEventListener('click', nextSlide);
   document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
   document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
-  // Contrôles du sélecteur de couleur en direct
+  // Contrôles du sélecteur de couleur en direct & Nuances Hexadécimales
   const colorPickerBtn = document.getElementById('colorPickerBtn');
   const colorPalettePopover = document.getElementById('colorPalettePopover');
   const customColorPickerInput = document.getElementById('customColorPickerInput');
+  const hexColorInput = document.getElementById('hexColorInput');
+  const applyHexColorBtn = document.getElementById('applyHexColorBtn');
+  const addHexColorBtn = document.getElementById('addHexColorBtn');
+  const hexInputWrap = document.getElementById('hexInputWrap');
+
+  // Initialisation et affichage des nuances sauvegardées
+  renderCustomColors();
 
   colorPickerBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
-    colorPalettePopover?.classList.toggle('open');
+    const isOpen = colorPalettePopover?.classList.toggle('open');
+    if (isOpen) {
+      if (hexColorInput) hexColorInput.value = currentAccentColor.toUpperCase();
+      if (customColorPickerInput) customColorPickerInput.value = currentAccentColor;
+      renderCustomColors();
+    }
   });
 
-  document.querySelectorAll('.palette-dot').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+  // Délégation de clics pour les pastilles de couleur et suppression de nuances
+  colorPalettePopover?.addEventListener('click', (e) => {
+    const dot = e.target.closest('.palette-dot');
+    if (dot) {
       e.stopPropagation();
-      const col = btn.getAttribute('data-color');
+      const col = dot.getAttribute('data-color');
       if (col) {
         setAccentColor(col, true);
-        colorPalettePopover?.classList.remove('open');
+        if (hexColorInput) hexColorInput.value = col.toUpperCase();
+        if (customColorPickerInput) customColorPickerInput.value = col;
       }
-    });
+      colorPalettePopover?.classList.remove('open');
+      return;
+    }
+
+    const delBtn = e.target.closest('.custom-dot-delete');
+    if (delBtn) {
+      e.stopPropagation();
+      const colToDelete = delBtn.getAttribute('data-delete-color');
+      if (colToDelete) {
+        const colors = getCustomColors().filter(c => c.toUpperCase() !== colToDelete.toUpperCase());
+        saveCustomColors(colors);
+        renderCustomColors();
+      }
+      return;
+    }
   });
 
+  // Traitement d'application directe d'une couleur hexadécimale
+  function handleApplyHexColor() {
+    const raw = hexColorInput?.value || '';
+    const norm = normalizeHexColor(raw);
+    if (norm) {
+      hexInputWrap?.classList.remove('invalid');
+      addCustomColor(norm);
+      setAccentColor(norm, true);
+      if (hexColorInput) hexColorInput.value = norm;
+      if (customColorPickerInput) customColorPickerInput.value = norm;
+      colorPalettePopover?.classList.remove('open');
+    } else {
+      hexInputWrap?.classList.add('invalid');
+      setTimeout(() => hexInputWrap?.classList.remove('invalid'), 800);
+    }
+  }
+
+  // Traitement de l'ajout d'une couleur hexadécimale à la liste sans l'appliquer
+  function handleAddHexColor() {
+    const raw = hexColorInput?.value || '';
+    const norm = normalizeHexColor(raw);
+    if (norm) {
+      hexInputWrap?.classList.remove('invalid');
+      addCustomColor(norm);
+      if (hexColorInput) hexColorInput.value = norm;
+      if (customColorPickerInput) customColorPickerInput.value = norm;
+      if (addHexColorBtn) {
+        const origText = addHexColorBtn.textContent;
+        addHexColorBtn.textContent = '✓ Ajouté';
+        setTimeout(() => { if (addHexColorBtn) addHexColorBtn.textContent = origText; }, 1200);
+      }
+    } else {
+      hexInputWrap?.classList.add('invalid');
+      setTimeout(() => hexInputWrap?.classList.remove('invalid'), 800);
+    }
+  }
+
+  // Pipette / Sélecteur visuel natif
   customColorPickerInput?.addEventListener('input', (e) => {
-    setAccentColor(e.target.value, false);
+    const val = e.target.value.toUpperCase();
+    if (hexColorInput) hexColorInput.value = val;
   });
 
   customColorPickerInput?.addEventListener('change', (e) => {
-    setAccentColor(e.target.value, true);
+    const val = e.target.value.toUpperCase();
+    if (hexColorInput) hexColorInput.value = val;
+    setAccentColor(val, true);
+    addCustomColor(val);
+    colorPalettePopover?.classList.remove('open');
+  });
+
+  // Saisie directe de code hexadécimal
+  hexColorInput?.addEventListener('input', (e) => {
+    const norm = normalizeHexColor(e.target.value);
+    if (norm) {
+      hexInputWrap?.classList.remove('invalid');
+      if (customColorPickerInput) customColorPickerInput.value = norm;
+    }
+  });
+
+  hexColorInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleApplyHexColor();
+    }
+  });
+
+  applyHexColorBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleApplyHexColor();
+  });
+
+  addHexColorBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleAddHexColor();
+  });
+
+  document.getElementById('clearCustomColorsBtn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    saveCustomColors([]);
+    renderCustomColors();
   });
 
   document.addEventListener('click', (e) => {
