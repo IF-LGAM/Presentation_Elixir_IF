@@ -1,0 +1,184 @@
+/* ==========================================================================
+   CHROME D'INTERFACE PERSISTANT (HEADER, FOOTER, BARRE DE PROGRESSION)
+   ========================================================================== */
+.deck-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 33px;
+  background: var(--header-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  z-index: 9999;
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.brand-pill {
+  background: var(--accent-primary);
+  color: #FFF;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 1.5px 5.5px;
+  border-radius: 3px;
+  line-height: 1.3;
+}
+
+.brand-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 12.5px;
+  color: var(--text-main);
+}
+
+.brand-title span {
+  color: var(--accent-primary);
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.slide-badge-title {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-dark);
+  padding: 1.5px 7px;
+  border-radius: 9999px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.pulse-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 5px var(--accent-primary);
+}
+
+.slide-counter {
+  background: var(--card-bg);
+  border: 1px solid var(--border-dark);
+  padding: 1.5px 7px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.deck-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-dark);
+  color: var(--text-main);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  height: 23px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.ctrl-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.ctrl-btn:hover {
+  background: var(--card-hover);
+  color: #FFF;
+}
+
+.ctrl-btn.primary {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #FFF;
+}
+
+.ctrl-btn.primary:hover {
+  background: var(--accent-hover);
+}
+
+.progress-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--border-dark);
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-hover));
+  transition: width 0.3s ease;
+}
+
+.deck-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: var(--footer-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.85rem;
+  font-size: 11px;
+  color: var(--text-dim);
+  z-index: 9990;
+  line-height: 1;
+}
+
+.deck-footer .ctrl-btn {
+  font-size: 10px;
+  padding: 1px 6px;
+  height: 16px;
+  gap: 0.2rem;
+  border-radius: 3px;
+}
+
+kbd {
+  background: var(--border-dark);
+  border: 1px solid #383838;
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-size: 10px;
+  font-family: monospace;
+  color: var(--text-main);
+}
