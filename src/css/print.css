@@ -101,6 +101,14 @@
     font-size: 0.9rem !important;
   }
 
+  .schema-img {
+    max-height: 4.8in !important;
+  }
+
+  .split-schema .schema-img {
+    max-height: 4.2in !important;
+  }
+
   /* Synchronisation Thème Clair en Export PDF */
   body.theme-light,
   .deck-container.theme-light {

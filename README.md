@@ -65,6 +65,8 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 | :--- | :--- |
 | `→` / `Espace` / `PageDown` | Slide suivante |
 | `←` / `PageUp` | Slide précédente |
+| `Clic gauche` *(en plein écran)* | Slide suivante (style télécommande) |
+| `Molette` *(en plein écran)* | Slide suivante / précédente |
 | `Home` / `End` | Première / Dernière slide |
 | `S` | Ouvrir la Console Présentateur (dual-screen) |
 | `N` | Ouvrir/Fermer le panneau latéral de notes (écran simple) |

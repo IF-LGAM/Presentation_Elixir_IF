@@ -570,3 +570,91 @@ h4 {
   border-color: var(--accent-primary);
   color: var(--accent-primary);
 }
+
+/* 12. Schémas, Figures & Médias */
+.schema-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border-dark);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.schema-box:hover {
+  border-color: color-mix(in srgb, var(--accent-primary) 35%, var(--border-dark));
+}
+
+.schema-box.framed {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.schema-box.framed .schema-caption {
+  color: #64748B;
+}
+
+.schema-img {
+  max-width: 100%;
+  max-height: 480px;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 6px;
+  margin: 0 auto;
+}
+
+.schema-caption {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  margin-top: 0.75rem;
+  text-align: center;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.schema-caption strong {
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+/* Disposition 2 colonnes : Texte explicatif + Schéma */
+.split-schema {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1.35rem;
+  align-items: center;
+  width: 100%;
+}
+
+.split-schema.reverse {
+  grid-template-columns: 1.2fr 1fr;
+}
+
+.split-schema > * {
+  min-width: 0;
+}
+
+.split-schema .schema-img {
+  max-height: 420px;
+}
+
+@media (max-height: 760px) {
+  .schema-img {
+    max-height: 380px;
+  }
+  .split-schema .schema-img {
+    max-height: 340px;
+  }
+}
+

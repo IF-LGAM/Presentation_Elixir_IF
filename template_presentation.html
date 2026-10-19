@@ -344,15 +344,38 @@ def valider_schema(payload: dict) -> dict:
       </section>
 
       <!-- ==========================================
-           SLIDE 6 : VALIDATION & QUIZZ INTERACTIF
+           SLIDE 6 : ARCHITECTURE & SCHÉMA SYSTÈME (SCHEMA-BOX & SPLIT-SCHEMA)
            ========================================== -->
-      <section class="slide" data-slide="6" data-title="Quizz Interactif"
+      <section class="slide" data-slide="6" data-title="Architecture & Schéma Système"
+        data-notes="Présenter le flux des requêtes depuis le client web jusqu'aux micro-processus isolés régis par l'arbre de supervision OTP.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 3 : ARCHITECTURE</span>
+              <span class="pill-tag gray">⏱ 4 min &bull; Slide 6/7</span>
+            </div>
+            <h2>Topologie Distribuée & Flux Temps Réel</h2>
+            <p>Vue d'ensemble de la communication asynchrone entre clients web et processus BEAM.</p>
+          </div>
+
+          <!-- Composant Grand Schéma du Dictionnaire -->
+          <div class="schema-box" style="margin-top: 0.5rem;">
+            <img src="assets/schemas/architecture-demo.svg" alt="Schéma d'Architecture Distribuée" class="schema-img">
+            <div class="schema-caption"><strong>Figure 1 :</strong> Routage WebSocket non-bloquant et supervision hiérarchique avec auto-guérison locale</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 7 : VALIDATION & QUIZZ INTERACTIF
+           ========================================== -->
+      <section class="slide" data-slide="7" data-title="Quizz Interactif"
         data-notes="Interroger l'auditoire pour les options A, B, C, D. Cliquer sur l'option B pour faire apparaître la validation et les explications détaillées.">
         <div class="slide-content">
           <div class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span class="pill-tag solid">PARTIE 3 : VALIDATION</span>
-              <span class="pill-tag gray">⏱ 3 min &bull; Slide 6/6</span>
+              <span class="pill-tag solid">PARTIE 4 : VALIDATION</span>
+              <span class="pill-tag gray">⏱ 3 min &bull; Slide 7/7</span>
             </div>
             <h2>Question : Quelle est la force principale de l'isolation mémoire par micro-processus ?</h2>
             <p>Analysez les propositions ci-dessous avant d'afficher la réponse argumentée :</p>
