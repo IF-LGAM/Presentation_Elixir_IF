@@ -104,10 +104,20 @@ window.DeckEngine.Navigation = (function () {
   }
 
   function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => { });
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (!isFs) {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(() => { });
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      }
     } else {
-      document.exitFullscreen().catch(() => { });
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => { });
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
     }
   }
 
@@ -182,6 +192,20 @@ window.DeckEngine.Navigation = (function () {
     document.getElementById('prevBtn')?.addEventListener('click', prevSlide);
     document.getElementById('nextBtn')?.addEventListener('click', nextSlide);
     document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
+
+    // Synchronisation de l'état plein écran
+    const syncFullscreenState = () => {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      document.documentElement.classList.toggle('is-fullscreen', isFs);
+      document.body.classList.toggle('is-fullscreen', isFs);
+      const container = document.querySelector('.deck-container');
+      if (container) {
+        container.classList.toggle('is-fullscreen', isFs);
+        container.setAttribute('data-fullscreen', isFs ? 'true' : 'false');
+      }
+    };
+    document.addEventListener('fullscreenchange', syncFullscreenState);
+    document.addEventListener('webkitfullscreenchange', syncFullscreenState);
 
     // Initialisation via Hash URL
     if (window.location.hash.startsWith('#slide-')) {

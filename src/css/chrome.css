@@ -182,3 +182,24 @@ kbd {
   font-family: monospace;
   color: var(--text-main);
 }
+
+/* ==========================================================================
+   MODE PLEIN ÉCRAN (MASQUAGE AUTOMATIQUE DU HEADER ET DU FOOTER)
+   ========================================================================== */
+:fullscreen .deck-header,
+:fullscreen .deck-footer {
+  display: none !important;
+}
+
+:-webkit-full-screen .deck-header,
+:-webkit-full-screen .deck-footer {
+  display: none !important;
+}
+
+.is-fullscreen .deck-header,
+.is-fullscreen .deck-footer,
+[data-fullscreen="true"] .deck-header,
+[data-fullscreen="true"] .deck-footer {
+  display: none !important;
+}
+

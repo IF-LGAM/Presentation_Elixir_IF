@@ -20,6 +20,23 @@
   overflow: hidden;
 }
 
+/* Extension à 100% de la hauteur en plein écran */
+:fullscreen .slides-viewport {
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
+:-webkit-full-screen .slides-viewport {
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
+.is-fullscreen .slides-viewport,
+[data-fullscreen="true"] .slides-viewport {
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
 .slide {
   position: absolute;
   inset: 0;
