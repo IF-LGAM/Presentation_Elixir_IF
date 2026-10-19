@@ -200,19 +200,21 @@ function populateSpeakerWindow(speakerWindow) {
 
     .sp-preview-inner {
       width: 1240px;
-      height: 700px;
+      min-height: 700px;
+      height: auto;
       position: absolute;
       transform-origin: center center;
       pointer-events: none;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 2rem;
+      padding: 1.5rem 2.2rem;
       box-sizing: border-box;
       border-radius: 8px;
       border: 1px solid var(--sp-inner-border);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       transition: background-color 0.25s ease, color 0.25s ease;
+      overflow: hidden;
     }
 
     /* Adaptation dynamique selon le mode clair/sombre de la slide */
@@ -440,8 +442,17 @@ function populateSpeakerWindow(speakerWindow) {
       const box = document.getElementById(boxId);
       const content = document.getElementById(contentId);
       if (!box || !content) return;
-      const scale = Math.min((box.clientWidth - 30) / 1240, (box.clientHeight - 30) / 700);
-      content.style.transform = 'scale(' + Math.max(scale, 0.1) + ')';
+
+      const contentWidth = 1240;
+      // Mesure de la hauteur naturelle réelle requise par le contenu (plancher à 700px pour préserver le 16:9)
+      const naturalHeight = Math.max(700, content.offsetHeight || 0, content.scrollHeight || 0);
+
+      const availableWidth = Math.max(20, box.clientWidth - 24);
+      const availableHeight = Math.max(20, box.clientHeight - 24);
+
+      // Calcul de l'échelle assurant que largeur et hauteur sont TOUTES LES DEUX 100% contenues
+      const scale = Math.min(availableWidth / contentWidth, availableHeight / naturalHeight);
+      content.style.transform = 'scale(' + Math.max(scale, 0.05) + ')';
     }
 
     function updateUI(idx, notify = true) {
@@ -496,6 +507,12 @@ function populateSpeakerWindow(speakerWindow) {
 
       scaleElement('currentBox', 'currentSlideContent');
       scaleElement('nextBox', 'nextSlideContent');
+
+      // Deuxième passe dans une frame suivante pour garantir la mesure post-rendu
+      requestAnimationFrame(() => {
+        scaleElement('currentBox', 'currentSlideContent');
+        scaleElement('nextBox', 'nextSlideContent');
+      });
 
       if (notify) sendSlideChange(activeIdx);
     }
