@@ -15,9 +15,25 @@ function populateSpeakerWindow(speakerWindow) {
                         document.body.classList.contains('theme-light') ||
                         document.documentElement.classList.contains('theme-light');
 
+  function lightenColor(col, percent) {
+    if (!col || typeof col !== 'string' || !col.startsWith('#')) return col || '#FF2A2A';
+    let num = parseInt(col.replace('#', ''), 16);
+    if (isNaN(num)) return col;
+    let r = (num >> 16) + Math.round(255 * (percent / 100));
+    let g = ((num >> 8) & 0x00FF) + Math.round(255 * (percent / 100));
+    let b = (num & 0x0000FF) + Math.round(255 * (percent / 100));
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  const containerEl = document.querySelector('.deck-container');
   const currentAccentColor = localStorage.getItem('deck_accent_color') ||
+    (containerEl && getComputedStyle(containerEl).getPropertyValue('--accent-primary').trim()) ||
     getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() ||
     '#E50914';
+  const currentAccentHover = lightenColor(currentAccentColor, 16);
 
   // 1. Récupération des styles inline éventuels
   const parentStyles = Array.from(document.querySelectorAll('style')).map(s => s.innerHTML).join('\n');
@@ -37,6 +53,8 @@ function populateSpeakerWindow(speakerWindow) {
       title: s.getAttribute('data-title') || `Slide ${idx + 1}`,
       notes: s.getAttribute('data-notes') || 'Aucune note disponible.',
       theme: slideTheme,
+      accent: s.getAttribute('data-accent') || '',
+      accentHover: s.getAttribute('data-accent-hover') || '',
       html: s.querySelector('.slide-content')?.innerHTML || ''
     });
   });
@@ -59,8 +77,8 @@ function populateSpeakerWindow(speakerWindow) {
 
     /* VARIABLES SPÉCIFIQUES CONSOLE PRÉSENTATEUR (SOMBRE & CLAIR) */
     :root {
-      --accent-primary: ;
-      --accent-hover: ;
+      --accent-primary: ${currentAccentColor};
+      --accent-hover: ${currentAccentHover};
     }
 
     :root, body.theme-dark {
@@ -129,7 +147,7 @@ function populateSpeakerWindow(speakerWindow) {
       font-family: inherit;
     }
     .sp-btn:hover { background: var(--sp-border); }
-    .sp-btn.primary { background: var(--accent-primary, #15803D); border-color: var(--accent-primary, #15803D); color: #FFF; }
+    .sp-btn.primary { background: var(--accent-primary, #E50914); border-color: var(--accent-primary, #E50914); color: #FFF; }
     .sp-btn.primary:hover { opacity: 0.9; }
 
     main.sp-main {
@@ -265,7 +283,7 @@ function populateSpeakerWindow(speakerWindow) {
 <body class="${isParentLight ? 'theme-light' : 'theme-dark'}">
   <header class="sp-header">
     <div style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.92rem; display: flex; align-items: center; gap: 0.6rem;">
-      <span>CONSOLE <span style="color: var(--accent-primary, #15803D);">PRÉSENTATEUR</span></span>
+      <span>CONSOLE <span style="color: var(--accent-primary, #E50914);">PRÉSENTATEUR</span></span>
       <button id="spThemeToggleBtn" class="sp-btn" title="Basculer Mode Clair / Sombre de la console">
         ${isParentLight ? '🌙' : '☀️'}
       </button>
@@ -301,7 +319,7 @@ function populateSpeakerWindow(speakerWindow) {
       <div class="sp-panel" style="flex: 0.75;">
         <div class="sp-panel-header">
           <span>Slide Suivante (Next)</span>
-          <span id="nextSlideTitleTxt" style="color: var(--accent-primary, #15803D); font-weight: 700;">-</span>
+          <span id="nextSlideTitleTxt" style="color: var(--accent-primary, #E50914); font-weight: 700;">-</span>
         </div>
         <div class="sp-preview-box" id="nextBox">
           <div id="nextSlideContent" class="sp-preview-inner slide-content"></div>
@@ -335,6 +353,25 @@ function populateSpeakerWindow(speakerWindow) {
     let activeIdx = ${currentIndex};
     let currentFontSize = 1.15;
 
+    function lightenColor(col, percent) {
+      if (!col || typeof col !== 'string' || !col.startsWith('#')) return col || '#FF2A2A';
+      let num = parseInt(col.replace('#', ''), 16);
+      if (isNaN(num)) return col;
+      let r = (num >> 16) + Math.round(255 * (percent / 100));
+      let g = ((num >> 8) & 0x00FF) + Math.round(255 * (percent / 100));
+      let b = (num & 0x0000FF) + Math.round(255 * (percent / 100));
+      r = Math.min(255, Math.max(0, r));
+      g = Math.min(255, Math.max(0, g));
+      b = Math.min(255, Math.max(0, b));
+      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function setAccentColor(color) {
+      if (!color) return;
+      document.documentElement.style.setProperty('--accent-primary', color);
+      document.documentElement.style.setProperty('--accent-hover', lightenColor(color, 16));
+    }
+
     const channel = new BroadcastChannel('deck_channel_sync');
     channel.onmessage = (e) => {
       if (e.data) {
@@ -342,8 +379,7 @@ function populateSpeakerWindow(speakerWindow) {
           setConsoleTheme(e.data.theme);
         }
         if (e.data.type === 'accentColor' && e.data.color) {
-          document.documentElement.style.setProperty('--accent-primary', e.data.color);
-          document.documentElement.style.setProperty('--accent-hover', e.data.color);
+          setAccentColor(e.data.color);
         }
         if (typeof e.data.slideIndex === 'number') {
           updateUI(e.data.slideIndex, false);
@@ -357,6 +393,9 @@ function populateSpeakerWindow(speakerWindow) {
       }
       if (e.key === 'deck_sync_theme' && e.newValue !== null) {
         setConsoleTheme(e.newValue);
+      }
+      if ((e.key === 'deck_sync_accent_color' || e.key === 'deck_accent_color') && e.newValue) {
+        setAccentColor(e.newValue);
       }
     });
 
@@ -420,6 +459,13 @@ function populateSpeakerWindow(speakerWindow) {
       const curTheme = sData.theme || (document.body.classList.contains('theme-light') ? 'light' : 'dark');
       curElem.className = 'sp-preview-inner slide-content ' + (curTheme === 'light' ? 'theme-light' : 'theme-dark');
       curElem.setAttribute('data-theme', curTheme);
+      if (sData.accent) {
+        curElem.style.setProperty('--accent-primary', sData.accent);
+        curElem.style.setProperty('--accent-hover', sData.accentHover || lightenColor(sData.accent, 16));
+      } else {
+        curElem.style.removeProperty('--accent-primary');
+        curElem.style.removeProperty('--accent-hover');
+      }
       curElem.innerHTML = sData.html;
 
       document.getElementById('speakerNotesArea').textContent = sData.notes;
@@ -431,11 +477,20 @@ function populateSpeakerWindow(speakerWindow) {
         const nextTheme = nextData.theme || curTheme;
         nextElem.className = 'sp-preview-inner slide-content ' + (nextTheme === 'light' ? 'theme-light' : 'theme-dark');
         nextElem.setAttribute('data-theme', nextTheme);
+        if (nextData.accent) {
+          nextElem.style.setProperty('--accent-primary', nextData.accent);
+          nextElem.style.setProperty('--accent-hover', nextData.accentHover || lightenColor(nextData.accent, 16));
+        } else {
+          nextElem.style.removeProperty('--accent-primary');
+          nextElem.style.removeProperty('--accent-hover');
+        }
         document.getElementById('nextSlideTitleTxt').textContent = nextData.title;
         nextElem.innerHTML = nextData.html;
       } else {
         document.getElementById('nextSlideTitleTxt').textContent = 'Fin de la présentation';
         nextElem.className = 'sp-preview-inner slide-content ' + (curTheme === 'light' ? 'theme-light' : 'theme-dark');
+        nextElem.style.removeProperty('--accent-primary');
+        nextElem.style.removeProperty('--accent-hover');
         nextElem.innerHTML = '<div style="text-align:center;color:var(--sp-text-muted);font-size:2rem;font-weight:800;padding-top:200px;">FIN DES SLIDES</div>';
       }
 
@@ -509,7 +564,7 @@ function showPopupBlockedModal() {
     modal.id = 'popupBlockedModal';
     modal.className = 'modal-overlay open';
     modal.innerHTML = `
-      <div class="x-card" style="max-width: 540px; width: 92vw; border: 1.5px solid var(--accent-primary, #15803D); box-shadow: 0 10px 45px rgba(0,0,0,0.25); text-align: center; padding: 1.8rem;">
+      <div class="x-card" style="max-width: 540px; width: 92vw; border: 1.5px solid var(--accent-primary, #E50914); box-shadow: 0 10px 45px rgba(0,0,0,0.25); text-align: center; padding: 1.8rem;">
         <div style="font-size: 2.2rem; margin-bottom: 0.6rem;">🖥️</div>
         <h3 style="font-size: 1.3rem; color: var(--text-main); margin-bottom: 0.6rem;">Mode Présentateur Dual-Screen</h3>
         <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 1.3rem;">
