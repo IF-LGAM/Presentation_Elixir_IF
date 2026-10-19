@@ -176,6 +176,64 @@ window.DeckEngine.Navigation = (function () {
     });
   }
 
+  function isFullscreenActive() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.body.classList.contains('is-fullscreen'));
+  }
+
+  function initMouse() {
+    // 1. Clic gauche pour avancer en mode plein écran (type télécommande/clicker)
+    window.addEventListener('click', (e) => {
+      if (!isFullscreenActive()) return;
+
+      // Si une modale ou un panneau latéral est ouvert, ne pas changer de slide
+      const overviewModal = document.getElementById('overviewModal');
+      const shortcutsModal = document.getElementById('shortcutsModal');
+      const notesDrawer = document.getElementById('notesDrawer');
+      if (overviewModal?.classList.contains('open') || 
+          shortcutsModal?.classList.contains('open') || 
+          notesDrawer?.classList.contains('open')) {
+        return;
+      }
+
+      // Si l'utilisateur est en train de sélectionner du texte, ne pas changer de slide
+      const selectedText = window.getSelection()?.toString().trim();
+      if (selectedText && selectedText.length > 0) return;
+
+      // Ignorer si le clic cible un élément interactif (liens, boutons, quiz, inputs)
+      const interactive = e.target.closest('a, button, input, textarea, select, .quiz-opt-btn, .ctrl-btn, .palette-dot, [role="button"], .repo-link, .btn-action, .link-card');
+      if (interactive) return;
+
+      // Clic gauche principal en plein écran -> slide suivante
+      if (e.button === 0) {
+        nextSlide();
+      }
+    });
+
+    // 2. Molette de la souris / Trackpad avec debounce en mode plein écran
+    let lastWheelTime = 0;
+    window.addEventListener('wheel', (e) => {
+      if (!isFullscreenActive()) return;
+
+      const overviewModal = document.getElementById('overviewModal');
+      const notesDrawer = document.getElementById('notesDrawer');
+      if (overviewModal?.classList.contains('open') || notesDrawer?.classList.contains('open')) {
+        return;
+      }
+
+      const now = Date.now();
+      if (now - lastWheelTime < 450) return;
+
+      if (Math.abs(e.deltaY) > 35) {
+        lastWheelTime = now;
+        if (e.deltaY > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    }, { passive: true });
+  }
+
   function init() {
     slides = document.querySelectorAll('.slide');
     totalSlides = slides.length;
@@ -187,6 +245,7 @@ window.DeckEngine.Navigation = (function () {
 
     initChannel();
     initKeyboard();
+    initMouse();
 
     // Boutons de navigation directe
     document.getElementById('prevBtn')?.addEventListener('click', prevSlide);

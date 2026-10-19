@@ -251,6 +251,9 @@ window.DeckEngine.DOM = (function () {
               <span>Export PDF 16:9</span> <kbd>P</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center; grid-column: span 2;">
+              <span>En Plein Écran : Slide suivante / précédente</span> <kbd>Clic / Molette</kbd>
+            </div>
+            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center; grid-column: span 2;">
               <span>Aide Raccourcis</span> <kbd>?</kbd>
             </div>
           </div>
