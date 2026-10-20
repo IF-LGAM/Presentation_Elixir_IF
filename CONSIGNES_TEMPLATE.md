@@ -115,12 +115,29 @@ Le moteur de présentation (`Deck Engine`) applique le thème de manière hiéra
 
 > **À REMPLIR : Insérez ci-dessous le contenu spécifique de votre sujet.**
 
-### Métadonnées Générales :
+### 3.1 Indication de Densité & Style de Contenu (Volume Textuel vs Pur Support)
+
+Avant de rédiger ou de générer les diapositives, vous **DEVEZ définir le niveau de densité textuelle souhaité**. Ce choix fondamental régit la façon dont l'information est répartie entre l'écran visible et les notes d'orateur :
+
+| Niveau de Densité | Contexte & Intention | Rendu Visible à l'Écran | Déport dans les Notes d'Orateur (`data-notes`) |
+| :--- | :--- | :--- | :--- |
+| **`pur-support`** *(Minimal)* | **Soutenance orale, Conférence, Keynote, Pitch**<br>Le public doit écouter l'orateur et non lire l'écran. | **Ultra-épuré & Visuel** :<br>• 1 seule idée maîtresse par slide.<br>• Mots-clés percutants (3 à 6 mots maximum par bloc).<br>• Zéro phrase rédigée avec verbe conjugué.<br>• Accent mis sur les chiffres géants (`.x-card.metric`), icônes et schémas (`.schema-box`). | **TRÈS FOURNI & EXPLICITE (Obligatoire)** :<br>Tout le discours oral, les explications complètes, les transitions et les exemples sont rédigés dans `data-notes="..."` pour être lus dans la **Console Présentateur (`S`)**. |
+| **`balanced`** *(Modéré / Standard)* | **Présentation technique d'équipe, Réunion de cadrage**<br>Équilibre entre clarté visuelle et autonomie de lecture. | **Synthétique & Structuré** :<br>• Puces courtes formulées sous forme de constats clés (1 ligne max).<br>• Cartes modulaires (`.x-card`) bien compartimentées.<br>• 1 boîte de synthèse concise (`.summary-box`). | **Équilibré** :<br>Points d'appui oraux, détails complémentaires, arguments de relance et réponses aux questions anticipées. |
+| **`dense`** *(Documentation / Référence)* | **Support de cours, Polycopié de référence, Livrable sans orateur**<br>Le diaporama doit être totalement auto-porteur. | **Complet & Détaillé** *(ex: `presentation.html`)* :<br>• Paragraphes explicatifs complets, définitions précises.<br>• Listes à puces circonstanciées, démonstrations et synthèses exhaustives.<br>• Plusieurs niveaux d'information par diapositive.<br>• *(Pris en charge automatiquement sans débordement par `deck-fit.js`)*. | **Complémentaire** :<br>Précisions de timing, références bibliographiques ou coulisses du projet. |
+
+> 💡 **RÈGLES D'OR POUR LA GÉNÉRATION DES SLIDES** :
+> 1. **Si le mode `pur-support` est sélectionné** : **INTERDICTION de surcharger l'écran**. Toute phrase explicative doit être impérativement résumée en 1 mot-clé ou 1 chiffre sur la slide, et la phrase complète doit être déplacée dans l'attribut `data-notes` de la slide.
+> 2. **Si le mode `dense` est sélectionné** : Utilisez la hiérarchie des composants de [`COMPOSANTS_DICTIONNAIRE.md`](COMPOSANTS_DICTIONNAIRE.md) (`.split-2`, `.timeline-milestones`, `.x-card.featured`, `.bullet-check`, `.summary-box`) pour maintenir une lisibilité optimale malgré la richesse du contenu.
+
+---
+
+### 3.2 Métadonnées Générales :
 - **Titre de la présentation** : Elixir & Phoenix : Le Web Haute Performance et Temps Réel
 - **Sous-titre / Thème** : Module Infrastructures & Frameworks — Master MIAGE
 - **Durée totale estimée** : 60 min (Atelier complet de présentation)
 - **Public visé** : Étudiants MIAGE
 - **Thème visuel global** : dark
+- **Densité de contenu** : pur-support *(choix parmi : `pur-support` | `balanced` | `dense`)*
 
 > ⚠️ **RÈGLE CRITIQUE POUR LA GÉNÉRATION DES SLIDES** :
 > - **Le thème visuel est défini UNE SEULE FOIS au global** (dans les métadonnées et sur `<div class="deck-container" data-theme="dark|light">`).
