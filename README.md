@@ -25,10 +25,18 @@ Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HT
   - Synchronisation bidirectionnelle en temps réel via l'API native `BroadcastChannel` (avec fallback automatique sur `localStorage`).
   - Aperçu direct de la slide actuelle et de la slide suivante (*Next Slide*).
   - Chronomètre de séance (Play/Pause/Reset), horloge réelle et réglage dynamique de la taille des notes (`A+` / `A-`).
-- **Bascule Thème Clair / Sombre (`T`)** :
-  - Adaptation automatique ou bascule manuelle en un clic (mode sombre contrasté `#141414` ou mode clair épuré `#F8FAFC`).
+- **Catalogue des 7 Ambiances Visuelles (`T`)** :
+  - Menu popover interactif ou raccourci clavier `T` pour alterner séquentiellement entre 7 thèmes complets :
+    1. **Midnight Charcoal** (Défaut sombre contrasté `#141414`)
+    2. **Clean Slate** (Clair épuré papier & bureau `#F8FAFC`)
+    3. **Polar Frost** (Nordic bleu ardoise glacial `#0F172A`)
+    4. **Neon Matrix** (Cyberpunk noir profond & vert fluo `#07090E`)
+    5. **Deep Forest** (Emerald vert végétal sombre `#06150F`)
+    6. **Corporate Navy** (Bleu marine institutionnel `#080E1E`)
+    7. **Editorial Warm** (Sepia café & cuivre chaud `#191614`)
+  - Synchronisation temps réel avec la console présentateur et persistance automatique.
 - **Personnalisation en direct de la Couleur d'Accent (`C`)** :
-  - Palette de couleurs vibrantes (Rouge Crimson, Bleu Cobalt, Vert Émeraude, Violet Cyber, Ambre, Rose Néon, Cyan) ou sélecteur libre sur mesure.
+  - Palette de couleurs vibrantes ou ajout libre au format hexadécimal `#HEX` avec sauvegarde dans "Mes couleurs".
   - Persistance automatique en `localStorage`, support des paramètres URL (`?color=...`) et synchronisation instantanée avec la console présentateur.
 - **Tiroir de Notes Écran Unique (`N`)** :
   - Panneau latéral rétractable pour consulter les notes de chaque slide lorsqu'aucun second écran n'est branché.
@@ -69,7 +77,11 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 | :--- | :--- |
 | `→` / `Espace` / `PageDown` | Slide suivante |
 | `←` / `PageUp` | Slide précédente |
+| `Clic gauche` *(en plein écran)* | Slide suivante (style télécommande) |
+| `Molette` *(en plein écran)* | Slide suivante / précédente |
 | `Home` / `End` | Première / Dernière slide |
+| `T` | Changer d'ambiance visuelle (parmi les 7 thèmes) |
+| `C` | Changer la couleur d'accentuation (ou ouvrir la palette) |
 | `S` | Ouvrir la Console Présentateur (dual-screen) |
 | `N` | Ouvrir/Fermer le panneau latéral de notes (écran simple) |
 | `O` / `Échap` | Vue globale en grille (*Overview*) |
@@ -84,12 +96,28 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 ```text
 .
 ├── CONSIGNES_TEMPLATE.md          # Schéma et prompt-type pour la génération du contenu
+├── COMPOSANTS_DICTIONNAIRE.md     # Référentiel des balises et structures graphiques
 ├── template_presentation.html     # Squelette HTML épuré des slides et composants
+├── presentation.html              # Exemple complet de présentation autonome (Elixir & Phoenix)
 ├── src/
 │   ├── css/
-│   │   └── deck.css               # Design system, layout, responsive & styles print PDF
+│   │   ├── deck.css               # Point d'entrée CSS principal (@import des sous-modules)
+│   │   ├── variables.css          # Design tokens, variables CSS & transitions de thème
+│   │   ├── base.css               # Reset global & échelle typographique responsive
+│   │   ├── layout.css             # Conteneur deck, viewport et disposition des slides 16:9
+│   │   ├── chrome.css             # Header, footer, barre de progression & boutons de commande
+│   │   ├── components.css         # Dictionnaire des composants (cartes, grilles, code, quizz...)
+│   │   ├── modals.css             # Tiroir de notes, modales d'aide & vue grille (Overview)
+│   │   ├── color-picker.css       # Palette d'accent dynamique & popover de couleur
+│   │   └── print.css              # Export PDF 16:9 paysage & styles d'impression
 │   └── js/
-│       ├── deck.js                # Moteur de navigation, raccourcis clavier & modales
+│       ├── deck.js                # Orchestrateur principal du Deck Engine
+│       ├── deck-dom.js            # Injection dynamique du chrome d'interface et des modales
+│       ├── deck-navigation.js     # Moteur de navigation, raccourcis clavier & BroadcastChannel
+│       ├── deck-theme.js          # Gestion des thèmes Clair / Sombre & auto-détection
+│       ├── deck-palette.js        # Gestionnaire de couleur d'accent (hex, pipette, presets)
+│       ├── deck-overview.js       # Vue d'ensemble en grille avec aperçus miniatures 16:9
+│       ├── deck-print.js          # Synchronisation des thèmes avant export PDF (Print)
 │       ├── speaker.js             # Console présentateur dual-screen & synchro BroadcastChannel
 │       └── interactive.js         # Widgets interactifs (Quizz cliquable, copie terminal)
 └── README.md                      # Documentation du projet

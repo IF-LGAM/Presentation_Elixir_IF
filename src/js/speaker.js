@@ -9,15 +9,43 @@ function populateSpeakerWindow(speakerWindow) {
   const totalSlides = slides.length;
   const currentIndex = window.getCurrentSlideIndex ? window.getCurrentSlideIndex() : 0;
 
-  // Détection du thème du document parent
-  const isParentLight = document.querySelector('.deck-container')?.classList.contains('theme-light') ||
-                        document.querySelector('.deck-container')?.getAttribute('data-theme') === 'light' ||
-                        document.body.classList.contains('theme-light') ||
-                        document.documentElement.classList.contains('theme-light');
+  // Détection du thème du document parent (support des 7 ambiances)
+  const KNOWN_THEMES = ['dark', 'light', 'nordic', 'cyberpunk', 'emerald', 'navy', 'sepia'];
+  const THEME_ICONS = {
+    dark: '🌑',
+    light: '☀️',
+    nordic: '❄️',
+    cyberpunk: '⚡',
+    emerald: '🌲',
+    navy: '⚓',
+    sepia: '☕'
+  };
 
+  const detectedTheme = document.querySelector('.deck-container')?.getAttribute('data-theme') ||
+                        document.body.getAttribute('data-theme') ||
+                        localStorage.getItem('deck_user_theme') ||
+                        (document.body.classList.contains('theme-light') ? 'light' : 'dark');
+  const activeParentTheme = KNOWN_THEMES.includes(detectedTheme) ? detectedTheme : 'dark';
+
+  function lightenColor(col, percent) {
+    if (!col || typeof col !== 'string' || !col.startsWith('#')) return col || '#FF2A2A';
+    let num = parseInt(col.replace('#', ''), 16);
+    if (isNaN(num)) return col;
+    let r = (num >> 16) + Math.round(255 * (percent / 100));
+    let g = ((num >> 8) & 0x00FF) + Math.round(255 * (percent / 100));
+    let b = (num & 0x0000FF) + Math.round(255 * (percent / 100));
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  const containerEl = document.querySelector('.deck-container');
   const currentAccentColor = localStorage.getItem('deck_accent_color') ||
+    (containerEl && getComputedStyle(containerEl).getPropertyValue('--accent-primary').trim()) ||
     getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() ||
     '#E50914';
+  const currentAccentHover = lightenColor(currentAccentColor, 16);
 
   // 1. Récupération des styles inline éventuels
   const parentStyles = Array.from(document.querySelectorAll('style')).map(s => s.innerHTML).join('\n');
@@ -37,6 +65,8 @@ function populateSpeakerWindow(speakerWindow) {
       title: s.getAttribute('data-title') || `Slide ${idx + 1}`,
       notes: s.getAttribute('data-notes') || 'Aucune note disponible.',
       theme: slideTheme,
+      accent: s.getAttribute('data-accent') || '',
+      accentHover: s.getAttribute('data-accent-hover') || '',
       html: s.querySelector('.slide-content')?.innerHTML || ''
     });
   });
@@ -59,30 +89,19 @@ function populateSpeakerWindow(speakerWindow) {
 
     /* VARIABLES SPÉCIFIQUES CONSOLE PRÉSENTATEUR (SOMBRE & CLAIR) */
     :root {
-      --accent-primary: ;
-      --accent-hover: ;
+      --accent-primary: ${currentAccentColor};
+      --accent-hover: ${currentAccentHover};
     }
 
-    :root, body.theme-dark {
-      --sp-bg: #121212;
-      --sp-panel: #1A1A1A;
-      --sp-panel-header: #161616;
-      --sp-border: #333333;
-      --sp-text: #FFFFFF;
-      --sp-text-muted: #888888;
-      --sp-box-bg: #0A0A0A;
-      --sp-inner-border: #2B2B2B;
-    }
-
-    body.theme-light {
-      --sp-bg: #F1F5F9;
-      --sp-panel: #FFFFFF;
-      --sp-panel-header: #F8FAFC;
-      --sp-border: #CBD5E1;
-      --sp-text: #0F172A;
-      --sp-text-muted: #475569;
-      --sp-box-bg: #E2E8F0;
-      --sp-inner-border: #CBD5E1;
+    :root {
+      --sp-bg: var(--bg-dark, #121212);
+      --sp-panel: var(--card-bg, #1A1A1A);
+      --sp-panel-header: var(--card-hover, #161616);
+      --sp-border: var(--border-dark, #333333);
+      --sp-text: var(--text-main, #FFFFFF);
+      --sp-text-muted: var(--text-muted, #888888);
+      --sp-box-bg: var(--code-bg, #0A0A0A);
+      --sp-inner-border: var(--border-dark, #2B2B2B);
     }
 
     html, body {
@@ -129,7 +148,7 @@ function populateSpeakerWindow(speakerWindow) {
       font-family: inherit;
     }
     .sp-btn:hover { background: var(--sp-border); }
-    .sp-btn.primary { background: var(--accent-primary, #15803D); border-color: var(--accent-primary, #15803D); color: #FFF; }
+    .sp-btn.primary { background: var(--accent-primary, #E50914); border-color: var(--accent-primary, #E50914); color: #FFF; }
     .sp-btn.primary:hover { opacity: 0.9; }
 
     main.sp-main {
@@ -182,19 +201,21 @@ function populateSpeakerWindow(speakerWindow) {
 
     .sp-preview-inner {
       width: 1240px;
-      height: 700px;
+      min-height: 700px;
+      height: auto;
       position: absolute;
       transform-origin: center center;
       pointer-events: none;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 2rem;
+      padding: 1.5rem 2.2rem;
       box-sizing: border-box;
       border-radius: 8px;
       border: 1px solid var(--sp-inner-border);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       transition: background-color 0.25s ease, color 0.25s ease;
+      overflow: hidden;
     }
 
     /* Adaptation dynamique selon le mode clair/sombre de la slide */
@@ -262,12 +283,12 @@ function populateSpeakerWindow(speakerWindow) {
     }
   </style>
 </head>
-<body class="${isParentLight ? 'theme-light' : 'theme-dark'}">
+<body class="theme-${activeParentTheme}" data-theme="${activeParentTheme}">
   <header class="sp-header">
     <div style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.92rem; display: flex; align-items: center; gap: 0.6rem;">
-      <span>CONSOLE <span style="color: var(--accent-primary, #15803D);">PRÉSENTATEUR</span></span>
-      <button id="spThemeToggleBtn" class="sp-btn" title="Basculer Mode Clair / Sombre de la console">
-        ${isParentLight ? '🌙' : '☀️'}
+      <span>CONSOLE <span style="color: var(--accent-primary, #E50914);">PRÉSENTATEUR</span></span>
+      <button id="spThemeToggleBtn" class="sp-btn" title="Changer l'ambiance visuelle de la console">
+        ${THEME_ICONS[activeParentTheme] || '🌑'}
       </button>
     </div>
     
@@ -301,7 +322,7 @@ function populateSpeakerWindow(speakerWindow) {
       <div class="sp-panel" style="flex: 0.75;">
         <div class="sp-panel-header">
           <span>Slide Suivante (Next)</span>
-          <span id="nextSlideTitleTxt" style="color: var(--accent-primary, #15803D); font-weight: 700;">-</span>
+          <span id="nextSlideTitleTxt" style="color: var(--accent-primary, #E50914); font-weight: 700;">-</span>
         </div>
         <div class="sp-preview-box" id="nextBox">
           <div id="nextSlideContent" class="sp-preview-inner slide-content"></div>
@@ -335,6 +356,25 @@ function populateSpeakerWindow(speakerWindow) {
     let activeIdx = ${currentIndex};
     let currentFontSize = 1.15;
 
+    function lightenColor(col, percent) {
+      if (!col || typeof col !== 'string' || !col.startsWith('#')) return col || '#FF2A2A';
+      let num = parseInt(col.replace('#', ''), 16);
+      if (isNaN(num)) return col;
+      let r = (num >> 16) + Math.round(255 * (percent / 100));
+      let g = ((num >> 8) & 0x00FF) + Math.round(255 * (percent / 100));
+      let b = (num & 0x0000FF) + Math.round(255 * (percent / 100));
+      r = Math.min(255, Math.max(0, r));
+      g = Math.min(255, Math.max(0, g));
+      b = Math.min(255, Math.max(0, b));
+      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function setAccentColor(color) {
+      if (!color) return;
+      document.documentElement.style.setProperty('--accent-primary', color);
+      document.documentElement.style.setProperty('--accent-hover', lightenColor(color, 16));
+    }
+
     const channel = new BroadcastChannel('deck_channel_sync');
     channel.onmessage = (e) => {
       if (e.data) {
@@ -342,8 +382,7 @@ function populateSpeakerWindow(speakerWindow) {
           setConsoleTheme(e.data.theme);
         }
         if (e.data.type === 'accentColor' && e.data.color) {
-          document.documentElement.style.setProperty('--accent-primary', e.data.color);
-          document.documentElement.style.setProperty('--accent-hover', e.data.color);
+          setAccentColor(e.data.color);
         }
         if (typeof e.data.slideIndex === 'number') {
           updateUI(e.data.slideIndex, false);
@@ -358,14 +397,31 @@ function populateSpeakerWindow(speakerWindow) {
       if (e.key === 'deck_sync_theme' && e.newValue !== null) {
         setConsoleTheme(e.newValue);
       }
+      if ((e.key === 'deck_sync_accent_color' || e.key === 'deck_accent_color') && e.newValue) {
+        setAccentColor(e.newValue);
+      }
     });
 
+    const KNOWN_THEMES = ['dark', 'light', 'nordic', 'cyberpunk', 'emerald', 'navy', 'sepia'];
+    const THEME_ICONS = {
+      dark: '🌑',
+      light: '☀️',
+      nordic: '❄️',
+      cyberpunk: '⚡',
+      emerald: '🌲',
+      navy: '⚓',
+      sepia: '☕'
+    };
+
     function setConsoleTheme(theme) {
-      const isLight = theme === 'light';
-      document.body.classList.toggle('theme-light', isLight);
-      document.body.classList.toggle('theme-dark', !isLight);
+      const activeTheme = KNOWN_THEMES.includes(theme) ? theme : 'dark';
+      KNOWN_THEMES.forEach(function (t) {
+        document.body.classList.remove('theme-' + t);
+      });
+      document.body.classList.add('theme-' + activeTheme);
+      document.body.setAttribute('data-theme', activeTheme);
       const btn = document.getElementById('spThemeToggleBtn');
-      if (btn) btn.textContent = isLight ? '🌙' : '☀️';
+      if (btn) btn.textContent = THEME_ICONS[activeTheme] || '🌑';
       scaleElement('currentBox', 'currentSlideContent');
       scaleElement('nextBox', 'nextSlideContent');
     }
@@ -373,11 +429,12 @@ function populateSpeakerWindow(speakerWindow) {
     const spThemeBtn = document.getElementById('spThemeToggleBtn');
     if (spThemeBtn) {
       spThemeBtn.onclick = () => {
-        const isCurrentlyLight = document.body.classList.contains('theme-light');
-        const newTheme = isCurrentlyLight ? 'dark' : 'light';
-        setConsoleTheme(newTheme);
-        channel.postMessage({ theme: newTheme });
-        localStorage.setItem('deck_sync_theme', newTheme);
+        const curTheme = document.body.getAttribute('data-theme') || 'dark';
+        const curIdx = KNOWN_THEMES.indexOf(curTheme);
+        const nextTheme = KNOWN_THEMES[(curIdx + 1) % KNOWN_THEMES.length];
+        setConsoleTheme(nextTheme);
+        channel.postMessage({ theme: nextTheme });
+        localStorage.setItem('deck_sync_theme', nextTheme);
       };
     }
 
@@ -401,8 +458,17 @@ function populateSpeakerWindow(speakerWindow) {
       const box = document.getElementById(boxId);
       const content = document.getElementById(contentId);
       if (!box || !content) return;
-      const scale = Math.min((box.clientWidth - 30) / 1240, (box.clientHeight - 30) / 700);
-      content.style.transform = 'scale(' + Math.max(scale, 0.1) + ')';
+
+      const contentWidth = 1240;
+      // Mesure de la hauteur naturelle réelle requise par le contenu (plancher à 700px pour préserver le 16:9)
+      const naturalHeight = Math.max(700, content.offsetHeight || 0, content.scrollHeight || 0);
+
+      const availableWidth = Math.max(20, box.clientWidth - 24);
+      const availableHeight = Math.max(20, box.clientHeight - 24);
+
+      // Calcul de l'échelle assurant que largeur et hauteur sont TOUTES LES DEUX 100% contenues
+      const scale = Math.min(availableWidth / contentWidth, availableHeight / naturalHeight);
+      content.style.transform = 'scale(' + Math.max(scale, 0.05) + ')';
     }
 
     function updateUI(idx, notify = true) {
@@ -420,6 +486,13 @@ function populateSpeakerWindow(speakerWindow) {
       const curTheme = sData.theme || (document.body.classList.contains('theme-light') ? 'light' : 'dark');
       curElem.className = 'sp-preview-inner slide-content ' + (curTheme === 'light' ? 'theme-light' : 'theme-dark');
       curElem.setAttribute('data-theme', curTheme);
+      if (sData.accent) {
+        curElem.style.setProperty('--accent-primary', sData.accent);
+        curElem.style.setProperty('--accent-hover', sData.accentHover || lightenColor(sData.accent, 16));
+      } else {
+        curElem.style.removeProperty('--accent-primary');
+        curElem.style.removeProperty('--accent-hover');
+      }
       curElem.innerHTML = sData.html;
 
       document.getElementById('speakerNotesArea').textContent = sData.notes;
@@ -431,16 +504,31 @@ function populateSpeakerWindow(speakerWindow) {
         const nextTheme = nextData.theme || curTheme;
         nextElem.className = 'sp-preview-inner slide-content ' + (nextTheme === 'light' ? 'theme-light' : 'theme-dark');
         nextElem.setAttribute('data-theme', nextTheme);
+        if (nextData.accent) {
+          nextElem.style.setProperty('--accent-primary', nextData.accent);
+          nextElem.style.setProperty('--accent-hover', nextData.accentHover || lightenColor(nextData.accent, 16));
+        } else {
+          nextElem.style.removeProperty('--accent-primary');
+          nextElem.style.removeProperty('--accent-hover');
+        }
         document.getElementById('nextSlideTitleTxt').textContent = nextData.title;
         nextElem.innerHTML = nextData.html;
       } else {
         document.getElementById('nextSlideTitleTxt').textContent = 'Fin de la présentation';
         nextElem.className = 'sp-preview-inner slide-content ' + (curTheme === 'light' ? 'theme-light' : 'theme-dark');
+        nextElem.style.removeProperty('--accent-primary');
+        nextElem.style.removeProperty('--accent-hover');
         nextElem.innerHTML = '<div style="text-align:center;color:var(--sp-text-muted);font-size:2rem;font-weight:800;padding-top:200px;">FIN DES SLIDES</div>';
       }
 
       scaleElement('currentBox', 'currentSlideContent');
       scaleElement('nextBox', 'nextSlideContent');
+
+      // Deuxième passe dans une frame suivante pour garantir la mesure post-rendu
+      requestAnimationFrame(() => {
+        scaleElement('currentBox', 'currentSlideContent');
+        scaleElement('nextBox', 'nextSlideContent');
+      });
 
       if (notify) sendSlideChange(activeIdx);
     }
@@ -509,7 +597,7 @@ function showPopupBlockedModal() {
     modal.id = 'popupBlockedModal';
     modal.className = 'modal-overlay open';
     modal.innerHTML = `
-      <div class="x-card" style="max-width: 540px; width: 92vw; border: 1.5px solid var(--accent-primary, #15803D); box-shadow: 0 10px 45px rgba(0,0,0,0.25); text-align: center; padding: 1.8rem;">
+      <div class="x-card" style="max-width: 540px; width: 92vw; border: 1.5px solid var(--accent-primary, #E50914); box-shadow: 0 10px 45px rgba(0,0,0,0.25); text-align: center; padding: 1.8rem;">
         <div style="font-size: 2.2rem; margin-bottom: 0.6rem;">🖥️</div>
         <h3 style="font-size: 1.3rem; color: var(--text-main); margin-bottom: 0.6rem;">Mode Présentateur Dual-Screen</h3>
         <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 1.3rem;">

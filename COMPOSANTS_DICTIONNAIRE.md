@@ -14,6 +14,7 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 | `grid-3` | `<div class="grid-3">` | Grille à 3 colonnes (triades, processus en 3 étapes). |
 | `grid-4` | `<div class="grid-4">` | Grille à 4 colonnes (piliers, métriques, KPIs). |
 | `split-code` | `<div class="split-code">` | Disposition 50/50 : explication conceptuelle à gauche, code à droite. |
+| `split-schema` | `<div class="split-schema">` | Disposition 50/50 : explications conceptuelles à gauche, grand schéma ou architecture à droite. |
 | `hero` | `<div class="slide-hero">` | Mise en page centrée avec espacements aérés pour slide de titre. |
 
 ---
@@ -106,19 +107,31 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 
 ---
 
-## 10. Métadonnées d'Orateur & Système
+## 10. Schémas, Figures & Médias (Diagrams & Images)
+
+| Alias court | Classe / Balise HTML | Utilisation & Description |
+| :--- | :--- | :--- |
+| `schema` / `diagram` | `<div class="schema-box">` | Conteneur avec centrage, fond sombre/clair et bordure fine pour schémas d'architecture. |
+| `schema-framed` | `<div class="schema-box framed">` | Schéma avec fond blanc contrasté (recommandé pour les schémas exportés sur fond blanc). |
+| `schema-img` | `<img class="schema-img" src="...">` | Image calibrée en hauteur (`object-fit: contain;`) pour garantir zéro débordement 16:9. |
+| `caption` | `<div class="schema-caption">` | Légende descriptive sous le schéma ou la figure. |
+| `split-schema` | `<div class="split-schema">` | Mise en page 50/50 avec texte explicatif à gauche et grand schéma à droite. |
+
+---
+
+## 11. Métadonnées d'Orateur & Système
  
 | Alias court | Attribut / Balise | Utilisation & Description |
 | :--- | :--- | :--- |
 | `notes` | `data-notes="..."` ou `<aside class="speaker-notes">` | Notes d'orateur lues par le Speaker Engine (`S` ou tiroir `N`). |
-| `theme-global` | `data-theme="dark\|light"` sur `.deck-container` | **Thème global du deck** (sombre par défaut ou clair). |
-| `theme-slide` | `data-theme="light\|dark"` sur `.slide` | **OPTIONNEL / EXCEPTIONNEL** : surcharge ponctuelle pour une slide isolée différente du deck. |
-| `title-slide` | `<h2 class="slide-title">` | Titre standardisé en Montserrat gras avec accent vert. |
+| `theme-global` | `data-theme="dark\|light\|nordic\|cyberpunk\|emerald\|navy\|sepia"` sur `.deck-container` | **Thème global du deck** (catalogue de 7 ambiances visuelles). Touche `T` pour alterner. |
+| `theme-slide` | `data-theme="..."` sur `.slide` | **OPTIONNEL / EXCEPTIONNEL** : surcharge ponctuelle pour une slide isolée différente du deck (`dark`, `light`, `nordic`, `cyberpunk`, `emerald`, `navy`, `sepia`). |
+| `title-slide` | `<h2 class="slide-title">` | Titre standardisé en Montserrat gras avec accent dynamique. |
 | `subtitle-slide`| `<p class="slide-subtitle">` | Sous-titre explicatif en Inter ardoise moyen (`#475569`). |
 
 ---
 
-## 11. Exemples Concrets d'Intégration HTML
+## 12. Exemples Concrets d'Intégration HTML
 
 ### Exemple A : Frise chronologique à étapes (`stepper`)
 ```html
@@ -141,3 +154,32 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
     <p class="step-desc">Couvert végétal & crédits C</p>
   </div>
 </div>
+```
+
+### Exemple B : Grand Schéma Centré avec Légende (`schema-box`)
+```html
+<div class="schema-box">
+  <img src="assets/schemas/cluster-nodes.svg" alt="Architecture Cluster" class="schema-img">
+  <div class="schema-caption"><strong>Figure 1 :</strong> Topologie maillée et isolation des processus BEAM</div>
+</div>
+```
+
+### Exemple C : Disposition 50/50 Texte & Schéma (`split-schema`)
+```html
+<div class="split-schema">
+  <div>
+    <div class="x-card featured">
+      <h3>Principes de l'Arbre de Supervision</h3>
+      <ul style="padding-left: 0; margin-top: 0.5rem;">
+        <li class="bullet-check"><strong>Stratégie One for One :</strong> Seul le processus défaillant est relancé.</li>
+        <li class="bullet-check"><strong>Stratégie One for All :</strong> Tout le groupe redémarre dans un état propre.</li>
+        <li class="bullet-check"><strong>Tolérance aux pannes :</strong> Zéro effet de bord sur le reste de la grappe.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="schema-box">
+    <img src="assets/schemas/supervision-tree.svg" alt="Arbre OTP" class="schema-img">
+    <div class="schema-caption">Arbre de supervision hiérarchique OTP</div>
+  </div>
+</div>
+```
