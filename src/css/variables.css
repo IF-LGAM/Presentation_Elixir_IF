@@ -1,6 +1,7 @@
 /* ==========================================================================
-   VARIABLES DU DESIGN SYSTEM & THEMES (DARK CONTRASTÉ & ACCENT ROUGE)
+   VARIABLES DU DESIGN SYSTEM & CATALOGUE DES THÈMES D'AMBIANCE
    ========================================================================== */
+
 :root {
   --accent-primary: #E50914;
   --accent-hover: #FF2A2A;
@@ -8,9 +9,15 @@
   --accent-error: #EF4444;
 }
 
+/* ==========================================================================
+   1. THÈME MIDNIGHT CHARCOAL (DÉFAUT / SOMBRE CONTRASTÉ)
+   ========================================================================== */
 :root,
 .deck-container.theme-dark,
-.deck-container[data-theme="dark"] {
+.deck-container[data-theme="dark"],
+body.theme-dark,
+body[data-theme="dark"],
+[data-theme="dark"] {
   --bg-dark: #141414;
   --card-bg: #1F1F1F;
   --card-hover: #2B2B2B;
@@ -23,7 +30,9 @@
   --footer-bg: rgba(20, 20, 20, 0.92);
 }
 
-/* Thème clair automatique : activé automatiquement sur .theme-light ou data-theme="light" */
+/* ==========================================================================
+   2. THÈME CLEAN SLATE (CLAIR ÉPURÉ / BUREAU & PAPIER)
+   ========================================================================== */
 .deck-container.theme-light,
 .deck-container[data-theme="light"],
 body.theme-light,
@@ -41,7 +50,107 @@ body[data-theme="light"],
   --footer-bg: rgba(248, 250, 252, 0.94);
 }
 
-/* Transition douce automatique entre thèmes */
+/* ==========================================================================
+   3. THÈME POLAR FROST (NORDIC / BLEU ARDOISE GLACIAL)
+   ========================================================================== */
+.deck-container.theme-nordic,
+.deck-container[data-theme="nordic"],
+body.theme-nordic,
+body[data-theme="nordic"],
+[data-theme="nordic"] {
+  --bg-dark: #0F172A;
+  --card-bg: #1E293B;
+  --card-hover: #334155;
+  --border-dark: #334155;
+  --code-bg: #090E17;
+  --text-main: #F1F5F9;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+  --header-bg: rgba(15, 23, 42, 0.94);
+  --footer-bg: rgba(15, 23, 42, 0.94);
+}
+
+/* ==========================================================================
+   4. THÈME NEON MATRIX (CYBERPUNK / NOIR PROFOND & TEINTES CYBER)
+   ========================================================================== */
+.deck-container.theme-cyberpunk,
+.deck-container[data-theme="cyberpunk"],
+body.theme-cyberpunk,
+body[data-theme="cyberpunk"],
+[data-theme="cyberpunk"] {
+  --bg-dark: #07090E;
+  --card-bg: #111622;
+  --card-hover: #192033;
+  --border-dark: #222C42;
+  --code-bg: #030407;
+  --text-main: #F0F6FC;
+  --text-muted: #8B949E;
+  --text-dim: #586069;
+  --header-bg: rgba(7, 9, 14, 0.95);
+  --footer-bg: rgba(7, 9, 14, 0.95);
+}
+
+/* ==========================================================================
+   5. THÈME DEEP FOREST (EMERALD / VERT ÉCO & NATURE SOMBRE)
+   ========================================================================== */
+.deck-container.theme-emerald,
+.deck-container[data-theme="emerald"],
+body.theme-emerald,
+body[data-theme="emerald"],
+[data-theme="emerald"] {
+  --bg-dark: #06150F;
+  --card-bg: #0C241B;
+  --card-hover: #133528;
+  --border-dark: #1A4736;
+  --code-bg: #030C08;
+  --text-main: #ECFDF5;
+  --text-muted: #A7F3D0;
+  --text-dim: #6EE7B7;
+  --header-bg: rgba(6, 21, 15, 0.95);
+  --footer-bg: rgba(6, 21, 15, 0.95);
+}
+
+/* ==========================================================================
+   6. THÈME CORPORATE EXECUTIVE (NAVY / BLEU MARINE INSTITUTIONNEL)
+   ========================================================================== */
+.deck-container.theme-navy,
+.deck-container[data-theme="navy"],
+body.theme-navy,
+body[data-theme="navy"],
+[data-theme="navy"] {
+  --bg-dark: #080E1E;
+  --card-bg: #121D38;
+  --card-hover: #1B2B52;
+  --border-dark: #25396B;
+  --code-bg: #040812;
+  --text-main: #FFFFFF;
+  --text-muted: #B8C7E6;
+  --text-dim: #7A91C2;
+  --header-bg: rgba(8, 14, 30, 0.95);
+  --footer-bg: rgba(8, 14, 30, 0.95);
+}
+
+/* ==========================================================================
+   7. THÈME EDITORIAL WARM (SEPIA / CAFÉ & CUIVRE CHAUD)
+   ========================================================================== */
+.deck-container.theme-sepia,
+.deck-container[data-theme="sepia"],
+body.theme-sepia,
+body[data-theme="sepia"],
+[data-theme="sepia"] {
+  --bg-dark: #191614;
+  --card-bg: #26221F;
+  --card-hover: #36302B;
+  --border-dark: #453E38;
+  --code-bg: #0F0D0C;
+  --text-main: #F7F3EE;
+  --text-muted: #C7BCB3;
+  --text-dim: #94887E;
+  --header-bg: rgba(25, 22, 20, 0.95);
+  --footer-bg: rgba(25, 22, 20, 0.95);
+}
+
+/* Transition douce automatique lors du changement d'ambiance */
 .deck-container,
 .deck-header,
 .deck-footer,
@@ -49,6 +158,10 @@ body[data-theme="light"],
 .slide-badge-title,
 .slide-counter,
 .notes-drawer,
-.x-card {
+.x-card,
+.schema-box,
+.terminal-box,
+.data-table,
+.stepper-horizontal {
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }

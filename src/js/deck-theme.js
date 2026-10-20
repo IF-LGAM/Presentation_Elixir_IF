@@ -1,50 +1,172 @@
 /**
- * Deck Engine - Theme Manager (Clair / Sombre)
- * Sous-responsabilité : Gestion du thème global (Dark/Light), détection automatique
- * par slide, calcul de luminance, persistance localStorage et synchronisation.
+ * Deck Engine - Theme Manager (Catalogue des 7 Ambiances Visuelles)
+ * Sous-responsabilité : Gestion des ambiances (Dark, Light, Nordic, Cyberpunk, Emerald, Navy, Sepia),
+ * popover de sélection, rotation séquentielle (Touche T), persistance et synchronisation double-écran.
  */
 
 window.DeckEngine = window.DeckEngine || {};
 
 window.DeckEngine.Theme = (function () {
-  let userManualTheme = localStorage.getItem('deck_user_theme'); // 'light', 'dark', ou null
+  const THEMES = [
+    {
+      id: 'dark',
+      name: 'Midnight Charcoal',
+      icon: '🌑',
+      defaultAccent: '#E50914',
+      bg: '#141414',
+      card: '#1F1F1F'
+    },
+    {
+      id: 'light',
+      name: 'Clean Slate',
+      icon: '☀️',
+      defaultAccent: '#2563EB',
+      bg: '#F8FAFC',
+      card: '#FFFFFF'
+    },
+    {
+      id: 'nordic',
+      name: 'Polar Frost',
+      icon: '❄️',
+      defaultAccent: '#38BDF8',
+      bg: '#0F172A',
+      card: '#1E293B'
+    },
+    {
+      id: 'cyberpunk',
+      name: 'Neon Matrix',
+      icon: '⚡',
+      defaultAccent: '#00FF9D',
+      bg: '#07090E',
+      card: '#111622'
+    },
+    {
+      id: 'emerald',
+      name: 'Deep Forest',
+      icon: '🌲',
+      defaultAccent: '#10B981',
+      bg: '#06150F',
+      card: '#0C241B'
+    },
+    {
+      id: 'navy',
+      name: 'Corporate Navy',
+      icon: '⚓',
+      defaultAccent: '#3B82F6',
+      bg: '#080E1E',
+      card: '#121D38'
+    },
+    {
+      id: 'sepia',
+      name: 'Editorial Warm',
+      icon: '☕',
+      defaultAccent: '#D97706',
+      bg: '#191614',
+      card: '#26221F'
+    }
+  ];
 
-  function applyTheme(theme, save = true) {
+  let currentThemeId = 'dark';
+  let userManualTheme = localStorage.getItem('deck_user_theme');
+
+  function getThemeById(id) {
+    if (!id) return THEMES[0];
+    return THEMES.find(t => t.id === id) || THEMES[0];
+  }
+
+  function renderThemeList() {
+    const listEl = document.getElementById('themePresetsList');
+    if (!listEl) return;
+
+    listEl.innerHTML = THEMES.map(t => `
+      <button class="theme-menu-btn ${t.id === currentThemeId ? 'active' : ''}" 
+              data-theme-id="${t.id}" 
+              title="Activer l'ambiance ${t.name}">
+        <div class="theme-btn-info">
+          <span class="theme-btn-icon">${t.icon}</span>
+          <span>${t.name}</span>
+        </div>
+        <div class="theme-preview-dots">
+          <span class="theme-preview-dot" style="background: ${t.bg};" title="Fond : ${t.bg}"></span>
+          <span class="theme-preview-dot" style="background: ${t.card};" title="Cartes : ${t.card}"></span>
+          <span class="theme-preview-dot" style="background: ${t.defaultAccent};" title="Accentuation : ${t.defaultAccent}"></span>
+        </div>
+      </button>
+    `).join('');
+  }
+
+  function applyTheme(themeId, save = true) {
+    const themeObj = getThemeById(themeId);
+    currentThemeId = themeObj.id;
+
     const container = document.querySelector('.deck-container') || document.body;
-    const isLight = theme === 'light';
-    container.classList.toggle('theme-light', isLight);
-    container.classList.toggle('theme-dark', !isLight);
-    container.setAttribute('data-theme', theme);
-    document.body.classList.toggle('theme-light', isLight);
-    document.body.classList.toggle('theme-dark', !isLight);
-    document.body.setAttribute('data-theme', theme);
 
-    if (save) {
-      userManualTheme = theme;
-      localStorage.setItem('deck_user_theme', theme);
-    }
+    // Suppression de toutes les classes de thème existantes
+    THEMES.forEach(t => {
+      container.classList.remove(`theme-${t.id}`);
+      document.body.classList.remove(`theme-${t.id}`);
+    });
 
-    if (window.DeckEngine.Navigation && window.DeckEngine.Navigation.broadcastMessage) {
-      window.DeckEngine.Navigation.broadcastMessage({ theme: theme });
-    }
-    localStorage.setItem('deck_sync_theme', theme);
+    // Application de la nouvelle classe et de l'attribut data-theme
+    container.classList.add(`theme-${currentThemeId}`);
+    container.setAttribute('data-theme', currentThemeId);
+    document.body.classList.add(`theme-${currentThemeId}`);
+    document.body.setAttribute('data-theme', currentThemeId);
 
+    // Mise à jour de l'icône et du texte dans le header
     const icon = document.getElementById('themeToggleIcon');
     const txt = document.getElementById('themeToggleTxt');
-    if (icon) icon.textContent = isLight ? '🌙' : '☀️';
-    if (txt) txt.textContent = isLight ? 'Sombre' : 'Clair';
+    if (icon) icon.textContent = themeObj.icon;
+    if (txt) txt.textContent = themeObj.name.split(' ')[0]; // nom court ex: "Midnight", "Clean", "Polar"
 
-    // Réajustement des aperçus si l'overview est ouverte
+    // Mise à jour visuelle des boutons dans le popover
+    const allBtns = document.querySelectorAll('.theme-menu-btn');
+    allBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.themeId === currentThemeId);
+    });
+
+    if (save) {
+      userManualTheme = currentThemeId;
+      localStorage.setItem('deck_user_theme', currentThemeId);
+
+      // Si l'utilisateur n'a pas défini de couleur d'accent manuelle persistante,
+      // on synchronise harmonieusement l'accent par défaut du thème
+      const userSavedAccent = localStorage.getItem('deck_accent_color');
+      const isDefaultThemeAccent = !userSavedAccent || THEMES.some(t => t.defaultAccent.toUpperCase() === userSavedAccent.toUpperCase());
+      if (isDefaultThemeAccent && window.DeckEngine.Palette && window.DeckEngine.Palette.setAccentColor) {
+        window.DeckEngine.Palette.setAccentColor(themeObj.defaultAccent, false);
+      }
+    }
+
+    // Synchronisation vers console présentateur
+    if (window.DeckEngine.Navigation && window.DeckEngine.Navigation.broadcastMessage) {
+      window.DeckEngine.Navigation.broadcastMessage({ theme: currentThemeId });
+    }
+    localStorage.setItem('deck_sync_theme', currentThemeId);
+
+    // Réajustement des aperçus si la grille d'ensemble est ouverte
     const overviewModal = document.getElementById('overviewModal');
     if (overviewModal && overviewModal.classList.contains('open') && window.DeckEngine.Overview) {
       window.DeckEngine.Overview.scaleThumbs();
     }
   }
 
-  function toggleTheme() {
-    const container = document.querySelector('.deck-container') || document.body;
-    const isCurrentlyLight = container.classList.contains('theme-light') || container.getAttribute('data-theme') === 'light';
-    applyTheme(isCurrentlyLight ? 'dark' : 'light', true);
+  function cycleTheme() {
+    const currentIndex = THEMES.findIndex(t => t.id === currentThemeId);
+    const nextIndex = (currentIndex + 1) % THEMES.length;
+    applyTheme(THEMES[nextIndex].id, true);
+  }
+
+  function togglePopover(force) {
+    const popover = document.getElementById('themePalettePopover');
+    if (!popover) return;
+    const shouldOpen = typeof force === 'boolean' ? force : !popover.classList.contains('open');
+    popover.classList.toggle('open', shouldOpen);
+
+    // Fermer l'autre popover (couleur d'accent) pour éviter les superpositions
+    if (shouldOpen) {
+      document.getElementById('colorPalettePopover')?.classList.remove('open');
+    }
   }
 
   function updateAutoTheme(slide) {
@@ -52,23 +174,23 @@ window.DeckEngine.Theme = (function () {
     const container = document.querySelector('.deck-container') || document.body;
     const defaultDeckTheme = container.getAttribute('data-theme') || 'dark';
 
-    // Priorité 1 : Choix manuel explicite de l'utilisateur (touche T ou bouton Thème)
+    // Priorité 1 : Choix manuel explicite de l'utilisateur
     if (userManualTheme) {
       applyTheme(userManualTheme, false);
     } else {
-      // Priorité 2 : Surcharge locale explicite sur la slide (exception ponctuelle)
+      // Priorité 2 : Surcharge locale explicite sur la slide
       const explicitTheme = slide.getAttribute('data-theme');
-      if (explicitTheme) {
+      if (explicitTheme && THEMES.some(t => t.id === explicitTheme)) {
         applyTheme(explicitTheme, false);
       } else if (slide.classList.contains('light') || slide.classList.contains('theme-light')) {
         applyTheme('light', false);
       } else if (slide.classList.contains('dark') || slide.classList.contains('theme-dark')) {
         applyTheme('dark', false);
       } else if (defaultDeckTheme) {
-        // Priorité 3 : Thème global défini au niveau du conteneur du diaporama (.deck-container)
+        // Priorité 3 : Thème global défini au niveau du conteneur du diaporama
         applyTheme(defaultDeckTheme, false);
       } else {
-        // Priorité 4 : Détection intelligente transparente par calcul de luminance du fond
+        // Priorité 4 : Détection intelligente par calcul de luminance du fond
         let isLight = false;
         const targets = [slide, slide.querySelector('.slide-content'), slide.querySelector('.x-card')].filter(Boolean);
         for (const el of targets) {
@@ -106,29 +228,64 @@ window.DeckEngine.Theme = (function () {
   }
 
   function init() {
+    renderThemeList();
+
     const urlParams = new URLSearchParams(window.location.search);
     const themeParam = urlParams.get('theme');
     const initialContainer = document.querySelector('.deck-container') || document.body;
-    const configuredGlobalTheme = initialContainer.getAttribute('data-theme') || (initialContainer.classList.contains('theme-light') ? 'light' : null);
+    const configuredGlobalTheme = initialContainer.getAttribute('data-theme') || 
+      (initialContainer.classList.contains('theme-light') ? 'light' : null);
 
-    if (themeParam === 'light' || themeParam === 'dark') {
+    if (themeParam && THEMES.some(t => t.id === themeParam)) {
       applyTheme(themeParam, true);
-    } else if (userManualTheme) {
+    } else if (userManualTheme && THEMES.some(t => t.id === userManualTheme)) {
       applyTheme(userManualTheme, false);
-    } else if (configuredGlobalTheme) {
+    } else if (configuredGlobalTheme && THEMES.some(t => t.id === configuredGlobalTheme)) {
       applyTheme(configuredGlobalTheme, false);
     } else {
       applyTheme('dark', false);
     }
 
-    document.getElementById('themeToggleBtn')?.addEventListener('click', toggleTheme);
+    // Clic sur le bouton d'en-tête -> Bascule le popover
+    document.getElementById('themeToggleBtn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      togglePopover();
+    });
+
+    // Clic dans la liste des thèmes du popover
+    document.getElementById('themePresetsList')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('.theme-menu-btn');
+      if (btn && btn.dataset.themeId) {
+        applyTheme(btn.dataset.themeId, true);
+        togglePopover(false);
+      }
+    });
+
+    // Clic en dehors -> Fermeture du popover
+    document.addEventListener('click', (e) => {
+      const wrap = document.getElementById('themePickerWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        togglePopover(false);
+      }
+    });
+
+    // Échap -> Fermeture du popover
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        togglePopover(false);
+      }
+    });
   }
 
   return {
     init: init,
+    THEMES: THEMES,
     applyTheme: applyTheme,
-    toggleTheme: toggleTheme,
+    cycleTheme: cycleTheme,
+    toggleTheme: cycleTheme, // Alias rétrocompatible pour raccourci T
+    togglePopover: togglePopover,
     updateAutoTheme: updateAutoTheme,
+    getCurrentThemeId: () => currentThemeId,
     getUserManualTheme: () => userManualTheme
   };
 })();

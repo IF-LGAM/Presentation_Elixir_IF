@@ -124,8 +124,8 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 | Alias court | Attribut / Balise | Utilisation & Description |
 | :--- | :--- | :--- |
 | `notes` | `data-notes="..."` ou `<aside class="speaker-notes">` | Notes d'orateur lues par le Speaker Engine (`S` ou tiroir `N`). |
-| `theme-global` | `data-theme="dark\|light"` sur `.deck-container` | **Thème global du deck** (sombre par défaut ou clair). |
-| `theme-slide` | `data-theme="light\|dark"` sur `.slide` | **OPTIONNEL / EXCEPTIONNEL** : surcharge ponctuelle pour une slide isolée différente du deck. |
+| `theme-global` | `data-theme="dark\|light\|nordic\|cyberpunk\|emerald\|navy\|sepia"` sur `.deck-container` | **Thème global du deck** (catalogue de 7 ambiances visuelles). Touche `T` pour alterner. |
+| `theme-slide` | `data-theme="..."` sur `.slide` | **OPTIONNEL / EXCEPTIONNEL** : surcharge ponctuelle pour une slide isolée différente du deck (`dark`, `light`, `nordic`, `cyberpunk`, `emerald`, `navy`, `sepia`). |
 | `title-slide` | `<h2 class="slide-title">` | Titre standardisé en Montserrat gras avec accent dynamique. |
 | `subtitle-slide`| `<p class="slide-subtitle">` | Sous-titre explicatif en Inter ardoise moyen (`#475569`). |
 

@@ -21,10 +21,18 @@ Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HT
   - Synchronisation bidirectionnelle en temps réel via l'API native `BroadcastChannel` (avec fallback automatique sur `localStorage`).
   - Aperçu direct de la slide actuelle et de la slide suivante (*Next Slide*).
   - Chronomètre de séance (Play/Pause/Reset), horloge réelle et réglage dynamique de la taille des notes (`A+` / `A-`).
-- **Bascule Thème Clair / Sombre (`T`)** :
-  - Adaptation automatique ou bascule manuelle en un clic (mode sombre contrasté `#141414` ou mode clair épuré `#F8FAFC`).
+- **Catalogue des 7 Ambiances Visuelles (`T`)** :
+  - Menu popover interactif ou raccourci clavier `T` pour alterner séquentiellement entre 7 thèmes complets :
+    1. **Midnight Charcoal** (Défaut sombre contrasté `#141414`)
+    2. **Clean Slate** (Clair épuré papier & bureau `#F8FAFC`)
+    3. **Polar Frost** (Nordic bleu ardoise glacial `#0F172A`)
+    4. **Neon Matrix** (Cyberpunk noir profond & vert fluo `#07090E`)
+    5. **Deep Forest** (Emerald vert végétal sombre `#06150F`)
+    6. **Corporate Navy** (Bleu marine institutionnel `#080E1E`)
+    7. **Editorial Warm** (Sepia café & cuivre chaud `#191614`)
+  - Synchronisation temps réel avec la console présentateur et persistance automatique.
 - **Personnalisation en direct de la Couleur d'Accent (`C`)** :
-  - Palette de couleurs vibrantes (Rouge Crimson, Bleu Cobalt, Vert Émeraude, Violet Cyber, Ambre, Rose Néon, Cyan) ou ajout libre au format hexadécimal `#HEX` avec sauvegarde dans "Mes couleurs".
+  - Palette de couleurs vibrantes ou ajout libre au format hexadécimal `#HEX` avec sauvegarde dans "Mes couleurs".
   - Persistance automatique en `localStorage`, support des paramètres URL (`?color=...`) et synchronisation instantanée avec la console présentateur.
 - **Tiroir de Notes Écran Unique (`N`)** :
   - Panneau latéral rétractable pour consulter les notes de chaque slide lorsqu'aucun second écran n'est branché.
@@ -68,6 +76,8 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 | `Clic gauche` *(en plein écran)* | Slide suivante (style télécommande) |
 | `Molette` *(en plein écran)* | Slide suivante / précédente |
 | `Home` / `End` | Première / Dernière slide |
+| `T` | Changer d'ambiance visuelle (parmi les 7 thèmes) |
+| `C` | Changer la couleur d'accentuation (ou ouvrir la palette) |
 | `S` | Ouvrir la Console Présentateur (dual-screen) |
 | `N` | Ouvrir/Fermer le panneau latéral de notes (écran simple) |
 | `O` / `Échap` | Vue globale en grille (*Overview*) |
@@ -84,7 +94,7 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 ├── CONSIGNES_TEMPLATE.md          # Schéma et prompt-type pour la génération du contenu
 ├── COMPOSANTS_DICTIONNAIRE.md     # Référentiel des balises et structures graphiques
 ├── template_presentation.html     # Squelette HTML épuré des slides et composants
-├── presentation.html              # Exemple complet de présentation autonome
+├── presentation.html              # Exemple complet de présentation autonome (Elixir & Phoenix)
 ├── src/
 │   ├── css/
 │   │   ├── deck.css               # Point d'entrée CSS principal (@import des sous-modules)

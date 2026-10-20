@@ -9,11 +9,23 @@ function populateSpeakerWindow(speakerWindow) {
   const totalSlides = slides.length;
   const currentIndex = window.getCurrentSlideIndex ? window.getCurrentSlideIndex() : 0;
 
-  // Détection du thème du document parent
-  const isParentLight = document.querySelector('.deck-container')?.classList.contains('theme-light') ||
-                        document.querySelector('.deck-container')?.getAttribute('data-theme') === 'light' ||
-                        document.body.classList.contains('theme-light') ||
-                        document.documentElement.classList.contains('theme-light');
+  // Détection du thème du document parent (support des 7 ambiances)
+  const KNOWN_THEMES = ['dark', 'light', 'nordic', 'cyberpunk', 'emerald', 'navy', 'sepia'];
+  const THEME_ICONS = {
+    dark: '🌑',
+    light: '☀️',
+    nordic: '❄️',
+    cyberpunk: '⚡',
+    emerald: '🌲',
+    navy: '⚓',
+    sepia: '☕'
+  };
+
+  const detectedTheme = document.querySelector('.deck-container')?.getAttribute('data-theme') ||
+                        document.body.getAttribute('data-theme') ||
+                        localStorage.getItem('deck_user_theme') ||
+                        (document.body.classList.contains('theme-light') ? 'light' : 'dark');
+  const activeParentTheme = KNOWN_THEMES.includes(detectedTheme) ? detectedTheme : 'dark';
 
   function lightenColor(col, percent) {
     if (!col || typeof col !== 'string' || !col.startsWith('#')) return col || '#FF2A2A';
@@ -81,26 +93,15 @@ function populateSpeakerWindow(speakerWindow) {
       --accent-hover: ${currentAccentHover};
     }
 
-    :root, body.theme-dark {
-      --sp-bg: #121212;
-      --sp-panel: #1A1A1A;
-      --sp-panel-header: #161616;
-      --sp-border: #333333;
-      --sp-text: #FFFFFF;
-      --sp-text-muted: #888888;
-      --sp-box-bg: #0A0A0A;
-      --sp-inner-border: #2B2B2B;
-    }
-
-    body.theme-light {
-      --sp-bg: #F1F5F9;
-      --sp-panel: #FFFFFF;
-      --sp-panel-header: #F8FAFC;
-      --sp-border: #CBD5E1;
-      --sp-text: #0F172A;
-      --sp-text-muted: #475569;
-      --sp-box-bg: #E2E8F0;
-      --sp-inner-border: #CBD5E1;
+    :root {
+      --sp-bg: var(--bg-dark, #121212);
+      --sp-panel: var(--card-bg, #1A1A1A);
+      --sp-panel-header: var(--card-hover, #161616);
+      --sp-border: var(--border-dark, #333333);
+      --sp-text: var(--text-main, #FFFFFF);
+      --sp-text-muted: var(--text-muted, #888888);
+      --sp-box-bg: var(--code-bg, #0A0A0A);
+      --sp-inner-border: var(--border-dark, #2B2B2B);
     }
 
     html, body {
@@ -282,12 +283,12 @@ function populateSpeakerWindow(speakerWindow) {
     }
   </style>
 </head>
-<body class="${isParentLight ? 'theme-light' : 'theme-dark'}">
+<body class="theme-${activeParentTheme}" data-theme="${activeParentTheme}">
   <header class="sp-header">
     <div style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.92rem; display: flex; align-items: center; gap: 0.6rem;">
       <span>CONSOLE <span style="color: var(--accent-primary, #E50914);">PRÉSENTATEUR</span></span>
-      <button id="spThemeToggleBtn" class="sp-btn" title="Basculer Mode Clair / Sombre de la console">
-        ${isParentLight ? '🌙' : '☀️'}
+      <button id="spThemeToggleBtn" class="sp-btn" title="Changer l'ambiance visuelle de la console">
+        ${THEME_ICONS[activeParentTheme] || '🌑'}
       </button>
     </div>
     
@@ -401,12 +402,26 @@ function populateSpeakerWindow(speakerWindow) {
       }
     });
 
+    const KNOWN_THEMES = ['dark', 'light', 'nordic', 'cyberpunk', 'emerald', 'navy', 'sepia'];
+    const THEME_ICONS = {
+      dark: '🌑',
+      light: '☀️',
+      nordic: '❄️',
+      cyberpunk: '⚡',
+      emerald: '🌲',
+      navy: '⚓',
+      sepia: '☕'
+    };
+
     function setConsoleTheme(theme) {
-      const isLight = theme === 'light';
-      document.body.classList.toggle('theme-light', isLight);
-      document.body.classList.toggle('theme-dark', !isLight);
+      const activeTheme = KNOWN_THEMES.includes(theme) ? theme : 'dark';
+      KNOWN_THEMES.forEach(function (t) {
+        document.body.classList.remove('theme-' + t);
+      });
+      document.body.classList.add('theme-' + activeTheme);
+      document.body.setAttribute('data-theme', activeTheme);
       const btn = document.getElementById('spThemeToggleBtn');
-      if (btn) btn.textContent = isLight ? '🌙' : '☀️';
+      if (btn) btn.textContent = THEME_ICONS[activeTheme] || '🌑';
       scaleElement('currentBox', 'currentSlideContent');
       scaleElement('nextBox', 'nextSlideContent');
     }
@@ -414,11 +429,12 @@ function populateSpeakerWindow(speakerWindow) {
     const spThemeBtn = document.getElementById('spThemeToggleBtn');
     if (spThemeBtn) {
       spThemeBtn.onclick = () => {
-        const isCurrentlyLight = document.body.classList.contains('theme-light');
-        const newTheme = isCurrentlyLight ? 'dark' : 'light';
-        setConsoleTheme(newTheme);
-        channel.postMessage({ theme: newTheme });
-        localStorage.setItem('deck_sync_theme', newTheme);
+        const curTheme = document.body.getAttribute('data-theme') || 'dark';
+        const curIdx = KNOWN_THEMES.indexOf(curTheme);
+        const nextTheme = KNOWN_THEMES[(curIdx + 1) % KNOWN_THEMES.length];
+        setConsoleTheme(nextTheme);
+        channel.postMessage({ theme: nextTheme });
+        localStorage.setItem('deck_sync_theme', nextTheme);
       };
     }
 

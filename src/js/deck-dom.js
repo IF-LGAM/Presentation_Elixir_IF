@@ -51,10 +51,16 @@ window.DeckEngine.DOM = (function () {
             <span>Export PDF</span>
           </button>
 
-          <button id="themeToggleBtn" class="ctrl-btn" title="Basculer Mode Clair / Sombre (Touche T)">
-            <span id="themeToggleIcon">☀️</span>
-            <span id="themeToggleTxt">Thème</span>
-          </button>
+          <div class="theme-picker-wrap" id="themePickerWrap">
+            <button id="themeToggleBtn" class="ctrl-btn" title="Changer d'ambiance visuelle (Touche T)">
+              <span id="themeToggleIcon">🌑</span>
+              <span id="themeToggleTxt">Thème</span>
+            </button>
+            <div class="theme-palette-popover" id="themePalettePopover">
+              <div class="palette-title">Ambiances Visuelles</div>
+              <div class="theme-menu-list" id="themePresetsList"></div>
+            </div>
+          </div>
 
           <div class="color-picker-wrap" id="colorPickerWrap">
             <button id="colorPickerBtn" class="ctrl-btn" title="Changer la couleur d'accent du thème (Touche C)">
@@ -230,7 +236,7 @@ window.DeckEngine.DOM = (function () {
               <span>Slide précédente</span> <kbd>&larr;</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
-              <span>Thème Clair / Sombre</span> <kbd>T</kbd>
+              <span>Ambiance Visuelle (7 thèmes)</span> <kbd>T</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>Couleur d'accent</span> <kbd>C</kbd>
