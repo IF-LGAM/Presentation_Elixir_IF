@@ -86,21 +86,22 @@ Le moteur de présentation (`Deck Engine`) applique le thème de manière hiéra
    - **Mode plein écran** : touche `F` ou bouton dédié.
    - **Vue globale en grille (Overview)** : touche `O` ou `Échap` avec vignettes cliquables.
    - **Bascule manuelle Thème Clair / Sombre** : touche `T` ou bouton dédié dans le header.
-   - **Personnalisation en direct de la Couleur d'accentuation** : touche `C` ou menu palette dans le header (palette de presets vibrants : Rouge Crimson, Bleu Cobalt, Vert Émeraude, Violet Cyber, Ambre, Rose Néon, Cyan + ajout libre de nuances au format hexadécimal `#HEX` avec sauvegarde dans "Mes couleurs", persistance `localStorage`, paramètre URL `?color=...`, et synchronisation temps réel dual-screen).
    - **Export PDF haute fidélité** : touche `P` ou bouton dédié (mode paysage 16:9 strict, exactement 1 page par slide, respect fidèle du thème clair/sombre de chaque slide, 0 coupure de page).
    - **Fenêtre d'aide des raccourcis** : touche `?`.
    - **Auto-ajustement d'échelle dynamique (Zéro débordement)** : le moteur mesure automatiquement le contenu de chaque slide et applique un facteur d'échelle adaptatif centré (`transform: scale(...)`) pour garantir qu'aucune slide ne déborde de l'écran (laptop, écran externe ou plein écran).
+   - **Révélation Progressive & Fragments (`class="fragment"`)** : animation par étapes au sein d'une même slide (`→` / `Espace` révèle le prochain élément, `Shift + →` saute directement à la slide suivante). Entièrement visible à l'export PDF et dans la grille Overview.
    - **Barre de progression dynamique & compteur** de slides dans le header.
 4. **🎙️ Mode Présentateur Avancé (Dual-Screen / Speaker View)** :
    - **Fenêtre dédiée synchronisée (touche `S` ou bouton Présentateur)** :
      - Ouvre une seconde fenêtre / onglet autonome réservée à l'orateur (`window.open` avec paramètre ou mode dédié).
-     - **Synchronisation temps réel bidirectionnelle** via l'API native `BroadcastChannel` (et fallback `localStorage`) : tout changement de slide sur l'écran présentateur met immédiatement à jour l'écran projeté pour le public, et vice-versa.
+     - **Synchronisation temps réel bidirectionnelle** via l'API native `BroadcastChannel` (et fallback `localStorage`) : tout changement de slide ou de fragment sur l'écran présentateur met immédiatement à jour l'écran projeté pour le public, et vice-versa.
    - **Interface complète du Mode Présentateur** :
-     - **Slide actuelle** en aperçu direct.
-     - **Slide suivante (Next Slide)** pour anticiper ses transitions et propos.
-     - **Chronomètre / Timer interactif** : affichage du temps écoulé (heures, minutes, secondes), bouton Pause/Play, Reset, et indicateur visuel de l'heure courante.
-     - **Zone de Notes d'orateur grand format** : affichage clair et lisible des notes renseignées sur chaque slide (`data-notes`), avec contrôles pour agrandir/réduire le texte des notes.
-     - **Contrôles de navigation orateur** : boutons Précédent / Suivant et liste de saut direct vers n'importe quelle slide.
+     - **Indicateur de Rythme (*Pacing Tracker*) en direct** : calcul automatique de la cible idéale par diapositive, minuteur unitaire qui se réinitialise à chaque slide, jauge comparative double (Temps écoulé vs Slides franchies), temps restant et badge de statut dynamique (🟢 *Dans les temps*, 🟡 *Accélérer*, 🔴 *Retard*, 🔵 *En avance*).
+     - **Slide actuelle & Aperçu des fragments** : les fragments à venir apparaissent en filigrane (opacité 35%) pour anticiper la suite.
+     - **Slide suivante (Next Slide)** : affichage à 100% pour préparer ses transitions.
+     - **Chronomètre / Timer interactif** : temps global de séance, boutons Pause/Play, Reset, et horloge courante.
+     - **Zone de Notes d'orateur grand format** : affichage lisible des notes de chaque slide (`data-notes`), avec boutons de taille de police `A+` / `A-`.
+     - **Contrôles de navigation orateur** : boutons Précédent / Suivant et liste déroulante de saut direct vers n'importe quelle slide.
    - **Tiroir rapide de secours (Drawer de notes)** : activable directement sur la slide principale avec la touche `N` pour les cas où l'on n'a qu'un seul écran.
 5. **Composants interactifs disponibles** :
    - Cartes en grille : 2, 3 ou 4 colonnes (`.grid-2`, `.grid-3`, `.grid-4`).
@@ -134,9 +135,9 @@ Avant de rédiger ou de générer les diapositives, vous **DEVEZ définir le niv
 ### 3.2 Métadonnées Générales :
 - **Titre de la présentation** : Elixir & Phoenix : Le Web Haute Performance et Temps Réel
 - **Sous-titre / Thème** : Module Infrastructures & Frameworks — Master MIAGE
-- **Durée totale estimée** : 60 min (Atelier complet de présentation)
+- **Durée totale estimée** : 60 min *(Alimente l'objectif de séance du Pacing Tracker)*
 - **Public visé** : Étudiants MIAGE
-- **Thème visuel global** : dark
+- **Thème visuel global** : dark *(choix parmi : dark | light | nordic | cyberpunk | emerald | navy | sepia)*
 - **Densité de contenu** : pur-support *(choix parmi : `pur-support` | `balanced` | `dense`)*
 
 > ⚠️ **RÈGLE CRITIQUE POUR LA GÉNÉRATION DES SLIDES** :
@@ -144,13 +145,42 @@ Avant de rédiger ou de générer les diapositives, vous **DEVEZ définir le niv
 > - **NE JAMAIS écrire ni répéter `theme: dark` ou `theme: light` sur chaque slide** dans le plan Markdown ou dans le code HTML.
 > - Seule une slide faisant l'objet d'une exception délibérée de contraste par rapport au reste du diaporama peut porter un attribut `data-theme` unitaire.
 
-### Structure des Slides :
+---
+
+### 3.3 Canevas & Structure Type d'une Slide (Comment Structurer le Contenu)
+
+Chaque diapositive du plan doit obligatoirement respecter le canevas standardisé ci-dessous pour être interprétée et codée fidèlement par l'agent HTML :
+
+```markdown
+#### Slide [Numéro] : [Titre Court / Sujet de la Slide]
+- **Type de slide** : slide | hero
+- **Durée estimée** : X min *(Crucial pour le Pacing Tracker : calibre le minuteur unitaire et le calcul d'avance/retard)*
+- **Titre (title-slide)** : Titre principal affiché en haut de la slide
+- **Sous-titre (subtitle-slide)** : Sous-titre ou fil d'Ariane conceptuel
+- **Mise en page** : hero | grid-2 | grid-3 | grid-4 | split-code | split-schema
+- **Contenu & Composants** : (s'appuyer sur COMPOSANTS_DICTIONNAIRE.md pour les classes standardisées)
+  - Blocs & cartes : card (.x-card), card-featured (.x-card.featured), card-metric (.x-card.metric), banner (.summary-box)
+  - Badges : pill-tag, pill-tag.solid, pill-tag.gray, bullet-check
+  - Visuels : schema-box, code-box, stepper-horizontal, data-table
+- **Animation & Révélation progressive (Fragments)** : *(Optionnel mais recommandé pour cadencer)*
+  - Spécifier les éléments à révéler au clic (ex: « les cartes apparaissent une par une via fragment »).
+- **Logos de pied de slide (optionnel)** :
+  - Emplacements : bottom-left, bottom-center, bottom-right avec classes de calibrage (.logo-xs à .logo-xl).
+- **Notes d'orateur (data-notes)** : *(OBLIGATOIRE, particulièrement en mode pur-support)*
+  - Discours parlé intégral, explications approfondies, détails techniques et relance vers la slide suivante.
+```
+
+---
+
+### 3.4 Plan Détaillé des Slides :
 
 #### Slide 3 : Frise Historique & Rupture Technologique
-- **Type de slide** : slide[cite: 1, 3]
-- **Titre (title-slide)** : De l'Impasse Monocœur à la Naissance d'Elixir[cite: 1, 3]
-- **Sous-titre (subtitle-slide)** : Chronologie d'une transition : des verrous de la POO à la concurrence massive sur la BEAM[cite: 1, 3]
-- **Mise en page** : grid-1[cite: 3]
+- **Type de slide** : slide
+- **Durée estimée** : 3 min *(Pacing Tracker : 3 min allouées)*
+- **Titre (title-slide)** : De l'Impasse Monocœur à la Naissance d'Elixir
+- **Sous-titre (subtitle-slide)** : Chronologie d'une transition : des verrous de la POO à la concurrence massive sur la BEAM
+- **Animation & Fragments** : Les cartes comparatives et le bandeau de synthèse apparaissent par étapes (fragment)
+- **Mise en page** : grid-1
   - **Frise chronologique (stepper-horizontal)** :[cite: 1, 3]
     - **Jalon 1 (1986 - Les Fondations Télécoms)** : step-node[cite: 1, 3]
       - badge-gray : 1986[cite: 1, 3]

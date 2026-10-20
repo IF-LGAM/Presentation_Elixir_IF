@@ -20,11 +20,12 @@ Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HT
   - Découpage et cadence dynamique de vos contenus (cartes, puces, jalons, blocs de code).
   - Apparition étape par étape via `→` ou `Espace` ; saut direct sans fragment via `Shift + →`.
   - Aperçu prévisionnel dans la console présentateur (opacité 35% avant révélation) et révélation totale automatique lors de l'export PDF.
-- **Console Présentateur Dual-Screen (`S`)** :
+- **Console Présentateur Dual-Screen (`S`) & Pacing Tracker** :
   - Ouvre une seconde fenêtre dédiée pour l'orateur.
   - Synchronisation bidirectionnelle en temps réel via l'API native `BroadcastChannel` (avec fallback automatique sur `localStorage`).
   - Aperçu direct de la slide actuelle et de la slide suivante (*Next Slide*).
-  - Chronomètre de séance (Play/Pause/Reset), horloge réelle et réglage dynamique de la taille des notes (`A+` / `A-`).
+  - **Indicateur de Rythme (*Pacing Tracker*) en direct** : calcul automatique du temps cible par slide, minuteur unitaire de diapositive, jauge comparative double (Temps écoulé vs Slides franchies), temps restant et badge de statut dynamique (🟢 *Dans les temps*, 🟡 *Accélérer*, 🔴 *Retard*, 🔵 *En avance*).
+  - Chronomètre de séance (Play/Pause/Reset), sélecteur d'objectif (15 à 120 min), horloge réelle et réglage dynamique de la taille des notes (`A+` / `A-`).
 - **Catalogue des 7 Ambiances Visuelles (`T`)** :
   - Menu popover interactif ou raccourci clavier `T` pour alterner séquentiellement entre 7 thèmes complets :
     1. **Midnight Charcoal** (Défaut sombre contrasté `#141414`)

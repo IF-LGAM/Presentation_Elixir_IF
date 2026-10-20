@@ -53,6 +53,29 @@ function populateSpeakerWindow(speakerWindow) {
   // 1. Récupération des styles inline éventuels
   const parentStyles = Array.from(document.querySelectorAll('style')).map(s => s.innerHTML).join('\n');
 
+  function parseDurationToSeconds(val) {
+    if (!val) return 0;
+    val = val.toString().trim().toLowerCase();
+    if (val.includes('min') || val.endsWith('m')) {
+      const num = parseFloat(val.replace(/[^0-9.]/g, ''));
+      return isNaN(num) ? 0 : Math.round(num * 60);
+    }
+    if (val.includes('s')) {
+      const num = parseFloat(val.replace(/[^0-9.]/g, ''));
+      return isNaN(num) ? 0 : Math.round(num);
+    }
+    const num = parseFloat(val);
+    return isNaN(num) ? 0 : Math.round(num * 60);
+  }
+
+  const detectedTargetMin = parseInt(
+    containerEl?.getAttribute('data-total-duration') ||
+    containerEl?.getAttribute('data-duration') ||
+    localStorage.getItem('deck_pacing_target_min') ||
+    '60',
+    10
+  );
+
   // 2. Récupération des données sérialisées de toutes les slides
   const slidesData = [];
   slides.forEach((s, idx) => {
@@ -61,6 +84,15 @@ function populateSpeakerWindow(speakerWindow) {
       if (s.classList.contains('light') || s.classList.contains('theme-light')) slideTheme = 'light';
       else if (s.classList.contains('dark') || s.classList.contains('theme-dark')) slideTheme = 'dark';
       else slideTheme = ''; // Suit dynamiquement le thème actif
+    }
+
+    let slideDuration = parseDurationToSeconds(s.getAttribute('data-duration') || s.getAttribute('data-time'));
+    if (!slideDuration) {
+      const text = s.innerText || '';
+      const match = text.match(/⏱\s*(?:Durée\s*:\s*)?([0-9]+)\s*min/i);
+      if (match && match[1]) {
+        slideDuration = parseInt(match[1], 10) * 60;
+      }
     }
 
     const contentHtml = s.querySelector('.slide-content')?.innerHTML || '';
@@ -73,6 +105,7 @@ function populateSpeakerWindow(speakerWindow) {
       theme: slideTheme,
       accent: s.getAttribute('data-accent') || '',
       accentHover: s.getAttribute('data-accent-hover') || '',
+      duration: slideDuration,
       html: contentHtml + logosHtml
     });
   });
@@ -463,6 +496,89 @@ function populateSpeakerWindow(speakerWindow) {
       font-family: inherit;
       font-size: 0.85rem;
     }
+
+    /* BARRE D'INDICATEUR DE RYTHME (PACING TRACKER) */
+    .sp-pacing-bar {
+      background: var(--sp-panel);
+      border-bottom: 1px solid var(--sp-border);
+      padding: 0.38rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.78rem;
+      color: var(--sp-text-muted);
+      flex-shrink: 0;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .sp-pace-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .sp-pace-badge.pace-ontrack {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .sp-pace-badge.pace-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .sp-pace-badge.pace-behind {
+      background: rgba(239, 68, 68, 0.15);
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .sp-pace-badge.pace-ahead {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60A5FA;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .sp-pacing-track {
+      flex: 1;
+      max-width: 200px;
+      min-width: 120px;
+      height: 7px;
+      background: var(--sp-inner-border, #333);
+      border-radius: 9999px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sp-pacing-time-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+    }
+
+    .sp-pacing-slide-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: var(--accent-primary, #E50914);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+      opacity: 0.88;
+    }
   </style>
 </head>
 <body class="theme-${activeParentTheme}" data-theme="${activeParentTheme}">
@@ -487,6 +603,39 @@ function populateSpeakerWindow(speakerWindow) {
       <button id="notesPlusBtn" class="sp-btn">A+</button>
     </div>
   </header>
+
+  <!-- Pacing Tracker Bar (Indicateur de Rythme en Temps Réel) -->
+  <div class="sp-pacing-bar">
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <span>⏱ Slide : <strong id="slideTimerText" style="color: var(--sp-text); font-family: 'Fira Code', monospace;">00:00</strong> / <span id="slideTargetText" style="font-family: 'Fira Code', monospace;">--:--</span></span>
+      <span id="slidePaceBadge" class="sp-pace-badge pace-ontrack">● En cours</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.65rem; flex: 1; justify-content: center; max-width: 460px;">
+      <span style="font-size: 0.72rem; color: var(--sp-text-muted);">Progression vs Temps :</span>
+      <div class="sp-pacing-track" title="Barre blanche : Temps écoulé | Barre couleur : Slides franchies">
+        <div id="pacingTimeFill" class="sp-pacing-time-fill" style="width: 0%;"></div>
+        <div id="pacingSlideFill" class="sp-pacing-slide-fill" style="width: 0%;"></div>
+      </div>
+      <span style="font-size: 0.72rem;">Reste : <strong id="timeRemainingText" style="font-family: 'Fira Code', monospace; color: var(--sp-text);">--:--</strong></span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <span id="globalPaceBadge" class="sp-pace-badge pace-ontrack">● Rythme idéal</span>
+      <div style="display: flex; align-items: center; gap: 0.35rem;">
+        <span style="font-size: 0.72rem;">Cible :</span>
+        <select id="pacingTargetSelect" class="sp-select" style="padding: 0.18rem 0.45rem; font-size: 0.75rem;">
+          <option value="15">15 min</option>
+          <option value="30">30 min</option>
+          <option value="45">45 min</option>
+          <option value="60">60 min</option>
+          <option value="75">75 min</option>
+          <option value="90">90 min</option>
+          <option value="120">120 min</option>
+        </select>
+      </div>
+    </div>
+  </div>
 
   <main class="sp-main">
     <!-- Colonne Gauche : Aperçus Slides (Actuelle & Suivante) -->
@@ -753,6 +902,12 @@ function populateSpeakerWindow(speakerWindow) {
         scaleElement('nextBox', 'nextSlideContent');
       });
 
+      if (typeof lastRenderedSlideIndex !== 'undefined' && lastRenderedSlideIndex !== activeIdx) {
+        slideSeconds = 0;
+        lastRenderedSlideIndex = activeIdx;
+      }
+      if (typeof updatePacing === 'function') updatePacing();
+
       if (notify) sendSlideChange(activeIdx);
     }
 
@@ -818,14 +973,119 @@ function populateSpeakerWindow(speakerWindow) {
     };
 
     let seconds = 0;
+    let slideSeconds = 0;
     let running = true;
+    let lastRenderedSlideIndex = -1;
+
+    function formatTimeMMSS(sec) {
+      const isNeg = sec < 0;
+      const abs = Math.abs(sec);
+      const m = String(Math.floor(abs / 60)).padStart(2, '0');
+      const s = String(abs % 60).padStart(2, '0');
+      return (isNeg ? '-' : '') + m + ':' + s;
+    }
+
+    const pacingTargetSelect = document.getElementById('pacingTargetSelect');
+    if (pacingTargetSelect) {
+      const savedTarget = localStorage.getItem('deck_pacing_target_min');
+      pacingTargetSelect.value = savedTarget || "${detectedTargetMin}" || "60";
+      pacingTargetSelect.onchange = () => {
+        try { localStorage.setItem('deck_pacing_target_min', pacingTargetSelect.value); } catch(e) {}
+        updatePacing();
+      };
+    }
+
+    function updatePacing() {
+      const targetMin = parseInt(pacingTargetSelect ? pacingTargetSelect.value : 60, 10) || 60;
+      const totalTargetSec = targetMin * 60;
+
+      // Calcul des allocations de temps par slide
+      const assignedSec = slidesData.reduce((acc, s) => acc + (s.duration || 0), 0);
+      const unassignedCount = slidesData.filter(s => !s.duration).length;
+      const unassignedShare = unassignedCount > 0 
+        ? Math.max(10, Math.round((totalTargetSec - assignedSec) / unassignedCount)) 
+        : Math.round(totalTargetSec / Math.max(1, slidesData.length));
+
+      const slideTargets = slidesData.map(s => s.duration || unassignedShare);
+
+      // Temps cible cumulé jusqu'à la slide actuelle (incluse)
+      let cumulativeTarget = 0;
+      for (let i = 0; i <= activeIdx; i++) {
+        cumulativeTarget += slideTargets[i];
+      }
+
+      const currentSlideTarget = slideTargets[activeIdx] || unassignedShare;
+
+      // 1. Minuteur et cible de la slide courante
+      const slideTimerEl = document.getElementById('slideTimerText');
+      const slideTargetEl = document.getElementById('slideTargetText');
+      if (slideTimerEl) slideTimerEl.textContent = formatTimeMMSS(slideSeconds);
+      if (slideTargetEl) slideTargetEl.textContent = formatTimeMMSS(currentSlideTarget);
+
+      // 2. Statut unitaire de la slide courante
+      const slidePaceBadge = document.getElementById('slidePaceBadge');
+      if (slidePaceBadge) {
+        const slideDelta = slideSeconds - currentSlideTarget;
+        if (slideDelta > 45) {
+          slidePaceBadge.className = 'sp-pace-badge pace-behind';
+          slidePaceBadge.textContent = '▲ Dépassé (+' + formatTimeMMSS(slideDelta) + ')';
+        } else if (slideDelta > 0) {
+          slidePaceBadge.className = 'sp-pace-badge pace-warning';
+          slidePaceBadge.textContent = '▲ Conclure (+' + formatTimeMMSS(slideDelta) + ')';
+        } else if (slideSeconds >= currentSlideTarget * 0.8) {
+          slidePaceBadge.className = 'sp-pace-badge pace-warning';
+          slidePaceBadge.textContent = '● Fin imminente';
+        } else {
+          slidePaceBadge.className = 'sp-pace-badge pace-ontrack';
+          slidePaceBadge.textContent = '● En cours (' + formatTimeMMSS(currentSlideTarget - slideSeconds) + ' restant)';
+        }
+      }
+
+      // 3. Statut du rythme global (en avance / à l'heure / en retard)
+      const globalBadge = document.getElementById('globalPaceBadge');
+      if (globalBadge) {
+        const globalDelta = seconds - cumulativeTarget;
+        if (globalDelta > 120) {
+          globalBadge.className = 'sp-pace-badge pace-behind';
+          globalBadge.textContent = '▲ Retard (+' + formatTimeMMSS(globalDelta) + ')';
+        } else if (globalDelta > 40) {
+          globalBadge.className = 'sp-pace-badge pace-warning';
+          globalBadge.textContent = '▲ Accélérer (+' + formatTimeMMSS(globalDelta) + ')';
+        } else if (globalDelta < -60) {
+          globalBadge.className = 'sp-pace-badge pace-ahead';
+          globalBadge.textContent = '▼ En avance (' + formatTimeMMSS(globalDelta) + ')';
+        } else {
+          globalBadge.className = 'sp-pace-badge pace-ontrack';
+          globalBadge.textContent = '● Dans les temps (' + (globalDelta >= 0 ? '+' : '') + formatTimeMMSS(globalDelta) + ')';
+        }
+      }
+
+      // 4. Temps restant total
+      const remainingSec = totalTargetSec - seconds;
+      const remainElem = document.getElementById('timeRemainingText');
+      if (remainElem) {
+        remainElem.textContent = (remainingSec >= 0 ? '' : 'Dépassé +') + formatTimeMMSS(Math.abs(remainingSec));
+        remainElem.style.color = remainingSec >= 0 ? 'var(--sp-text)' : '#EF4444';
+      }
+
+      // 5. Jauges superposées
+      const timePercent = Math.min(100, Math.max(0, (seconds / totalTargetSec) * 100));
+      const slidePercent = Math.min(100, Math.max(0, ((activeIdx + 1) / Math.max(1, slidesData.length)) * 100));
+      const timeFill = document.getElementById('pacingTimeFill');
+      const slideFill = document.getElementById('pacingSlideFill');
+      if (timeFill) timeFill.style.width = timePercent + '%';
+      if (slideFill) slideFill.style.width = slidePercent + '%';
+    }
+
     setInterval(() => {
       if (running) {
         seconds++;
+        slideSeconds++;
         const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
         const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
         const s = String(seconds % 60).padStart(2, '0');
         document.getElementById('timerText').textContent = h + ':' + m + ':' + s;
+        updatePacing();
       }
       document.getElementById('clockText').textContent = new Date().toLocaleTimeString();
     }, 1000);
@@ -837,10 +1097,15 @@ function populateSpeakerWindow(speakerWindow) {
     };
     document.getElementById('resetTimerBtn').onclick = () => {
       seconds = 0;
+      slideSeconds = 0;
       document.getElementById('timerText').textContent = '00:00:00';
+      updatePacing();
     };
 
-    setTimeout(() => updateUI(activeIdx, false), 50);
+    setTimeout(() => {
+      updateUI(activeIdx, false);
+      updatePacing();
+    }, 50);
   <\/script>
 </body>
 </html>`);
