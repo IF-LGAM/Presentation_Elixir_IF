@@ -424,6 +424,44 @@ def valider_schema(payload: dict) -> dict:
         </div>
       </section>
 
+      <!-- ==========================================
+           SLIDE 8 : DIAGRAMME DE SÉQUENCE MERMAID.JS
+           ========================================== -->
+      <section class="slide" data-slide="8" data-title="Architecture Mermaid.js"
+        data-notes="Explication du cycle de vie des requêtes avec rendu vectoriel Mermaid.js natif à chaud sans outil externe.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 5 : ARCHITECTURE</span>
+              <span class="pill-tag gray">⏱ 3 min &bull; Slide 8/8</span>
+            </div>
+            <h2>Flux de Communication & Diagramme Vectoriel</h2>
+            <p>Diagramme de séquence généré directement à chaud via la balise standard <code>&lt;div class="mermaid"&gt;</code> :</p>
+          </div>
+
+          <div class="x-card" style="padding: 1.25rem;">
+            <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Client as 🌐 Client Web
+    participant Proxy as ⚡ NGINX / Gateway
+    participant BEAM as 🟣 BEAM VM (Elixir)
+    participant Channel as 📡 WebSocket Channel
+    participant DB as 🗄️ PostgreSQL
+
+    Client->>Proxy: Connexion WSS / HTTP Upgrade
+    Proxy->>BEAM: Routage vers Endpoint Phoenix
+    BEAM->>Channel: Spawn Processus Isolé (GenServer)
+    Channel-->>Client: Accusé de connexion {:ok, %{status: 200}}
+    Client->>Channel: Message push("event", payload)
+    Channel->>DB: Écriture asynchrone non bloquante
+    DB-->>Channel: Commit transactionnel
+    Channel-->>Client: Diffusion temps réel
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 

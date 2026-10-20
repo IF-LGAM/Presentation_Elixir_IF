@@ -941,3 +941,45 @@ img.slide-logo.framed {
   pointer-events: auto !important;
 }
 
+/* ==========================================================================
+   DIAGRAMMES VECTORIELS MERMAID.JS (ADAPTATIFS THEME & ACCENT)
+   ========================================================================== */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0.6rem auto;
+  overflow: hidden;
+  text-align: center;
+  min-height: 120px;
+}
+
+.mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 480px;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.18));
+}
+
+.x-card .mermaid svg {
+  max-height: 360px;
+}
+
+.grid-2 .mermaid svg {
+  max-height: 400px;
+}
+
+.mermaid-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-family: 'Fira Code', monospace;
+}
+
+

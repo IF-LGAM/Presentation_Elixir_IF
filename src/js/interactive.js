@@ -287,3 +287,118 @@ window.DeckEngine.Blank = (function () {
     getMode: () => activeMode
   };
 })();
+
+// ==========================================================================
+// MOTEUR DE DIAGRAMMES MERMAID.JS (À CHAUD & ADAPTATIF)
+// ==========================================================================
+window.DeckEngine.Mermaid = (function () {
+  let cdnPromise = null;
+
+  function loadMermaidCDN() {
+    if (window.mermaid) return Promise.resolve(window.mermaid);
+    if (cdnPromise) return cdnPromise;
+
+    cdnPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+      script.async = true;
+      script.onload = () => resolve(window.mermaid);
+      script.onerror = (err) => {
+        console.warn('Impossible de charger Mermaid.js depuis le CDN:', err);
+        cdnPromise = null;
+        reject(err);
+      };
+      document.head.appendChild(script);
+    });
+
+    return cdnPromise;
+  }
+
+  function getThemeConfig() {
+    const isLight = document.body.classList.contains('theme-light') || 
+                    document.body.getAttribute('data-theme') === 'light';
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() || '#E50914';
+    const bgDark = getComputedStyle(document.documentElement).getPropertyValue('--card-bg').trim() || '#1F1F1F';
+    const textColor = isLight ? '#0F172A' : '#FFFFFF';
+
+    return {
+      startOnLoad: false,
+      securityLevel: 'loose',
+      theme: isLight ? 'default' : 'dark',
+      themeVariables: {
+        primaryColor: accent,
+        primaryTextColor: textColor,
+        primaryBorderColor: accent,
+        lineColor: accent,
+        secondaryColor: isLight ? '#F1F5F9' : '#1A1A1A',
+        tertiaryColor: isLight ? '#E2E8F0' : bgDark,
+        fontFamily: 'Inter, -apple-system, sans-serif',
+        fontSize: '14px',
+        noteBkgColor: isLight ? '#FEF08A' : '#2A2515',
+        noteTextColor: isLight ? '#713F12' : '#FEF08A'
+      }
+    };
+  }
+
+  let renderTimeout = null;
+
+  function renderAll() {
+    if (renderTimeout) clearTimeout(renderTimeout);
+    renderTimeout = setTimeout(doRenderAll, 60);
+  }
+
+  async function doRenderAll() {
+    const nodes = document.querySelectorAll('.mermaid');
+    if (!nodes.length) return;
+
+    // Sauvegarde du code source brut avant premier rendu
+    nodes.forEach(node => {
+      if (!node.dataset.mermaidSrc) {
+        node.dataset.mermaidSrc = node.textContent.trim();
+      }
+    });
+
+    try {
+      await loadMermaidCDN();
+      if (!window.mermaid) return;
+
+      window.mermaid.initialize(getThemeConfig());
+
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        const rawSrc = node.dataset.mermaidSrc;
+        if (!rawSrc) continue;
+
+        const id = 'mermaid-diag-' + i + '-' + Math.floor(Math.random() * 1000000);
+        try {
+          const { svg } = await window.mermaid.render(id, rawSrc);
+          node.innerHTML = svg;
+          node.classList.remove('mermaid-loading');
+        } catch (renderErr) {
+          console.warn('Erreur de syntaxe Mermaid:', renderErr);
+          node.innerHTML = `<div style="color:#EF4444;font-size:0.85rem;font-family:'Fira Code',monospace;padding:1rem;border:1px dashed #EF4444;border-radius:6px;text-align:left;">⚠️ Erreur de rendu Mermaid : ${renderErr.message || renderErr}</div>`;
+        }
+      }
+    } catch (err) {
+      console.warn('Erreur globale Mermaid:', err);
+    }
+  }
+
+  function init() {
+    const nodes = document.querySelectorAll('.mermaid');
+    if (nodes.length > 0) {
+      nodes.forEach(n => {
+        if (!n.dataset.mermaidSrc) {
+          n.dataset.mermaidSrc = n.textContent.trim();
+        }
+      });
+      renderAll();
+    }
+  }
+
+  return {
+    init: init,
+    render: renderAll
+  };
+})();
+

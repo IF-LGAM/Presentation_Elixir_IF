@@ -57,6 +57,10 @@ Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HT
   - Surlignage dynamique des termes trouvés, navigation intégrale au clavier (`↑` / `↓` et `Entrée`) et saut immédiat vers la diapositive sélectionnée.
 - **Coloration Syntaxique Intégrée** :
   - Rendu de code optimisé via Prism.js (thème sombre *Tomorrow*).
+- **Support Natif des Diagrammes Vectoriels Mermaid.js (`.mermaid`)** :
+  - Écriture directe de code Mermaid dans le HTML (`sequenceDiagram`, `flowchart`, `classDiagram`, `stateDiagram`...).
+  - Chargement à chaud et à la demande (CDN zéro overhead si aucun diagramme n'est présent).
+  - Rendu vectoriel SVG net s'adaptant automatiquement au thème (`dark`/`light`) et à la couleur d'accentuation en temps réel.
 - **Composants Interactifs Intégrés** :
   - Disposition adaptative en grilles (`.grid-2`, `.grid-3`, `.grid-4`).
   - Module de Quiz interactif à main levée avec validation visuelle et révélation de la solution argumentée.

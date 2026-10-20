@@ -134,6 +134,11 @@ window.DeckEngine.Palette = (function () {
     if (window.DeckEngine.Navigation && window.DeckEngine.Navigation.broadcastMessage) {
       window.DeckEngine.Navigation.broadcastMessage({ type: 'accentColor', color: norm });
     }
+
+    // Ré-adaptation des diagrammes Mermaid à la nouvelle couleur d'accent
+    if (window.DeckEngine.Mermaid && typeof window.DeckEngine.Mermaid.render === 'function') {
+      window.DeckEngine.Mermaid.render();
+    }
   }
 
   function cycleAccentColor() {

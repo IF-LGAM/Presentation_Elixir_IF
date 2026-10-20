@@ -116,6 +116,7 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 | `schema-img` | `<img class="schema-img" src="...">` | Image calibrée en hauteur (`object-fit: contain;`) pour garantir zéro débordement 16:9. |
 | `caption` | `<div class="schema-caption">` | Légende descriptive sous le schéma ou la figure. |
 | `split-schema` | `<div class="split-schema">` | Mise en page 50/50 avec texte explicatif à gauche et grand schéma à droite. |
+| `mermaid` | `<div class="mermaid">` | Diagramme vectoriel interactif Mermaid.js à chaud (séquence, flux, architecture). Auto-adapté au thème (`dark`/`light`) et à la couleur d'accent. |
 
 ---
 
@@ -327,3 +328,29 @@ Par défaut, les fragments apparaissent dans l'ordre du DOM. Pour révéler plus
 > 💡 **Console Présentateur & PDF** :
 > - Dans la console orateur, les fragments non encore révélés apparaissent en filigrane (opacité atténuée 35%) pour anticiper la suite.
 > - Dans l'aperçu de la prochaine slide et dans l'export PDF (`@media print`), tous les fragments sont automatiquement 100% visibles.
+
+---
+
+## 12. Diagrammes Vectoriels Mermaid.js (À Chaud & Adaptatifs)
+
+Pour intégrer un schéma d'architecture, un diagramme de séquence ou un organigramme sans image externe, écrivez directement le code Mermaid dans une balise `<div class="mermaid">` :
+
+```html
+<div class="x-card">
+  <div class="mermaid">
+    sequenceDiagram
+      autonumber
+      Client->>Phoenix: WebSocket Handshake
+      Phoenix->>Channel: Join Topic "room:lobby"
+      Channel-->>Client: {:ok, %{status: "connected"}}
+      Client->>Channel: push("new_msg", payload)
+      Channel->>PubSub: broadcast(payload)
+      PubSub-->>Client: {:msg, payload}
+  </div>
+</div>
+```
+
+> 🎨 **Adaptation Automatique au Design System** :
+> - **Thèmes** : Le diagramme s'adapte automatiquement en mode sombre (`dark`) ou clair (`light`).
+> - **Couleur d'Accent** : Les bordures principales, flèches et nœuds actifs adoptent instantanément la couleur d'accent sélectionnée (`C` ou palette).
+> - **Chargement à la Demande** : Le moteur DeckEngine ne télécharge la bibliothèque Mermaid.js que si la page contient au moins un bloc `.mermaid`.

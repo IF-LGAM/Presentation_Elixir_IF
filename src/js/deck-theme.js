@@ -149,6 +149,11 @@ window.DeckEngine.Theme = (function () {
     if (overviewModal && overviewModal.classList.contains('open') && window.DeckEngine.Overview) {
       window.DeckEngine.Overview.scaleThumbs();
     }
+
+    // Ré-adaptation des diagrammes Mermaid au nouveau thème
+    if (window.DeckEngine.Mermaid && typeof window.DeckEngine.Mermaid.render === 'function') {
+      window.DeckEngine.Mermaid.render();
+    }
   }
 
   function cycleTheme() {

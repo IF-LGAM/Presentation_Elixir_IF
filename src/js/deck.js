@@ -66,6 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DeckEngine.Blank.init();
   }
 
+  // 10. Initialisation et rendu des diagrammes vectoriels Mermaid.js
+  if (window.DeckEngine.Mermaid && typeof window.DeckEngine.Mermaid.init === 'function') {
+    window.DeckEngine.Mermaid.init();
+  }
+
   // 7. Câblage des contrôles d'interface complémentaires
   const notesDrawer = document.getElementById('notesDrawer');
   const shortcutsModal = document.getElementById('shortcutsModal');
