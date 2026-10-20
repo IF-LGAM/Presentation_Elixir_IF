@@ -272,4 +272,12 @@
     max-height: 0.6in !important;
     max-width: 2.4in !important;
   }
+
+  /* Révélation systématique de tous les fragments pour l'export PDF */
+  .fragment {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
 }

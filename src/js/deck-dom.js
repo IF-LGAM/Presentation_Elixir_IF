@@ -230,10 +230,13 @@ window.DeckEngine.DOM = (function () {
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.9rem;">
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
-              <span>Slide suivante</span> <kbd>&rarr; / Espace</kbd>
+              <span>Suivant / Fragment</span> <kbd>&rarr; / Espace</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
-              <span>Slide précédente</span> <kbd>&larr;</kbd>
+              <span>Précédent / Fragment</span> <kbd>&larr;</kbd>
+            </div>
+            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center; grid-column: span 2;">
+              <span>Saut direct de slide (sans fragments)</span> <kbd>Shift + &rarr; / &larr;</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>Ambiance Visuelle (7 thèmes)</span> <kbd>T</kbd>
@@ -256,8 +259,8 @@ window.DeckEngine.DOM = (function () {
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>Export PDF 16:9</span> <kbd>P</kbd>
             </div>
-            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center; grid-column: span 2;">
-              <span>En Plein Écran : Slide suivante / précédente</span> <kbd>Clic / Molette</kbd>
+            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+              <span>En Plein Écran : Navigation</span> <kbd>Clic / Molette</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center; grid-column: span 2;">
               <span>Aide Raccourcis</span> <kbd>?</kbd>

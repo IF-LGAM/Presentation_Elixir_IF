@@ -16,6 +16,10 @@ Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HT
 
 ## ✨ Fonctionnalités Clés
 
+- **Révélation Progressive & Fragments (`class="fragment"`)** :
+  - Découpage et cadence dynamique de vos contenus (cartes, puces, jalons, blocs de code).
+  - Apparition étape par étape via `→` ou `Espace` ; saut direct sans fragment via `Shift + →`.
+  - Aperçu prévisionnel dans la console présentateur (opacité 35% avant révélation) et révélation totale automatique lors de l'export PDF.
 - **Console Présentateur Dual-Screen (`S`)** :
   - Ouvre une seconde fenêtre dédiée pour l'orateur.
   - Synchronisation bidirectionnelle en temps réel via l'API native `BroadcastChannel` (avec fallback automatique sur `localStorage`).
@@ -71,10 +75,11 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 
 | Raccourci | Action |
 | :--- | :--- |
-| `→` / `Espace` / `PageDown` | Slide suivante |
-| `←` / `PageUp` | Slide précédente |
-| `Clic gauche` *(en plein écran)* | Slide suivante (style télécommande) |
-| `Molette` *(en plein écran)* | Slide suivante / précédente |
+| `→` / `Espace` / `PageDown` | Slide suivante / Révéler le fragment suivant |
+| `←` / `PageUp` | Slide précédente / Masquer le fragment précédent |
+| `Shift + →` / `Shift + ←` | Saut direct vers slide suivante / précédente (sans fragment) |
+| `Clic gauche` *(en plein écran)* | Étape suivante (style télécommande / clicker) |
+| `Molette` *(en plein écran)* | Étape suivante / précédente |
 | `Home` / `End` | Première / Dernière slide |
 | `T` | Changer d'ambiance visuelle (parmi les 7 thèmes) |
 | `C` | Changer la couleur d'accentuation (ou ouvrir la palette) |

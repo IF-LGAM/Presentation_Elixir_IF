@@ -877,3 +877,67 @@ img.slide-logo.framed {
   }
 }
 
+/* ==========================================================================
+   ANIMATIONS & RÉVÉLATION PROGRESSIVE PAR ÉTAPES (FRAGMENTS)
+   ========================================================================== */
+
+.fragment {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.fragment.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Variantes de transition de fragments */
+.fragment.fade-only {
+  transform: none !important;
+}
+
+.fragment.zoom-in {
+  opacity: 0;
+  transform: scale(0.88);
+}
+
+.fragment.zoom-in.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fragment.semi-fade {
+  opacity: 0.22;
+  transform: none;
+}
+
+.fragment.semi-fade.visible {
+  opacity: 1;
+}
+
+.fragment.fade-out {
+  opacity: 1;
+  transform: none;
+}
+
+.fragment.fade-out.visible {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fragment.highlight-current.current-fragment {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent-primary) 35%, transparent);
+}
+
+/* Dans les modales de vue d'ensemble (Overview), tous les fragments doivent être immédiatement visibles */
+.overview-modal .fragment,
+.overview-card .fragment {
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+

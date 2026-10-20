@@ -12,6 +12,64 @@ window.DeckEngine.Navigation = (function () {
   let currentIndex = 0;
   let deckChannel = null;
 
+  let currentFragmentStep = -1; // -1 = aucun fragment révélé
+
+  function getFragmentSteps(slide) {
+    if (!slide) return [];
+    const frags = Array.from(slide.querySelectorAll('.fragment'));
+    if (frags.length === 0) return [];
+
+    const hasIndices = frags.some(f => f.hasAttribute('data-fragment-index'));
+    if (hasIndices) {
+      const groups = {};
+      frags.forEach(f => {
+        const idx = f.hasAttribute('data-fragment-index') ? parseInt(f.getAttribute('data-fragment-index'), 10) : 999;
+        if (!groups[idx]) groups[idx] = [];
+        groups[idx].push(f);
+      });
+      return Object.keys(groups).sort((a, b) => Number(a) - Number(b)).map(k => groups[k]);
+    } else {
+      return frags.map(f => [f]);
+    }
+  }
+
+  function updateFragmentClasses(steps, activeStepIndex) {
+    steps.forEach((step, idx) => {
+      const isVisible = idx <= activeStepIndex;
+      const isCurrent = idx === activeStepIndex;
+      step.forEach(el => {
+        el.classList.toggle('visible', isVisible);
+        el.classList.toggle('current-fragment', isCurrent);
+      });
+    });
+  }
+
+  function broadcastFragmentStep(slideIdx, stepIdx) {
+    broadcastMessage({ type: 'fragmentStep', slideIndex: slideIdx, fragmentStep: stepIdx });
+    try {
+      localStorage.setItem('deck_sync_fragment', JSON.stringify({ slideIndex: slideIdx, fragmentStep: stepIdx, timestamp: Date.now() }));
+    } catch (e) {}
+  }
+
+  let lastActionTime = 0;
+  let lastActionKey = '';
+
+  function handleRemoteAction(action) {
+    if (!action) return;
+    const now = Date.now();
+    // Dé-doublonnage : évite d'exécuter 2 fois l'action si BroadcastChannel et storage se déclenchent simultanément
+    if (action === lastActionKey && (now - lastActionTime) < 150) {
+      return;
+    }
+    lastActionTime = now;
+    lastActionKey = action;
+
+    if (action === 'next') next(false);
+    else if (action === 'prev') prev(false);
+    else if (action === 'nextDirect') next(true);
+    else if (action === 'prevDirect') prev(true);
+  }
+
   function initChannel() {
     try {
       deckChannel = new BroadcastChannel('deck_channel_sync');
@@ -25,7 +83,15 @@ window.DeckEngine.Navigation = (function () {
             window.DeckEngine.Theme.applyTheme(event.data.theme, false);
           }
         }
-        if (typeof event.data.slideIndex === 'number') {
+        if (event.data.type === 'action') {
+          handleRemoteAction(event.data.action);
+        }
+        if (event.data.type === 'fragmentStep' && event.data.slideIndex === currentIndex) {
+          const steps = getFragmentSteps(slides[currentIndex]);
+          currentFragmentStep = event.data.fragmentStep;
+          updateFragmentClasses(steps, currentFragmentStep);
+        }
+        if (typeof event.data.slideIndex === 'number' && event.data.type !== 'fragmentStep') {
           goToSlide(event.data.slideIndex, false);
         }
       };
@@ -43,6 +109,22 @@ window.DeckEngine.Navigation = (function () {
           window.DeckEngine.Theme.applyTheme(event.newValue, false);
         }
       }
+      if (event.key === 'deck_sync_fragment' && event.newValue !== null) {
+        try {
+          const data = JSON.parse(event.newValue);
+          if (data.slideIndex === currentIndex) {
+            const steps = getFragmentSteps(slides[currentIndex]);
+            currentFragmentStep = data.fragmentStep;
+            updateFragmentClasses(steps, currentFragmentStep);
+          }
+        } catch (e) {}
+      }
+      if (event.key === 'deck_sync_action' && event.newValue !== null) {
+        try {
+          const data = JSON.parse(event.newValue);
+          handleRemoteAction(data.action);
+        } catch (e) {}
+      }
     });
   }
 
@@ -56,11 +138,11 @@ window.DeckEngine.Navigation = (function () {
     const curTheme = (window.DeckEngine?.Theme && typeof window.DeckEngine.Theme.getCurrentThemeId === 'function')
       ? window.DeckEngine.Theme.getCurrentThemeId()
       : (document.querySelector('.deck-container')?.getAttribute('data-theme') || 'dark');
-    broadcastMessage({ slideIndex: index, theme: curTheme });
+    broadcastMessage({ slideIndex: index, theme: curTheme, fragmentStep: currentFragmentStep });
     localStorage.setItem('deck_sync_slide', index.toString());
   }
 
-  function goToSlide(index, shouldBroadcast = true) {
+  function goToSlide(index, shouldBroadcast = true, direction = 'forward') {
     if (index < 0) index = 0;
     if (index >= totalSlides) index = totalSlides - 1;
 
@@ -72,6 +154,15 @@ window.DeckEngine.Navigation = (function () {
     currentIndex = index;
     const activeSlide = slides[currentIndex];
     if (activeSlide) activeSlide.classList.add('active');
+
+    // Gestion de l'état des fragments sur la slide active
+    const steps = getFragmentSteps(activeSlide);
+    if (direction === 'backward') {
+      currentFragmentStep = steps.length - 1; // Révéler tous les fragments en marche arrière
+    } else {
+      currentFragmentStep = -1; // Aucun fragment révélé à l'arrivée
+    }
+    updateFragmentClasses(steps, currentFragmentStep);
 
     // Détection et adaptation automatique du thème Clair/Foncé
     if (window.DeckEngine.Theme) {
@@ -112,12 +203,44 @@ window.DeckEngine.Navigation = (function () {
     });
   }
 
+  function next(skipFragments = false) {
+    const activeSlide = slides[currentIndex];
+    const steps = getFragmentSteps(activeSlide);
+
+    if (!skipFragments && steps.length > 0 && currentFragmentStep < steps.length - 1) {
+      currentFragmentStep++;
+      updateFragmentClasses(steps, currentFragmentStep);
+      broadcastFragmentStep(currentIndex, currentFragmentStep);
+      return;
+    }
+
+    if (currentIndex < totalSlides - 1) {
+      goToSlide(currentIndex + 1, true, 'forward');
+    }
+  }
+
+  function prev(skipFragments = false) {
+    const activeSlide = slides[currentIndex];
+    const steps = getFragmentSteps(activeSlide);
+
+    if (!skipFragments && steps.length > 0 && currentFragmentStep >= 0) {
+      currentFragmentStep--;
+      updateFragmentClasses(steps, currentFragmentStep);
+      broadcastFragmentStep(currentIndex, currentFragmentStep);
+      return;
+    }
+
+    if (currentIndex > 0) {
+      goToSlide(currentIndex - 1, true, 'backward');
+    }
+  }
+
   function nextSlide() {
-    if (currentIndex < totalSlides - 1) goToSlide(currentIndex + 1);
+    next(false);
   }
 
   function prevSlide() {
-    if (currentIndex > 0) goToSlide(currentIndex - 1);
+    prev(false);
   }
 
   function toggleFullscreen() {
@@ -150,10 +273,14 @@ window.DeckEngine.Navigation = (function () {
         case 'ArrowRight':
         case ' ':
         case 'PageDown':
-          e.preventDefault(); nextSlide(); break;
+          e.preventDefault();
+          next(e.shiftKey);
+          break;
         case 'ArrowLeft':
         case 'PageUp':
-          e.preventDefault(); prevSlide(); break;
+          e.preventDefault();
+          prev(e.shiftKey);
+          break;
         case 'Home':
           e.preventDefault(); goToSlide(0); break;
         case 'End':
@@ -303,8 +430,11 @@ window.DeckEngine.Navigation = (function () {
     goToSlide: goToSlide,
     nextSlide: nextSlide,
     prevSlide: prevSlide,
+    next: next,
+    prev: prev,
     getCurrentIndex: () => currentIndex,
     getTotalSlides: () => totalSlides,
+    getCurrentFragmentStep: () => currentFragmentStep,
     broadcastMessage: broadcastMessage,
     toggleFullscreen: toggleFullscreen
   };
@@ -315,3 +445,5 @@ window.getCurrentSlideIndex = () => (window.DeckEngine.Navigation ? window.DeckE
 window.goToSlide = (idx, broadcast) => window.DeckEngine.Navigation && window.DeckEngine.Navigation.goToSlide(idx, broadcast);
 window.nextSlide = () => window.DeckEngine.Navigation && window.DeckEngine.Navigation.nextSlide();
 window.prevSlide = () => window.DeckEngine.Navigation && window.DeckEngine.Navigation.prevSlide();
+window.next = (skip) => window.DeckEngine.Navigation && window.DeckEngine.Navigation.next(skip);
+window.prev = (skip) => window.DeckEngine.Navigation && window.DeckEngine.Navigation.prev(skip);

@@ -409,6 +409,26 @@ function populateSpeakerWindow(speakerWindow) {
       --code-bg: #0F0D0C;
     }
 
+    /* Rendu des fragments dans les aperçus de la console présentateur */
+    .sp-preview-inner .fragment {
+      opacity: 0.35 !important;
+      transform: none !important;
+      transition: opacity 0.2s ease;
+      outline: 1px dashed color-mix(in srgb, var(--accent-primary, #E50914) 40%, transparent);
+      outline-offset: 2px;
+    }
+
+    .sp-preview-inner .fragment.visible {
+      opacity: 1 !important;
+      outline: none !important;
+    }
+
+    /* Dans l'aperçu de la prochaine slide, tous les éléments sont lisibles immédiatement */
+    #nextSlideContent .fragment {
+      opacity: 1 !important;
+      outline: none !important;
+    }
+
     .sp-notes-box {
       flex: 1;
       padding: 1.4rem;
@@ -537,6 +557,32 @@ function populateSpeakerWindow(speakerWindow) {
       document.documentElement.style.setProperty('--accent-hover', lightenColor(color, 16));
     }
 
+    function syncPreviewFragments(stepIdx) {
+      const curElem = document.getElementById('currentSlideContent');
+      if (!curElem) return;
+      const frags = Array.from(curElem.querySelectorAll('.fragment'));
+      if (frags.length === 0) return;
+
+      const hasIndices = frags.some(f => f.hasAttribute('data-fragment-index'));
+      let steps = [];
+      if (hasIndices) {
+        const groups = {};
+        frags.forEach(f => {
+          const idx = f.hasAttribute('data-fragment-index') ? parseInt(f.getAttribute('data-fragment-index'), 10) : 999;
+          if (!groups[idx]) groups[idx] = [];
+          groups[idx].push(f);
+        });
+        steps = Object.keys(groups).sort((a, b) => Number(a) - Number(b)).map(k => groups[k]);
+      } else {
+        steps = frags.map(f => [f]);
+      }
+
+      steps.forEach((step, idx) => {
+        const isVis = idx <= stepIdx;
+        step.forEach(el => el.classList.toggle('visible', isVis));
+      });
+    }
+
     const channel = new BroadcastChannel('deck_channel_sync');
     channel.onmessage = (e) => {
       if (e.data) {
@@ -546,8 +592,11 @@ function populateSpeakerWindow(speakerWindow) {
         if (e.data.type === 'accentColor' && e.data.color) {
           setAccentColor(e.data.color);
         }
-        if (typeof e.data.slideIndex === 'number') {
-          updateUI(e.data.slideIndex, false);
+        if (e.data.type === 'fragmentStep' && e.data.slideIndex === activeIdx) {
+          syncPreviewFragments(e.data.fragmentStep);
+        }
+        if (typeof e.data.slideIndex === 'number' && e.data.type !== 'fragmentStep') {
+          updateUI(e.data.slideIndex, false, e.data.fragmentStep);
         }
       }
     };
@@ -561,6 +610,12 @@ function populateSpeakerWindow(speakerWindow) {
       }
       if ((e.key === 'deck_sync_accent_color' || e.key === 'deck_accent_color') && e.newValue) {
         setAccentColor(e.newValue);
+      }
+      if (e.key === 'deck_sync_fragment' && e.newValue !== null) {
+        try {
+          const d = JSON.parse(e.newValue);
+          if (d.slideIndex === activeIdx) syncPreviewFragments(d.fragmentStep);
+        } catch (err) {}
       }
     });
 
@@ -632,7 +687,7 @@ function populateSpeakerWindow(speakerWindow) {
       content.style.transform = 'scale(' + Math.max(scale, 0.05) + ')';
     }
 
-    function updateUI(idx, notify = true) {
+    function updateUI(idx, notify = true, fragmentStep = -1) {
       if (idx < 0) idx = 0;
       if (idx >= slidesData.length) idx = slidesData.length - 1;
       activeIdx = idx;
@@ -657,6 +712,7 @@ function populateSpeakerWindow(speakerWindow) {
         curElem.style.removeProperty('--accent-hover');
       }
       curElem.innerHTML = sData.html;
+      syncPreviewFragments(typeof fragmentStep === 'number' ? fragmentStep : -1);
 
       document.getElementById('speakerNotesArea').textContent = sData.notes;
 
@@ -677,6 +733,7 @@ function populateSpeakerWindow(speakerWindow) {
         }
         document.getElementById('nextSlideTitleTxt').textContent = nextData.title;
         nextElem.innerHTML = nextData.html;
+        nextElem.querySelectorAll('.fragment').forEach(f => f.classList.add('visible'));
       } else {
         document.getElementById('nextSlideTitleTxt').textContent = 'Fin de la présentation';
         KNOWN_THEMES.forEach(t => nextElem.classList.remove('theme-' + t));
@@ -704,14 +761,48 @@ function populateSpeakerWindow(speakerWindow) {
       scaleElement('nextBox', 'nextSlideContent');
     });
 
-    document.getElementById('prevSlideBtn').onclick = () => { if (activeIdx > 0) sendSlideChange(activeIdx - 1); };
-    document.getElementById('nextSlideBtn').onclick = () => { if (activeIdx < slidesData.length - 1) sendSlideChange(activeIdx + 1); };
+    function requestNext(skip = false) {
+      const act = skip ? 'nextDirect' : 'next';
+      let sent = false;
+      if (channel) {
+        try {
+          channel.postMessage({ type: 'action', action: act });
+          sent = true;
+        } catch (e) { sent = false; }
+      }
+      if (!sent) {
+        try {
+          localStorage.setItem('deck_sync_action', JSON.stringify({ action: act, t: Date.now() }));
+        } catch (e) {}
+      }
+    }
+
+    function requestPrev(skip = false) {
+      const act = skip ? 'prevDirect' : 'prev';
+      let sent = false;
+      if (channel) {
+        try {
+          channel.postMessage({ type: 'action', action: act });
+          sent = true;
+        } catch (e) { sent = false; }
+      }
+      if (!sent) {
+        try {
+          localStorage.setItem('deck_sync_action', JSON.stringify({ action: act, t: Date.now() }));
+        } catch (e) {}
+      }
+    }
+
+    document.getElementById('prevSlideBtn').onclick = () => requestPrev(false);
+    document.getElementById('nextSlideBtn').onclick = () => requestNext(false);
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-        e.preventDefault(); if (activeIdx < slidesData.length - 1) sendSlideChange(activeIdx + 1);
+        e.preventDefault();
+        requestNext(e.shiftKey);
       } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-        e.preventDefault(); if (activeIdx > 0) sendSlideChange(activeIdx - 1);
+        e.preventDefault();
+        requestPrev(e.shiftKey);
       }
     });
 

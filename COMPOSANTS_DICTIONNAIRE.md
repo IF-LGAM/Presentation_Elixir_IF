@@ -300,3 +300,30 @@ Toutes les approches suivantes sont supportées nativement pour redimensionner l
    ```
 
 > 🛡️ **Garantie Zéro Chevauchement** : Le moteur `deck-fit.js` et le layout CSS réservent automatiquement une zone de sécurité dynamique au bas de chaque diapositive dotée de logos (`logoReserve = maxLogoHeight + 44px`). Le contenu de la slide (`.slide-content`) est automatiquement mis à l'échelle pour s'arrêter strictement au-dessus du logo avec une marge respirante.
+
+---
+
+## 11. Révélation Progressive & Fragments (Animations & Rythme)
+
+Pour cadencer l'apparition des éléments à l'écran sans changer de slide (cartes, puces, jalons, blocs de code), il suffit d'ajouter la classe `.fragment` sur n'importe quel élément HTML :
+
+| Alias / Classe | Exemple HTML | Comportement & Rendu |
+| :--- | :--- | :--- |
+| `fragment` | `<div class="x-card fragment">` | Apparaît au clic suivant avec un fondu et glissement doux vers le haut. |
+| `fragment fade-only` | `<p class="fragment fade-only">` | Fondu simple d'opacité (sans translation verticale). |
+| `fragment zoom-in` | `<div class="metric-value fragment zoom-in">` | Apparition avec léger zoom (scale `0.88` &rarr; `1`). |
+| `fragment semi-fade` | `<li class="fragment semi-fade">` | Visible initialement à 22% d'opacité, puis devient 100% au focus. |
+| `fragment highlight-current`| `<div class="x-card fragment highlight-current">` | Met en exergue l'élément avec la couleur d'accent lorsqu'il est actif. |
+| `fragment fade-out` | `<div class="fragment fade-out">` | Visible au départ, s'estompe et disparaît à l'étape suivante. |
+
+### Ordonnancement sur-mesure (`data-fragment-index`)
+Par défaut, les fragments apparaissent dans l'ordre du DOM. Pour révéler plusieurs éléments en simultané ou dans un ordre précis :
+```html
+<div class="x-card fragment" data-fragment-index="1">Étape A</div>
+<div class="x-card fragment" data-fragment-index="1">Étape A (simultanée)</div>
+<div class="x-card fragment" data-fragment-index="2">Étape B</div>
+```
+
+> 💡 **Console Présentateur & PDF** :
+> - Dans la console orateur, les fragments non encore révélés apparaissent en filigrane (opacité atténuée 35%) pour anticiper la suite.
+> - Dans l'aperçu de la prochaine slide et dans l'export PDF (`@media print`), tous les fragments sont automatiquement 100% visibles.
