@@ -51,6 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DeckEngine.Navigation.init();
   }
 
+  // 8. Initialisation du pointeur laser virtuel haute visibilité (Touche L)
+  if (window.DeckEngine.Laser && typeof window.DeckEngine.Laser.init === 'function') {
+    window.DeckEngine.Laser.init();
+  }
+
   // 7. Câblage des contrôles d'interface complémentaires
   const notesDrawer = document.getElementById('notesDrawer');
   const shortcutsModal = document.getElementById('shortcutsModal');

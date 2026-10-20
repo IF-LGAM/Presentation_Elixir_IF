@@ -46,6 +46,9 @@ Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HT
 - **Export PDF 16:9 Haute Fidélité (`P`)** :
   - Feuille de style dédiée `@media print` calibrée en format paysage 16:9 (`16in x 9in`).
   - Strictement 1 page par slide, respect fidèle du thème clair/sombre, éléments d'interface masqués et zéro coupure de contenu.
+- **Pointeur Laser Virtuel Haute Visibilité (`L`)** :
+  - Active un pointeur laser lumineux rouge rubis avec halo de diffusion et onde de choc animée au clic pour guider le regard de l'audience.
+  - Masque automatiquement le curseur flèche natif du système pour un rendu fluide et professionnel lors des présentations et captures d'écran.
 - **Coloration Syntaxique Intégrée** :
   - Rendu de code optimisé via Prism.js (thème sombre *Tomorrow*).
 - **Composants Interactifs Intégrés** :
@@ -88,6 +91,7 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 | `N` | Ouvrir/Fermer le panneau latéral de notes (écran simple) |
 | `O` / `Échap` | Vue globale en grille (*Overview*) |
 | `F` | Basculer en mode Plein écran (*Fullscreen*) |
+| `L` | Activer / Désactiver le Pointeur Laser Virtuel (avec onde de choc au clic) |
 | `P` | Lancer l'export PDF via la boîte d'impression navigateur |
 | `?` | Afficher la fenêtre d'aide des raccourcis |
 

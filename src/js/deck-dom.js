@@ -120,6 +120,11 @@ window.DeckEngine.DOM = (function () {
             <span>Notes (N)</span>
           </button>
 
+          <button id="laserToggleBtn" class="ctrl-btn" title="Activer / Désactiver le Pointeur Laser Virtuel (Touche L)">
+            <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #FF1E1E; box-shadow: 0 0 6px #FF1E1E;"></span>
+            <span>Laser (L)</span>
+          </button>
+
           <button id="overviewBtn" class="ctrl-btn" title="Vue globale des slides (Touche O / Échap)">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <rect x="3" y="3" width="7" height="7"></rect>
@@ -258,6 +263,9 @@ window.DeckEngine.DOM = (function () {
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>Export PDF 16:9</span> <kbd>P</kbd>
+            </div>
+            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+              <span>Pointeur Laser Virtuel</span> <kbd>L</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>En Plein Écran : Navigation</span> <kbd>Clic / Molette</kbd>

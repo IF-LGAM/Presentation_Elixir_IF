@@ -75,3 +75,110 @@ function copyCommand(text) {
 
 window.revealQuiz = revealQuiz;
 window.copyCommand = copyCommand;
+
+// ==========================================================================
+// POINTEUR LASER VIRTUEL HAUTE VISIBILITÉ (TOUCHE L)
+// ==========================================================================
+window.DeckEngine = window.DeckEngine || {};
+
+window.DeckEngine.Laser = (function () {
+  let isActive = false;
+  let pointerEl = null;
+  let haloEl = null;
+  let dotEl = null;
+  let mouseX = -100;
+  let mouseY = -100;
+  let isMoving = false;
+
+  function ensureElements() {
+    if (pointerEl) return;
+    pointerEl = document.createElement('div');
+    pointerEl.id = 'deckLaserPointer';
+
+    haloEl = document.createElement('div');
+    haloEl.className = 'laser-halo';
+
+    dotEl = document.createElement('div');
+    dotEl.className = 'laser-dot';
+
+    pointerEl.appendChild(haloEl);
+    pointerEl.appendChild(dotEl);
+    document.body.appendChild(pointerEl);
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!isMoving) {
+        isMoving = true;
+        requestAnimationFrame(renderPosition);
+      }
+    }, { passive: true });
+
+    window.addEventListener('mousedown', (e) => {
+      if (!isActive) return;
+      createRipple(e.clientX, e.clientY);
+    });
+  }
+
+  function renderPosition() {
+    isMoving = false;
+    if (pointerEl) {
+      pointerEl.style.transform = 'translate3d(' + mouseX + 'px, ' + mouseY + 'px, 0)';
+    }
+  }
+
+  function createRipple(x, y) {
+    if (!pointerEl) return;
+    const ripple = document.createElement('div');
+    ripple.className = 'laser-ripple';
+    pointerEl.appendChild(ripple);
+    setTimeout(() => {
+      if (ripple && ripple.parentNode) ripple.parentNode.removeChild(ripple);
+    }, 460);
+  }
+
+  function activate() {
+    ensureElements();
+    isActive = true;
+    document.body.classList.add('laser-active');
+    const btn = document.getElementById('laserToggleBtn');
+    if (btn) btn.classList.add('laser-active-btn');
+  }
+
+  function deactivate() {
+    isActive = false;
+    document.body.classList.remove('laser-active');
+    const btn = document.getElementById('laserToggleBtn');
+    if (btn) btn.classList.remove('laser-active-btn');
+  }
+
+  function toggle() {
+    if (isActive) deactivate();
+    else activate();
+  }
+
+  function init() {
+    const btn = document.getElementById('laserToggleBtn');
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggle();
+      });
+    }
+
+    document.addEventListener('mouseleave', () => {
+      if (pointerEl) pointerEl.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => {
+      if (pointerEl && isActive) pointerEl.style.opacity = '1';
+    });
+  }
+
+  return {
+    init: init,
+    toggle: toggle,
+    activate: activate,
+    deactivate: deactivate,
+    isActive: () => isActive
+  };
+})();

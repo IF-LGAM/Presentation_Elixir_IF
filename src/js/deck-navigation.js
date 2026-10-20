@@ -306,12 +306,18 @@ window.DeckEngine.Navigation = (function () {
         case 'n':
         case 'N':
           if (notesDrawer) notesDrawer.classList.toggle('open'); break;
+        case 'l':
+        case 'L':
+          if (window.DeckEngine.Laser) window.DeckEngine.Laser.toggle(); break;
         case 'o':
         case 'O':
           if (window.DeckEngine.Overview) window.DeckEngine.Overview.toggle(); break;
         case '?':
           if (shortcutsModal) shortcutsModal.classList.toggle('open'); break;
         case 'Escape':
+          if (window.DeckEngine.Laser && window.DeckEngine.Laser.isActive()) {
+            window.DeckEngine.Laser.deactivate();
+          }
           if (overviewModal) overviewModal.classList.remove('open');
           if (shortcutsModal) shortcutsModal.classList.remove('open');
           if (notesDrawer) notesDrawer.classList.remove('open');
