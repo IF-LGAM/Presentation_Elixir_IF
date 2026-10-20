@@ -292,6 +292,13 @@ window.DeckEngine.Navigation = (function () {
 
   function initKeyboard() {
     window.addEventListener('keydown', (e) => {
+      // Raccourci global Palette de Recherche (Cmd+K ou Ctrl+K)
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        if (window.DeckEngine.Search) window.DeckEngine.Search.toggle();
+        return;
+      }
+
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
       const notesDrawer = document.getElementById('notesDrawer');
@@ -350,6 +357,10 @@ window.DeckEngine.Navigation = (function () {
         case 'w':
         case 'W':
           if (window.DeckEngine.Blank) window.DeckEngine.Blank.toggle('white'); break;
+        case '/':
+          e.preventDefault();
+          if (window.DeckEngine.Search) window.DeckEngine.Search.open();
+          break;
         case 't':
         case 'T':
           if (window.DeckEngine.Theme) window.DeckEngine.Theme.toggleTheme(); break;
@@ -374,6 +385,9 @@ window.DeckEngine.Navigation = (function () {
         case '?':
           if (shortcutsModal) shortcutsModal.classList.toggle('open'); break;
         case 'Escape':
+          if (window.DeckEngine.Search && window.DeckEngine.Search.isOpen()) {
+            window.DeckEngine.Search.close();
+          }
           if (window.DeckEngine.Blank && window.DeckEngine.Blank.isActive()) {
             window.DeckEngine.Blank.deactivate();
           }

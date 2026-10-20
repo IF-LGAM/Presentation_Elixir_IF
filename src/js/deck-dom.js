@@ -134,6 +134,14 @@ window.DeckEngine.DOM = (function () {
             <span>Noir (B)</span>
           </button>
 
+          <button id="searchBtn" class="ctrl-btn" title="Rechercher dans les slides (Cmd+K / Ctrl+K / /)">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Recherche (⌘K)</span>
+          </button>
+
           <button id="overviewBtn" class="ctrl-btn" title="Vue globale des slides (Touche O / Échap)">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <rect x="3" y="3" width="7" height="7"></rect>
@@ -286,6 +294,9 @@ window.DeckEngine.DOM = (function () {
               <span>En Plein Écran : Navigation</span> <kbd>Clic / Molette</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center; grid-column: span 2;">
+              <span>Palette de Recherche Rapide</span> <kbd>⌘K / Ctrl+K ou /</kbd>
+            </div>
+            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center; grid-column: span 2;">
               <span>Aide Raccourcis</span> <kbd>?</kbd>
             </div>
           </div>
@@ -300,6 +311,35 @@ window.DeckEngine.DOM = (function () {
       blankOverlay.id = 'deckBlankOverlay';
       blankOverlay.innerHTML = '<div class="blank-overlay-hint"></div>';
       container.appendChild(blankOverlay);
+    }
+
+    // 5c. Palette de Recherche Rapide (Cmd + K / Ctrl + K)
+    if (!document.getElementById('searchModal')) {
+      const searchModal = document.createElement('div');
+      searchModal.id = 'searchModal';
+      searchModal.className = 'modal-overlay search-modal-overlay';
+      searchModal.innerHTML = `
+        <div class="x-card search-palette-box">
+          <div class="search-input-wrap">
+            <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="deckSearchInput" class="search-input-field" placeholder="Rechercher par mot-clé, titre, code, concept..." autocomplete="off" spellcheck="false">
+            <span id="searchResultCount" class="search-count-pill">0 slides</span>
+            <button id="closeSearchBtn" class="search-close-btn" title="Fermer (Échap)">&times;</button>
+          </div>
+          <div id="deckSearchResults" class="search-results-list"></div>
+          <div class="search-palette-footer">
+            <span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> Naviguer</span>
+            <span>&bull;</span>
+            <span><kbd>Entrée</kbd> Ouvrir</span>
+            <span>&bull;</span>
+            <span><kbd>Échap</kbd> Fermer</span>
+          </div>
+        </div>
+      `;
+      container.appendChild(searchModal);
     }
 
     // 6. Injection automatique des logos de pied de slide (bas gauche, milieu, bas droite)

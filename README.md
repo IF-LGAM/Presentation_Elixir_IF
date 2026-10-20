@@ -52,6 +52,9 @@ Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HT
 - **Mode Masquage d'Écran — Blackout & Whiteout (`B` / `W`)** :
   - Masque instantanément l'écran de projection en noir complet (`B` ou `.`) ou en blanc pur (`W`) pour couper la lumière du vidéoprojecteur et recentrer 100% de l'attention de l'auditoire sur l'orateur.
   - Pilotable au clavier, via le bouton dédié dans le header, ou directement à distance depuis la console présentateur (dual-screen). Un simple clic ou n'importe quelle touche de navigation rétablit l'affichage normal.
+- **Palette de Recherche Plein Texte Instantanée (`Cmd + K` / `Ctrl + K` / `/`)** :
+  - Palette de commande flottante façon Spotlight/Raycast permettant de chercher instantanément dans les titres, sous-titres, contenus textuels et notes d'orateur de toutes les diapositives.
+  - Surlignage dynamique des termes trouvés, navigation intégrale au clavier (`↑` / `↓` et `Entrée`) et saut immédiat vers la diapositive sélectionnée.
 - **Coloration Syntaxique Intégrée** :
   - Rendu de code optimisé via Prism.js (thème sombre *Tomorrow*).
 - **Composants Interactifs Intégrés** :
@@ -92,6 +95,7 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 | `C` | Changer la couleur d'accentuation (ou ouvrir la palette) |
 | `S` | Ouvrir la Console Présentateur (dual-screen) |
 | `N` | Ouvrir/Fermer le panneau latéral de notes (écran simple) |
+| `Cmd + K` / `Ctrl + K` / `/` | Ouvrir la Palette de Recherche Plein Texte (Spotlight) |
 | `O` / `Échap` | Vue globale en grille (*Overview*) |
 | `F` | Basculer en mode Plein écran (*Fullscreen*) |
 | `B` / `.` | Masquer l'écran en noir (*Blackout*) |

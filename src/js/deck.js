@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DeckEngine.Overview.init();
   }
 
+  // 4b. Initialisation de la palette de recherche instantanée (Cmd+K / Ctrl+K / /)
+  if (window.DeckEngine.Search && typeof window.DeckEngine.Search.init === 'function') {
+    window.DeckEngine.Search.init();
+  }
+
   // 5. Initialisation du module d'export PDF et Print
   if (window.DeckEngine.Print && typeof window.DeckEngine.Print.init === 'function') {
     window.DeckEngine.Print.init();
