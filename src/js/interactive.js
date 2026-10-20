@@ -182,3 +182,108 @@ window.DeckEngine.Laser = (function () {
     isActive: () => isActive
   };
 })();
+
+// ==========================================================================
+// MODE BLACKOUT & WHITEOUT (TOUCHES B / W)
+// ==========================================================================
+window.DeckEngine.Blank = (function () {
+  let activeMode = null; // 'black' | 'white' | null
+  let overlayEl = null;
+  let hintEl = null;
+
+  function ensureElement() {
+    if (overlayEl) return;
+    overlayEl = document.getElementById('deckBlankOverlay');
+    if (!overlayEl) {
+      overlayEl = document.createElement('div');
+      overlayEl.id = 'deckBlankOverlay';
+
+      hintEl = document.createElement('div');
+      hintEl.className = 'blank-overlay-hint';
+      overlayEl.appendChild(hintEl);
+
+      document.body.appendChild(overlayEl);
+    } else {
+      hintEl = overlayEl.querySelector('.blank-overlay-hint');
+      if (!hintEl) {
+        hintEl = document.createElement('div');
+        hintEl.className = 'blank-overlay-hint';
+        overlayEl.appendChild(hintEl);
+      }
+    }
+
+    // Un clic sur l'écran masqué réactive la vue normale
+    overlayEl.addEventListener('click', () => {
+      deactivate(true);
+    });
+  }
+
+  function broadcastState(mode) {
+    if (window.DeckEngine && window.DeckEngine.Navigation && typeof window.DeckEngine.Navigation.broadcastBlankState === 'function') {
+      window.DeckEngine.Navigation.broadcastBlankState(mode);
+    }
+  }
+
+  function activate(mode = 'black', notify = true) {
+    ensureElement();
+    activeMode = mode === 'white' ? 'white' : 'black';
+
+    overlayEl.classList.remove('blackout-active', 'whiteout-active');
+    overlayEl.classList.add(activeMode === 'white' ? 'whiteout-active' : 'blackout-active');
+
+    if (hintEl) {
+      hintEl.innerHTML = activeMode === 'white'
+        ? '<span>Écran Blanc</span> &bull; <span>Cliquer ou presser Échap pour reprendre</span>'
+        : '<span>Écran Noir</span> &bull; <span>Cliquer ou presser Échap pour reprendre</span>';
+    }
+
+    const btn = document.getElementById('blackoutBtn');
+    if (btn) btn.classList.add('blackout-active-btn');
+
+    if (notify) broadcastState(activeMode);
+  }
+
+  function deactivate(notify = true) {
+    if (!activeMode && !overlayEl?.classList.contains('blackout-active') && !overlayEl?.classList.contains('whiteout-active')) return;
+    activeMode = null;
+
+    if (overlayEl) {
+      overlayEl.classList.remove('blackout-active', 'whiteout-active');
+    }
+
+    const btn = document.getElementById('blackoutBtn');
+    if (btn) btn.classList.remove('blackout-active-btn');
+
+    if (notify) broadcastState(null);
+  }
+
+  function toggle(mode = 'black', notify = true) {
+    const targetMode = mode === 'white' ? 'white' : 'black';
+    if (activeMode === targetMode) {
+      deactivate(notify);
+    } else {
+      activate(targetMode, notify);
+    }
+  }
+
+  function init() {
+    ensureElement();
+
+    const btn = document.getElementById('blackoutBtn');
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggle('black');
+      });
+    }
+  }
+
+  return {
+    init: init,
+    activate: activate,
+    deactivate: deactivate,
+    toggle: toggle,
+    isActive: () => !!activeMode,
+    getMode: () => activeMode
+  };
+})();

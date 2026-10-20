@@ -51,6 +51,13 @@ window.DeckEngine.Navigation = (function () {
     } catch (e) {}
   }
 
+  function broadcastBlankState(mode) {
+    try {
+      if (deckChannel) deckChannel.postMessage({ type: 'blankState', mode: mode });
+      localStorage.setItem('deck_sync_blank_state', JSON.stringify({ mode: mode, timestamp: Date.now() }));
+    } catch (e) {}
+  }
+
   let lastActionTime = 0;
   let lastActionKey = '';
 
@@ -68,6 +75,15 @@ window.DeckEngine.Navigation = (function () {
     else if (action === 'prev') prev(false);
     else if (action === 'nextDirect') next(true);
     else if (action === 'prevDirect') prev(true);
+    else if (action === 'blackout') {
+      if (window.DeckEngine.Blank) window.DeckEngine.Blank.toggle('black', false);
+    }
+    else if (action === 'whiteout') {
+      if (window.DeckEngine.Blank) window.DeckEngine.Blank.toggle('white', false);
+    }
+    else if (action === 'unblank') {
+      if (window.DeckEngine.Blank) window.DeckEngine.Blank.deactivate(false);
+    }
   }
 
   function initChannel() {
@@ -91,6 +107,11 @@ window.DeckEngine.Navigation = (function () {
           currentFragmentStep = event.data.fragmentStep;
           updateFragmentClasses(steps, currentFragmentStep);
         }
+        if (event.data.type === 'blank') {
+          if (event.data.mode === 'black') window.DeckEngine.Blank?.activate('black', false);
+          else if (event.data.mode === 'white') window.DeckEngine.Blank?.activate('white', false);
+          else window.DeckEngine.Blank?.deactivate(false);
+        }
         if (typeof event.data.slideIndex === 'number' && event.data.type !== 'fragmentStep') {
           goToSlide(event.data.slideIndex, false);
         }
@@ -108,6 +129,14 @@ window.DeckEngine.Navigation = (function () {
         if (window.DeckEngine.Theme && typeof window.DeckEngine.Theme.applyTheme === 'function') {
           window.DeckEngine.Theme.applyTheme(event.newValue, false);
         }
+      }
+      if (event.key === 'deck_sync_blank_action' && event.newValue !== null) {
+        try {
+          const data = JSON.parse(event.newValue);
+          if (data.mode === 'black') window.DeckEngine.Blank?.activate('black', false);
+          else if (data.mode === 'white') window.DeckEngine.Blank?.activate('white', false);
+          else window.DeckEngine.Blank?.deactivate(false);
+        } catch (e) {}
       }
       if (event.key === 'deck_sync_fragment' && event.newValue !== null) {
         try {
@@ -269,6 +298,29 @@ window.DeckEngine.Navigation = (function () {
       const overviewModal = document.getElementById('overviewModal');
       const shortcutsModal = document.getElementById('shortcutsModal');
 
+      // Si l'écran est masqué (Blackout / Whiteout)
+      if (window.DeckEngine.Blank && window.DeckEngine.Blank.isActive()) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          window.DeckEngine.Blank.deactivate();
+          return;
+        }
+        if (e.key === 'b' || e.key === 'B' || e.key === '.') {
+          e.preventDefault();
+          window.DeckEngine.Blank.toggle('black');
+          return;
+        }
+        if (e.key === 'w' || e.key === 'W') {
+          e.preventDefault();
+          window.DeckEngine.Blank.toggle('white');
+          return;
+        }
+        // Toute autre touche de navigation démasque l'écran et continue
+        if (['ArrowRight', 'ArrowLeft', ' ', 'PageDown', 'PageUp'].includes(e.key)) {
+          window.DeckEngine.Blank.deactivate();
+        }
+      }
+
       switch (e.key) {
         case 'ArrowRight':
         case ' ':
@@ -291,6 +343,13 @@ window.DeckEngine.Navigation = (function () {
         case 'f':
         case 'F':
           toggleFullscreen(); break;
+        case 'b':
+        case 'B':
+        case '.':
+          if (window.DeckEngine.Blank) window.DeckEngine.Blank.toggle('black'); break;
+        case 'w':
+        case 'W':
+          if (window.DeckEngine.Blank) window.DeckEngine.Blank.toggle('white'); break;
         case 't':
         case 'T':
           if (window.DeckEngine.Theme) window.DeckEngine.Theme.toggleTheme(); break;
@@ -315,6 +374,9 @@ window.DeckEngine.Navigation = (function () {
         case '?':
           if (shortcutsModal) shortcutsModal.classList.toggle('open'); break;
         case 'Escape':
+          if (window.DeckEngine.Blank && window.DeckEngine.Blank.isActive()) {
+            window.DeckEngine.Blank.deactivate();
+          }
           if (window.DeckEngine.Laser && window.DeckEngine.Laser.isActive()) {
             window.DeckEngine.Laser.deactivate();
           }
@@ -442,6 +504,7 @@ window.DeckEngine.Navigation = (function () {
     getTotalSlides: () => totalSlides,
     getCurrentFragmentStep: () => currentFragmentStep,
     broadcastMessage: broadcastMessage,
+    broadcastBlankState: broadcastBlankState,
     toggleFullscreen: toggleFullscreen
   };
 })();

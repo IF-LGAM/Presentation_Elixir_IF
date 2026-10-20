@@ -56,6 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DeckEngine.Laser.init();
   }
 
+  // 9. Initialisation du mode Blackout / Whiteout (Touches B / W)
+  if (window.DeckEngine.Blank && typeof window.DeckEngine.Blank.init === 'function') {
+    window.DeckEngine.Blank.init();
+  }
+
   // 7. Câblage des contrôles d'interface complémentaires
   const notesDrawer = document.getElementById('notesDrawer');
   const shortcutsModal = document.getElementById('shortcutsModal');

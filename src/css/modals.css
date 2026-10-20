@@ -190,3 +190,81 @@
   cursor: pointer;
   border: none;
 }
+
+/* ==========================================================================
+   MODE BLACKOUT & WHITEOUT (TOUCHES B / W)
+   ========================================================================== */
+#deckBlankOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 2.5rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  user-select: none;
+}
+
+#deckBlankOverlay.blackout-active {
+  background: #000000;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+#deckBlankOverlay.whiteout-active {
+  background: #FFFFFF;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.blank-overlay-hint {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#deckBlankOverlay:hover .blank-overlay-hint {
+  opacity: 0.9;
+}
+
+#deckBlankOverlay.blackout-active .blank-overlay-hint {
+  color: #CCCCCC;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#deckBlankOverlay.whiteout-active .blank-overlay-hint {
+  color: #333333;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.ctrl-btn.blackout-active-btn {
+  background: color-mix(in srgb, #000000 40%, var(--card-bg)) !important;
+  border-color: var(--accent-primary) !important;
+  color: var(--accent-primary) !important;
+}
+
+@media print {
+  #deckBlankOverlay {
+    display: none !important;
+  }
+}
+

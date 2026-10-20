@@ -49,6 +49,9 @@ Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HT
 - **Pointeur Laser Virtuel Haute Visibilité (`L`)** :
   - Active un pointeur laser lumineux rouge rubis avec halo de diffusion et onde de choc animée au clic pour guider le regard de l'audience.
   - Masque automatiquement le curseur flèche natif du système pour un rendu fluide et professionnel lors des présentations et captures d'écran.
+- **Mode Masquage d'Écran — Blackout & Whiteout (`B` / `W`)** :
+  - Masque instantanément l'écran de projection en noir complet (`B` ou `.`) ou en blanc pur (`W`) pour couper la lumière du vidéoprojecteur et recentrer 100% de l'attention de l'auditoire sur l'orateur.
+  - Pilotable au clavier, via le bouton dédié dans le header, ou directement à distance depuis la console présentateur (dual-screen). Un simple clic ou n'importe quelle touche de navigation rétablit l'affichage normal.
 - **Coloration Syntaxique Intégrée** :
   - Rendu de code optimisé via Prism.js (thème sombre *Tomorrow*).
 - **Composants Interactifs Intégrés** :
@@ -91,6 +94,8 @@ Le template utilise une esthétique *Dark Mode* sobre et contrastée :
 | `N` | Ouvrir/Fermer le panneau latéral de notes (écran simple) |
 | `O` / `Échap` | Vue globale en grille (*Overview*) |
 | `F` | Basculer en mode Plein écran (*Fullscreen*) |
+| `B` / `.` | Masquer l'écran en noir (*Blackout*) |
+| `W` | Masquer l'écran en blanc (*Whiteout*) |
 | `L` | Activer / Désactiver le Pointeur Laser Virtuel (avec onde de choc au clic) |
 | `P` | Lancer l'export PDF via la boîte d'impression navigateur |
 | `?` | Afficher la fenêtre d'aide des raccourcis |

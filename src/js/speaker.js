@@ -598,6 +598,7 @@ function populateSpeakerWindow(speakerWindow) {
     </div>
 
     <div style="display: flex; gap: 0.4rem; align-items: center;">
+      <button id="spBlackoutBtn" class="sp-btn" title="Masquer l'écran principal (Écran Noir) - Touche B">📺 Masquer (B)</button>
       <span style="font-size: 0.75rem; color: var(--sp-text-muted);">Notes :</span>
       <button id="notesMinusBtn" class="sp-btn">A-</button>
       <button id="notesPlusBtn" class="sp-btn">A+</button>
@@ -678,7 +679,7 @@ function populateSpeakerWindow(speakerWindow) {
       <select id="jumpSlideSelect" class="sp-select"></select>
     </div>
     <div style="font-size: 0.75rem; color: var(--sp-text-muted);">
-      Touches Clavier actives (<kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>Espace</kbd>)
+      Touches Clavier actives (<kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>Espace</kbd> <kbd>B</kbd> <kbd>W</kbd>)
     </div>
   </footer>
 
@@ -744,6 +745,9 @@ function populateSpeakerWindow(speakerWindow) {
         if (e.data.type === 'fragmentStep' && e.data.slideIndex === activeIdx) {
           syncPreviewFragments(e.data.fragmentStep);
         }
+        if (e.data.type === 'blankState') {
+          updateBlankStateUI(e.data.mode);
+        }
         if (typeof e.data.slideIndex === 'number' && e.data.type !== 'fragmentStep') {
           updateUI(e.data.slideIndex, false, e.data.fragmentStep);
         }
@@ -759,6 +763,12 @@ function populateSpeakerWindow(speakerWindow) {
       }
       if ((e.key === 'deck_sync_accent_color' || e.key === 'deck_accent_color') && e.newValue) {
         setAccentColor(e.newValue);
+      }
+      if (e.key === 'deck_sync_blank_state' && e.newValue !== null) {
+        try {
+          const d = JSON.parse(e.newValue);
+          updateBlankStateUI(d.mode);
+        } catch (err) {}
       }
       if (e.key === 'deck_sync_fragment' && e.newValue !== null) {
         try {
@@ -948,6 +958,61 @@ function populateSpeakerWindow(speakerWindow) {
       }
     }
 
+    let currentBlankMode = null;
+    function updateBlankStateUI(mode) {
+      currentBlankMode = mode;
+      const btn = document.getElementById('spBlackoutBtn');
+      if (btn) {
+        if (mode === 'black') {
+          btn.innerHTML = '📺 <strong>Masqué (Noir)</strong>';
+          btn.style.background = '#FF1E1E';
+          btn.style.color = '#FFFFFF';
+          btn.style.borderColor = '#FF1E1E';
+        } else if (mode === 'white') {
+          btn.innerHTML = '📺 <strong>Masqué (Blanc)</strong>';
+          btn.style.background = '#FFFFFF';
+          btn.style.color = '#000000';
+          btn.style.borderColor = '#CCCCCC';
+        } else {
+          btn.innerHTML = '📺 Masquer (B)';
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }
+      }
+    }
+
+    function toggleBlank(mode) {
+      const target = currentBlankMode === mode ? 'unblank' : (mode === 'white' ? 'whiteout' : 'blackout');
+      let sent = false;
+      if (channel) {
+        try {
+          channel.postMessage({ type: 'action', action: target });
+          sent = true;
+        } catch (e) { sent = false; }
+      }
+      if (!sent) {
+        try {
+          localStorage.setItem('deck_sync_action', JSON.stringify({ action: target, t: Date.now() }));
+        } catch (e) {}
+      }
+      updateBlankStateUI(currentBlankMode === mode ? null : mode);
+    }
+
+    const spBlackoutBtn = document.getElementById('spBlackoutBtn');
+    if (spBlackoutBtn) {
+      spBlackoutBtn.onclick = () => toggleBlank('black');
+    }
+
+    // Récupération de l'état initial du masquage s'il existe
+    try {
+      const savedBlank = localStorage.getItem('deck_sync_blank_state');
+      if (savedBlank) {
+        const d = JSON.parse(savedBlank);
+        if (d && d.mode) updateBlankStateUI(d.mode);
+      }
+    } catch (e) {}
+
     document.getElementById('prevSlideBtn').onclick = () => requestPrev(false);
     document.getElementById('nextSlideBtn').onclick = () => requestNext(false);
 
@@ -958,6 +1023,15 @@ function populateSpeakerWindow(speakerWindow) {
       } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
         e.preventDefault();
         requestPrev(e.shiftKey);
+      } else if (e.key === 'b' || e.key === 'B' || e.key === '.') {
+        e.preventDefault();
+        toggleBlank('black');
+      } else if (e.key === 'w' || e.key === 'W') {
+        e.preventDefault();
+        toggleBlank('white');
+      } else if (e.key === 'Escape' && currentBlankMode) {
+        e.preventDefault();
+        toggleBlank(currentBlankMode);
       }
     });
 

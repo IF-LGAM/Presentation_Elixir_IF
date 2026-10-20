@@ -125,6 +125,15 @@ window.DeckEngine.DOM = (function () {
             <span>Laser (L)</span>
           </button>
 
+          <button id="blackoutBtn" class="ctrl-btn" title="Masquer l'écran / Écran Noir (Touche B ou .)">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span>Noir (B)</span>
+          </button>
+
           <button id="overviewBtn" class="ctrl-btn" title="Vue globale des slides (Touche O / Échap)">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <rect x="3" y="3" width="7" height="7"></rect>
@@ -268,6 +277,12 @@ window.DeckEngine.DOM = (function () {
               <span>Pointeur Laser Virtuel</span> <kbd>L</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+              <span>Écran Noir (Blackout)</span> <kbd>B / .</kbd>
+            </div>
+            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+              <span>Écran Blanc (Whiteout)</span> <kbd>W</kbd>
+            </div>
+            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>En Plein Écran : Navigation</span> <kbd>Clic / Molette</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center; grid-column: span 2;">
@@ -277,6 +292,14 @@ window.DeckEngine.DOM = (function () {
         </div>
       `;
       container.appendChild(scModal);
+    }
+
+    // 5b. Overlay de masquage Écran Noir / Blanc (Touches B / W)
+    if (!document.getElementById('deckBlankOverlay')) {
+      const blankOverlay = document.createElement('div');
+      blankOverlay.id = 'deckBlankOverlay';
+      blankOverlay.innerHTML = '<div class="blank-overlay-hint"></div>';
+      container.appendChild(blankOverlay);
     }
 
     // 6. Injection automatique des logos de pied de slide (bas gauche, milieu, bas droite)
