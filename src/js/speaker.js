@@ -21,8 +21,10 @@ function populateSpeakerWindow(speakerWindow) {
     sepia: '☕'
   };
 
-  const detectedTheme = document.querySelector('.deck-container')?.getAttribute('data-theme') ||
+  const detectedTheme = (window.DeckEngine?.Theme && typeof window.DeckEngine.Theme.getCurrentThemeId === 'function' ? window.DeckEngine.Theme.getCurrentThemeId() : null) ||
+                        document.querySelector('.deck-container')?.getAttribute('data-theme') ||
                         document.body.getAttribute('data-theme') ||
+                        localStorage.getItem('deck_sync_theme') ||
                         localStorage.getItem('deck_user_theme') ||
                         (document.body.classList.contains('theme-light') ? 'light' : 'dark');
   const activeParentTheme = KNOWN_THEMES.includes(detectedTheme) ? detectedTheme : 'dark';
@@ -58,7 +60,7 @@ function populateSpeakerWindow(speakerWindow) {
     if (!slideTheme) {
       if (s.classList.contains('light') || s.classList.contains('theme-light')) slideTheme = 'light';
       else if (s.classList.contains('dark') || s.classList.contains('theme-dark')) slideTheme = 'dark';
-      else slideTheme = activeParentTheme;
+      else slideTheme = ''; // Suit dynamiquement le thème actif
     }
 
     const contentHtml = s.querySelector('.slide-content')?.innerHTML || '';
@@ -97,15 +99,101 @@ function populateSpeakerWindow(speakerWindow) {
       --accent-hover: ${currentAccentHover};
     }
 
-    :root {
-      --sp-bg: var(--bg-dark, #121212);
-      --sp-panel: var(--card-bg, #1A1A1A);
-      --sp-panel-header: var(--card-hover, #161616);
-      --sp-border: var(--border-dark, #333333);
-      --sp-text: var(--text-main, #FFFFFF);
-      --sp-text-muted: var(--text-muted, #888888);
-      --sp-box-bg: var(--code-bg, #0A0A0A);
-      --sp-inner-border: var(--border-dark, #2B2B2B);
+    /* VARIABLES DU PRÉSENTATEUR PAR THÈME D'AMBIANCE */
+    :root,
+    body {
+      --sp-bg: #141414;
+      --sp-panel: #1F1F1F;
+      --sp-panel-header: #2B2B2B;
+      --sp-border: #333333;
+      --sp-text: #FFFFFF;
+      --sp-text-muted: #A3A3A3;
+      --sp-box-bg: #0B0B0B;
+      --sp-inner-border: #2B2B2B;
+    }
+
+    body.theme-light,
+    body[data-theme="light"] {
+      --sp-bg: #F8FAFC !important;
+      --sp-panel: #FFFFFF !important;
+      --sp-panel-header: #F1F5F9 !important;
+      --sp-border: #E2E8F0 !important;
+      --sp-text: #0F172A !important;
+      --sp-text-muted: #475569 !important;
+      --sp-box-bg: #E2E8F0 !important;
+      --sp-inner-border: #CBD5E1 !important;
+    }
+
+    body.theme-dark,
+    body[data-theme="dark"] {
+      --sp-bg: #141414 !important;
+      --sp-panel: #1F1F1F !important;
+      --sp-panel-header: #2B2B2B !important;
+      --sp-border: #333333 !important;
+      --sp-text: #FFFFFF !important;
+      --sp-text-muted: #A3A3A3 !important;
+      --sp-box-bg: #0B0B0B !important;
+      --sp-inner-border: #2B2B2B !important;
+    }
+
+    body.theme-nordic,
+    body[data-theme="nordic"] {
+      --sp-bg: #0F172A !important;
+      --sp-panel: #1E293B !important;
+      --sp-panel-header: #334155 !important;
+      --sp-border: #334155 !important;
+      --sp-text: #F1F5F9 !important;
+      --sp-text-muted: #94A3B8 !important;
+      --sp-box-bg: #090E17 !important;
+      --sp-inner-border: #334155 !important;
+    }
+
+    body.theme-cyberpunk,
+    body[data-theme="cyberpunk"] {
+      --sp-bg: #07090E !important;
+      --sp-panel: #111622 !important;
+      --sp-panel-header: #192033 !important;
+      --sp-border: #222C42 !important;
+      --sp-text: #F0F6FC !important;
+      --sp-text-muted: #8B949E !important;
+      --sp-box-bg: #030407 !important;
+      --sp-inner-border: #222C42 !important;
+    }
+
+    body.theme-emerald,
+    body[data-theme="emerald"] {
+      --sp-bg: #06150F !important;
+      --sp-panel: #0C241B !important;
+      --sp-panel-header: #14382B !important;
+      --sp-border: #184233 !important;
+      --sp-text: #ECFDF5 !important;
+      --sp-text-muted: #A7F3D0 !important;
+      --sp-box-bg: #030B07 !important;
+      --sp-inner-border: #184233 !important;
+    }
+
+    body.theme-navy,
+    body[data-theme="navy"] {
+      --sp-bg: #080E1E !important;
+      --sp-panel: #121D38 !important;
+      --sp-panel-header: #1B2B50 !important;
+      --sp-border: #233766 !important;
+      --sp-text: #F8FAFC !important;
+      --sp-text-muted: #94A3B8 !important;
+      --sp-box-bg: #040812 !important;
+      --sp-inner-border: #233766 !important;
+    }
+
+    body.theme-sepia,
+    body[data-theme="sepia"] {
+      --sp-bg: #191614 !important;
+      --sp-panel: #26221F !important;
+      --sp-panel-header: #38322E !important;
+      --sp-border: #453D38 !important;
+      --sp-text: #FAF5F0 !important;
+      --sp-text-muted: #D6C7BC !important;
+      --sp-box-bg: #0F0D0C !important;
+      --sp-inner-border: #453D38 !important;
     }
 
     html, body {
@@ -222,7 +310,7 @@ function populateSpeakerWindow(speakerWindow) {
       overflow: hidden;
     }
 
-    /* Adaptation dynamique selon le mode clair/sombre de la slide */
+    /* Adaptation dynamique selon le mode d'ambiance de chaque slide dans l'aperçu */
     .sp-preview-inner.theme-light,
     .sp-preview-inner[data-theme="light"] {
       background: #F8FAFC !important;
@@ -249,6 +337,76 @@ function populateSpeakerWindow(speakerWindow) {
       --text-muted: #A3A3A3;
       --text-dim: #737373;
       --code-bg: #0B0B0B;
+    }
+
+    .sp-preview-inner.theme-nordic,
+    .sp-preview-inner[data-theme="nordic"] {
+      background: #0F172A !important;
+      color: #F1F5F9 !important;
+      --bg-dark: #0F172A;
+      --card-bg: #1E293B;
+      --card-hover: #334155;
+      --border-dark: #334155;
+      --text-main: #F1F5F9;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --code-bg: #090E17;
+    }
+
+    .sp-preview-inner.theme-cyberpunk,
+    .sp-preview-inner[data-theme="cyberpunk"] {
+      background: #07090E !important;
+      color: #F0F6FC !important;
+      --bg-dark: #07090E;
+      --card-bg: #111622;
+      --card-hover: #192033;
+      --border-dark: #222C42;
+      --text-main: #F0F6FC;
+      --text-muted: #8B949E;
+      --text-dim: #586069;
+      --code-bg: #030407;
+    }
+
+    .sp-preview-inner.theme-emerald,
+    .sp-preview-inner[data-theme="emerald"] {
+      background: #06150F !important;
+      color: #ECFDF5 !important;
+      --bg-dark: #06150F;
+      --card-bg: #0C241B;
+      --card-hover: #14382B;
+      --border-dark: #184233;
+      --text-main: #ECFDF5;
+      --text-muted: #A7F3D0;
+      --text-dim: #6EE7B7;
+      --code-bg: #030B07;
+    }
+
+    .sp-preview-inner.theme-navy,
+    .sp-preview-inner[data-theme="navy"] {
+      background: #080E1E !important;
+      color: #F8FAFC !important;
+      --bg-dark: #080E1E;
+      --card-bg: #121D38;
+      --card-hover: #1B2B50;
+      --border-dark: #233766;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --code-bg: #040812;
+    }
+
+    .sp-preview-inner.theme-sepia,
+    .sp-preview-inner[data-theme="sepia"] {
+      background: #191614 !important;
+      color: #FAF5F0 !important;
+      --bg-dark: #191614;
+      --card-bg: #26221F;
+      --card-hover: #38322E;
+      --border-dark: #453D38;
+      --text-main: #FAF5F0;
+      --text-muted: #D6C7BC;
+      --text-dim: #A8998C;
+      --code-bg: #0F0D0C;
     }
 
     .sp-notes-box {
@@ -426,8 +584,7 @@ function populateSpeakerWindow(speakerWindow) {
       document.body.setAttribute('data-theme', activeTheme);
       const btn = document.getElementById('spThemeToggleBtn');
       if (btn) btn.textContent = THEME_ICONS[activeTheme] || '🌑';
-      scaleElement('currentBox', 'currentSlideContent');
-      scaleElement('nextBox', 'nextSlideContent');
+      updateUI(activeIdx, false);
     }
 
     const spThemeBtn = document.getElementById('spThemeToggleBtn');
@@ -487,8 +644,10 @@ function populateSpeakerWindow(speakerWindow) {
       // Mise à jour de l'aperçu actuel avec le thème propre à la slide ou le thème global
       const sData = slidesData[activeIdx];
       const curElem = document.getElementById('currentSlideContent');
-      const curTheme = sData.theme || (document.body.classList.contains('theme-light') ? 'light' : 'dark');
-      curElem.className = 'sp-preview-inner slide-content ' + (curTheme === 'light' ? 'theme-light' : 'theme-dark');
+      const curGlobalTheme = document.body.getAttribute('data-theme') || 'dark';
+      const curTheme = sData.theme || curGlobalTheme;
+      KNOWN_THEMES.forEach(t => curElem.classList.remove('theme-' + t));
+      curElem.classList.add('theme-' + curTheme);
       curElem.setAttribute('data-theme', curTheme);
       if (sData.accent) {
         curElem.style.setProperty('--accent-primary', sData.accent);
@@ -506,7 +665,8 @@ function populateSpeakerWindow(speakerWindow) {
       if (activeIdx < slidesData.length - 1) {
         const nextData = slidesData[activeIdx + 1];
         const nextTheme = nextData.theme || curTheme;
-        nextElem.className = 'sp-preview-inner slide-content ' + (nextTheme === 'light' ? 'theme-light' : 'theme-dark');
+        KNOWN_THEMES.forEach(t => nextElem.classList.remove('theme-' + t));
+        nextElem.classList.add('theme-' + nextTheme);
         nextElem.setAttribute('data-theme', nextTheme);
         if (nextData.accent) {
           nextElem.style.setProperty('--accent-primary', nextData.accent);
@@ -519,7 +679,9 @@ function populateSpeakerWindow(speakerWindow) {
         nextElem.innerHTML = nextData.html;
       } else {
         document.getElementById('nextSlideTitleTxt').textContent = 'Fin de la présentation';
-        nextElem.className = 'sp-preview-inner slide-content ' + (curTheme === 'light' ? 'theme-light' : 'theme-dark');
+        KNOWN_THEMES.forEach(t => nextElem.classList.remove('theme-' + t));
+        nextElem.classList.add('theme-' + curTheme);
+        nextElem.setAttribute('data-theme', curTheme);
         nextElem.style.removeProperty('--accent-primary');
         nextElem.style.removeProperty('--accent-hover');
         nextElem.innerHTML = '<div style="text-align:center;color:var(--sp-text-muted);font-size:2rem;font-weight:800;padding-top:200px;">FIN DES SLIDES</div>';
