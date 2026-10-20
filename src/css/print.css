@@ -216,4 +216,60 @@
   .quiz-explanation-box {
     display: block !important;
   }
+
+  /* Préservation et positionnement rigoureux des logos en export PDF */
+  .slide-logo,
+  .slide-bottom-logos {
+    display: flex !important;
+    position: absolute !important;
+    bottom: 0.45in !important;
+    z-index: 25 !important;
+  }
+
+  .slide-logo.bottom-left,
+  .slide-logo.left,
+  .slide-bottom-logos .logo-group.left {
+    left: 0.95in !important;
+    right: auto !important;
+  }
+
+  .slide-logo.bottom-center,
+  .slide-logo.center,
+  .slide-bottom-logos .logo-group.center {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .slide-logo.bottom-right,
+  .slide-logo.right,
+  .slide-bottom-logos .logo-group.right {
+    right: 0.95in !important;
+    left: auto !important;
+  }
+
+  .slide-logo img,
+  .slide-logo svg,
+  .slide-bottom-logos img,
+  .slide-bottom-logos svg,
+  img.slide-logo {
+    max-height: 0.45in !important;
+    max-width: 1.8in !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    filter: none !important;
+  }
+
+  .slide-logo.logo-sm img,
+  .slide-bottom-logos.logo-sm img {
+    max-height: 0.32in !important;
+    max-width: 1.2in !important;
+  }
+
+  .slide-logo.logo-lg img,
+  .slide-bottom-logos.logo-lg img {
+    max-height: 0.6in !important;
+    max-width: 2.4in !important;
+  }
 }

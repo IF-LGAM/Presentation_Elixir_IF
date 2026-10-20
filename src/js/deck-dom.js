@@ -267,6 +267,46 @@ window.DeckEngine.DOM = (function () {
       `;
       container.appendChild(scModal);
     }
+
+    // 6. Injection automatique des logos de pied de slide (bas gauche, milieu, bas droite)
+    // Lit data-logo-left, data-logo-center, data-logo-right sur .deck-container ou sur chaque .slide
+    const globalLogos = {
+      left: container.getAttribute('data-logo-left'),
+      center: container.getAttribute('data-logo-center'),
+      right: container.getAttribute('data-logo-right')
+    };
+
+    const slides = container.querySelectorAll('.slide');
+    slides.forEach(slide => {
+      if (slide.hasAttribute('data-no-logo') || slide.hasAttribute('data-no-logos')) {
+        return;
+      }
+
+      const positions = ['left', 'center', 'right'];
+      positions.forEach(pos => {
+        const logoAttr = slide.getAttribute(`data-logo-${pos}`) || globalLogos[pos];
+        if (!logoAttr) return;
+
+        // Éviter de dupliquer si déjà présent dans le HTML
+        const existing = slide.querySelector(`.slide-logo.bottom-${pos}, .slide-logo.${pos}, .slide-bottom-logos .logo-group.${pos}`);
+        if (existing) return;
+
+        const logoContainer = document.createElement('div');
+        logoContainer.className = `slide-logo bottom-${pos}`;
+
+        // Support d'une ou plusieurs URLs séparées par des virgules
+        const sources = logoAttr.split(',').map(s => s.trim()).filter(Boolean);
+        sources.forEach(src => {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = `Logo ${pos}`;
+          img.className = 'slide-logo-img';
+          logoContainer.appendChild(img);
+        });
+
+        slide.appendChild(logoContainer);
+      });
+    });
   }
 
   return {

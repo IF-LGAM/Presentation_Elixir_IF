@@ -26,6 +26,7 @@ function populateSpeakerWindow(speakerWindow) {
                         localStorage.getItem('deck_user_theme') ||
                         (document.body.classList.contains('theme-light') ? 'light' : 'dark');
   const activeParentTheme = KNOWN_THEMES.includes(detectedTheme) ? detectedTheme : 'dark';
+  const isParentLight = activeParentTheme === 'light';
 
   function lightenColor(col, percent) {
     if (!col || typeof col !== 'string' || !col.startsWith('#')) return col || '#FF2A2A';
@@ -57,8 +58,11 @@ function populateSpeakerWindow(speakerWindow) {
     if (!slideTheme) {
       if (s.classList.contains('light') || s.classList.contains('theme-light')) slideTheme = 'light';
       else if (s.classList.contains('dark') || s.classList.contains('theme-dark')) slideTheme = 'dark';
-      else slideTheme = isParentLight ? 'light' : 'dark';
+      else slideTheme = activeParentTheme;
     }
+
+    const contentHtml = s.querySelector('.slide-content')?.innerHTML || '';
+    const logosHtml = Array.from(s.querySelectorAll('.slide-logo, .slide-bottom-logos')).map(el => el.outerHTML).join('');
 
     slidesData.push({
       index: idx,
@@ -67,7 +71,7 @@ function populateSpeakerWindow(speakerWindow) {
       theme: slideTheme,
       accent: s.getAttribute('data-accent') || '',
       accentHover: s.getAttribute('data-accent-hover') || '',
-      html: s.querySelector('.slide-content')?.innerHTML || ''
+      html: contentHtml + logosHtml
     });
   });
 
@@ -352,7 +356,7 @@ function populateSpeakerWindow(speakerWindow) {
   </footer>
 
   <script>
-    const slidesData = ${JSON.stringify(slidesData)};
+    const slidesData = ${JSON.stringify(slidesData).replace(/<\/script/gi, '<\\/script')};
     let activeIdx = ${currentIndex};
     let currentFontSize = 1.15;
 
@@ -665,7 +669,15 @@ function openSpeakerWindow() {
     return;
   }
 
-  populateSpeakerWindow(speakerWindow);
+  try {
+    speakerWindow.focus();
+  } catch (e) {}
+
+  try {
+    populateSpeakerWindow(speakerWindow);
+  } catch (err) {
+    console.error('Erreur lors du peuplement de la fenêtre présentateur:', err);
+  }
 }
 
 window.openSpeakerWindow = openSpeakerWindow;
@@ -673,8 +685,8 @@ window.openSpeakerWindow = openSpeakerWindow;
 function attachSpeakerListeners() {
   ['speakerWindowBtn', 'speakerModeBtn'].forEach(id => {
     const btn = document.getElementById(id);
-    if (btn) {
-      btn.removeEventListener('click', openSpeakerWindow);
+    if (btn && !btn.dataset.speakerBound) {
+      btn.dataset.speakerBound = 'true';
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         openSpeakerWindow();

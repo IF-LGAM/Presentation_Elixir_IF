@@ -119,7 +119,27 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 
 ---
 
-## 11. Métadonnées d'Orateur & Système
+## 11. Logos de Pied de Slide (Positionnement & Redimensionnement Automatique)
+
+Le moteur gère l'affichage et l'auto-calibrage de logos positionnés **en bas à gauche**, **au milieu** ou **en bas à droite**.
+> ⚡ **Redimensionnement automatique garanti** : tout logo (`SVG`, `PNG`, `JPG`, `WebP`) est automatiquement retaillé à la hauteur optimale 16:9 (`clamp(24px, 3.8vh, 38px)`), avec ratio d'aspect préservé (`object-fit: contain`), ombre portée douce et zéro risque de déborder ou de casser la mise en page.
+
+| Alias court | Classe / Balise HTML | Utilisation & Description |
+| :--- | :--- | :--- |
+| `logo-left` / `bottom-left` | `<div class="slide-logo bottom-left"><img src="..."></div>` | Ancre un ou plusieurs logos **en bas à gauche** de la diapositive. |
+| `logo-center` / `bottom-center`| `<div class="slide-logo bottom-center"><img src="..."></div>` | Ancre un ou plusieurs logos **au milieu (centré)** en pied de slide. |
+| `logo-right` / `bottom-right` | `<div class="slide-logo bottom-right"><img src="..."></div>` | Ancre un ou plusieurs logos **en bas à droite** de la diapositive. |
+| `logo-bar` | `<div class="slide-bottom-logos">` | Barre de pied de slide complète avec 3 slots : `.logo-group.left`, `.logo-group.center`, `.logo-group.right`. |
+| `logo-direct` | `<img class="slide-logo bottom-left" src="...">` | Balise image directe portant les classes de positionnement. |
+| `logo-sm` | `<div class="slide-logo bottom-left logo-sm">` | Variante compacte discrète (`max-height: ~24px`). |
+| `logo-lg` | `<div class="slide-logo bottom-left logo-lg">` | Variante plus imposante pour sponsor principal ou slide de titre (`max-height: ~48px`). |
+| `logo-framed` | `<div class="slide-logo bottom-left framed">` | Ajoute un cadre discret semi-transparent (glassmorphism) pour assurer le contraste de logos sombres sur fond sombre. |
+| `data-logo-left\|center\|right` | Sur `.deck-container` ou `<section class="slide">` | **Mode automatique (Zero-config)** : injecte automatiquement les logos spécifiés sans écrire de balises HTML manuelles. |
+| `data-no-logos="true"` | Sur `<section class="slide">` | Masque les logos globaux sur une slide spécifique (ex: slide de titre ou conclusion). |
+
+---
+
+## 12. Métadonnées d'Orateur & Système
  
 | Alias court | Attribut / Balise | Utilisation & Description |
 | :--- | :--- | :--- |
@@ -131,7 +151,7 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 
 ---
 
-## 12. Exemples Concrets d'Intégration HTML
+## 13. Exemples Concrets d'Intégration HTML
 
 ### Exemple A : Frise chronologique à étapes (`stepper`)
 ```html
@@ -181,5 +201,59 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
     <img src="assets/schemas/supervision-tree.svg" alt="Arbre OTP" class="schema-img">
     <div class="schema-caption">Arbre de supervision hiérarchique OTP</div>
   </div>
+</div>
+```
+
+### Exemple D : Logos de Pied de Slide (Gauche, Milieu, Droite)
+
+#### Option 1 : Blocs unitaires dans la slide
+```html
+<section class="slide" data-slide="3">
+  <div class="slide-content">
+    <!-- Contenu principal de la diapositive -->
+  </div>
+
+  <!-- Logo en bas à gauche -->
+  <div class="slide-logo bottom-left">
+    <img src="assets/logos/elixir.svg" alt="Elixir">
+  </div>
+
+  <!-- Logo ou texte institutionnel au milieu -->
+  <div class="slide-logo bottom-center framed">
+    <img src="assets/logos/erlang.svg" alt="BEAM">
+  </div>
+
+  <!-- Logos partenaires/écoles en bas à droite -->
+  <div class="slide-logo bottom-right">
+    <a href="https://example.com" target="_blank">
+      <img src="assets/logos/ruby.svg" alt="Partner">
+    </a>
+  </div>
+</section>
+```
+
+#### Option 2 : Barre de logos unifiée (`slide-bottom-logos`)
+```html
+<div class="slide-bottom-logos">
+  <div class="logo-group left">
+    <img src="assets/logos/elixir.svg" alt="Logo">
+  </div>
+  <div class="logo-group center">
+    <img src="assets/logos/erlang.svg" alt="Erlang">
+  </div>
+  <div class="logo-group right">
+    <img src="assets/logos/ruby.svg" alt="Ruby">
+  </div>
+</div>
+```
+
+#### Option 3 : Zero-Configuration au niveau global ou slide
+```html
+<!-- Défini une fois sur le conteneur du diaporama : appliqué sur toutes les slides -->
+<div class="deck-container"
+     data-logo-left="assets/logos/elixir.svg"
+     data-logo-center="assets/logos/erlang.svg"
+     data-logo-right="assets/logos/ruby.svg">
+  ...
 </div>
 ```

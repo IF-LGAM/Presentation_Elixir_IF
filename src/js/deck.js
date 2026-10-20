@@ -51,12 +51,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const shortcutsModal = document.getElementById('shortcutsModal');
 
   // Bouton Console Présentateur
-  const openSpeaker = () => {
+  const openSpeaker = (e) => {
+    if (e) e.preventDefault();
     if (typeof openSpeakerWindow === 'function') openSpeakerWindow();
     else if (window.openSpeakerWindow) window.openSpeakerWindow();
   };
-  document.getElementById('speakerWindowBtn')?.addEventListener('click', openSpeaker);
-  document.getElementById('speakerModeBtn')?.addEventListener('click', openSpeaker);
+  const spBtn = document.getElementById('speakerWindowBtn');
+  if (spBtn && !spBtn.dataset.speakerBound) {
+    spBtn.dataset.speakerBound = 'true';
+    spBtn.addEventListener('click', openSpeaker);
+  }
+  const spModeBtn = document.getElementById('speakerModeBtn');
+  if (spModeBtn && !spModeBtn.dataset.speakerBound) {
+    spModeBtn.dataset.speakerBound = 'true';
+    spModeBtn.addEventListener('click', openSpeaker);
+  }
 
   // Tiroir de Notes rapide (écran unique)
   document.getElementById('speakerNotesBtn')?.addEventListener('click', () => notesDrawer?.classList.toggle('open'));

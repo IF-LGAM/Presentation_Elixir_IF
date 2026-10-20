@@ -658,3 +658,168 @@ h4 {
   }
 }
 
+/* ==========================================================================
+   11. LOGOS DE PIED DE SLIDE (POSITIONNEMENT & REDIMENSIONNEMENT AUTOMATIQUE)
+   Positionnement en bas à gauche, au milieu ou à droite avec auto-calibrage
+   strict des proportions 16:9 et préservation du ratio d'aspect.
+   ========================================================================== */
+
+/* Conteneur unitaire ou groupe de logos */
+.slide-logo {
+  position: absolute;
+  bottom: clamp(14px, 2.4vh, 26px);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 25;
+  pointer-events: auto;
+  line-height: 1;
+}
+
+/* Alignement en bas à gauche */
+.slide-logo.bottom-left,
+.slide-logo.left {
+  left: clamp(18px, 3.2vw, 42px);
+  right: auto;
+  justify-content: flex-start;
+}
+
+/* Alignement au milieu / centré */
+.slide-logo.bottom-center,
+.slide-logo.center {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  justify-content: center;
+}
+
+/* Alignement en bas à droite */
+.slide-logo.bottom-right,
+.slide-logo.right {
+  right: clamp(18px, 3.2vw, 42px);
+  left: auto;
+  justify-content: flex-end;
+}
+
+/* Barre de logos unifiée de pied de slide (slots gauche, milieu, droite) */
+.slide-bottom-logos {
+  position: absolute;
+  bottom: clamp(14px, 2.4vh, 26px);
+  left: clamp(18px, 3.2vw, 42px);
+  right: clamp(18px, 3.2vw, 42px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 25;
+  pointer-events: none;
+}
+
+.slide-bottom-logos .logo-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  pointer-events: auto;
+}
+
+.slide-bottom-logos .logo-group.left {
+  justify-content: flex-start;
+}
+
+.slide-bottom-logos .logo-group.center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  justify-content: center;
+}
+
+.slide-bottom-logos .logo-group.right {
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+/* ==========================================================================
+   REDIMENSIONNEMENT AUTOMATIQUE UNIVERSEL (Auto-fit & Ratio Contain)
+   Garantit qu'aucun logo (SVG, PNG, JPG, WebP) ne déborde ou ne déforme
+   le layout 16:9, quelle que soit sa résolution source.
+   ========================================================================== */
+.slide-logo img,
+.slide-logo svg,
+.slide-bottom-logos img,
+.slide-bottom-logos svg,
+img.slide-logo {
+  display: block;
+  width: auto !important;
+  height: auto !important;
+  max-height: clamp(24px, 3.8vh, 38px);
+  max-width: clamp(75px, 12vw, 155px);
+  object-fit: contain;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.28));
+  transition: transform 0.25s ease, opacity 0.25s ease, filter 0.25s ease;
+}
+
+/* Interaction au survol pour liens */
+.slide-logo a,
+.slide-bottom-logos a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.slide-logo a:hover img,
+.slide-logo a:hover svg,
+.slide-bottom-logos a:hover img,
+.slide-bottom-logos a:hover svg {
+  transform: translateY(-2px) scale(1.05);
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
+}
+
+/* Tailles alternatives optionnelles */
+.slide-logo.logo-sm img,
+.slide-logo.logo-sm svg,
+.slide-bottom-logos.logo-sm img,
+.slide-bottom-logos.logo-sm svg,
+.logo-sm img,
+img.slide-logo.logo-sm {
+  max-height: clamp(18px, 2.6vh, 26px);
+  max-width: clamp(55px, 8vw, 100px);
+}
+
+.slide-logo.logo-lg img,
+.slide-logo.logo-lg svg,
+.slide-bottom-logos.logo-lg img,
+.slide-bottom-logos.logo-lg svg,
+.logo-lg img,
+img.slide-logo.logo-lg {
+  max-height: clamp(32px, 5.2vh, 52px);
+  max-width: clamp(90px, 16vw, 210px);
+}
+
+/* Variante encadrée (badge/glassmorphic) pour logos nécessitant un contraste renforcé */
+.slide-logo.framed,
+.slide-bottom-logos .logo-group.framed,
+img.slide-logo.framed {
+  background: var(--card-bg, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--border-dark, rgba(255, 255, 255, 0.12));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+/* Écrans de faible hauteur */
+@media (max-height: 720px) {
+  .slide-logo,
+  .slide-bottom-logos {
+    bottom: 8px;
+  }
+  .slide-logo img,
+  .slide-logo svg,
+  .slide-bottom-logos img,
+  .slide-bottom-logos svg,
+  img.slide-logo {
+    max-height: 28px;
+    max-width: 120px;
+  }
+}
+

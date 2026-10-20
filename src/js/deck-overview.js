@@ -62,7 +62,8 @@ window.DeckEngine.Overview = (function () {
       card.setAttribute('data-idx', idx);
 
       const title = slide.getAttribute('data-title') || `Slide ${idx + 1}`;
-      const contentHtml = slide.querySelector('.slide-content')?.innerHTML || '';
+      const contentHtml = (slide.querySelector('.slide-content')?.innerHTML || '') +
+        Array.from(slide.querySelectorAll('.slide-logo, .slide-bottom-logos')).map(el => el.outerHTML).join('');
 
       card.innerHTML = `
         <div class="overview-thumb-wrap">
