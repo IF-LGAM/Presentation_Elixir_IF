@@ -385,14 +385,21 @@ window.DeckEngine.Navigation = (function () {
         case '?':
           if (shortcutsModal) shortcutsModal.classList.toggle('open'); break;
         case 'Escape':
+          if (window.DeckEngine.Zoom && window.DeckEngine.Zoom.isOpen()) {
+            window.DeckEngine.Zoom.close();
+            return;
+          }
           if (window.DeckEngine.Search && window.DeckEngine.Search.isOpen()) {
             window.DeckEngine.Search.close();
+            return;
           }
           if (window.DeckEngine.Blank && window.DeckEngine.Blank.isActive()) {
             window.DeckEngine.Blank.deactivate();
+            return;
           }
           if (window.DeckEngine.Laser && window.DeckEngine.Laser.isActive()) {
             window.DeckEngine.Laser.deactivate();
+            return;
           }
           if (overviewModal) overviewModal.classList.remove('open');
           if (shortcutsModal) shortcutsModal.classList.remove('open');
@@ -415,9 +422,14 @@ window.DeckEngine.Navigation = (function () {
       const overviewModal = document.getElementById('overviewModal');
       const shortcutsModal = document.getElementById('shortcutsModal');
       const notesDrawer = document.getElementById('notesDrawer');
+      const zoomModal = document.getElementById('deckZoomModal');
+      const searchModal = document.getElementById('searchModal');
       if (overviewModal?.classList.contains('open') || 
           shortcutsModal?.classList.contains('open') || 
-          notesDrawer?.classList.contains('open')) {
+          notesDrawer?.classList.contains('open') ||
+          zoomModal?.classList.contains('open') ||
+          searchModal?.classList.contains('open') ||
+          (window.DeckEngine.Zoom && window.DeckEngine.Zoom.isOpen())) {
         return;
       }
 

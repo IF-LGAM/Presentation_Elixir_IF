@@ -71,6 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DeckEngine.Mermaid.init();
   }
 
+  // 11. Initialisation du module de Zoom Interactif (Click to Zoom)
+  if (window.DeckEngine.Zoom && typeof window.DeckEngine.Zoom.init === 'function') {
+    window.DeckEngine.Zoom.init();
+  }
+
   // 7. Câblage des contrôles d'interface complémentaires
   const notesDrawer = document.getElementById('notesDrawer');
   const shortcutsModal = document.getElementById('shortcutsModal');

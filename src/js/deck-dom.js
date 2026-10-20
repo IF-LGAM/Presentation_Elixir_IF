@@ -342,6 +342,21 @@ window.DeckEngine.DOM = (function () {
       container.appendChild(searchModal);
     }
 
+    // 5d. Modale de Zoom Interactif (Click to Zoom)
+    if (!document.getElementById('deckZoomModal')) {
+      const zoomModal = document.createElement('div');
+      zoomModal.id = 'deckZoomModal';
+      zoomModal.className = 'zoom-modal-overlay';
+      zoomModal.innerHTML = `
+        <button id="closeZoomBtn" class="zoom-close-btn" title="Fermer le zoom (Échap)">&times;</button>
+        <div class="zoom-wrapper">
+          <div id="deckZoomContent" class="zoom-content-box"></div>
+          <div class="zoom-dismiss-hint">Cliquer en dehors ou presser Échap pour fermer</div>
+        </div>
+      `;
+      container.appendChild(zoomModal);
+    }
+
     // 6. Injection automatique des logos de pied de slide (bas gauche, milieu, bas droite)
     // Lit data-logo-left, data-logo-center, data-logo-right sur .deck-container ou sur chaque .slide
     const globalLogos = {

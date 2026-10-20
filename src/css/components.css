@@ -955,6 +955,17 @@ img.slide-logo.framed {
   min-height: 120px;
 }
 
+.mermaid:not(:has(svg)) {
+  white-space: pre-wrap;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  opacity: 0.45;
+  color: var(--text-dim);
+  text-align: left;
+  display: block;
+}
+
 .mermaid svg {
   max-width: 100% !important;
   height: auto !important;

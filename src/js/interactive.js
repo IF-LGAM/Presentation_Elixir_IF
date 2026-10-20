@@ -342,20 +342,31 @@ window.DeckEngine.Mermaid = (function () {
 
   let renderTimeout = null;
 
+  function getCleanMermaidSrc(node) {
+    if (node.dataset.mermaidSrc) return node.dataset.mermaidSrc;
+    const clone = node.cloneNode(true);
+    clone.querySelectorAll('.zoom-indicator-badge').forEach(b => b.remove());
+    const raw = clone.textContent.trim();
+    if (raw && !raw.startsWith('<svg')) {
+      node.dataset.mermaidSrc = raw;
+      return raw;
+    }
+    return '';
+  }
+
   function renderAll() {
     if (renderTimeout) clearTimeout(renderTimeout);
     renderTimeout = setTimeout(doRenderAll, 60);
   }
 
   async function doRenderAll() {
-    const nodes = document.querySelectorAll('.mermaid');
+    // Cibler uniquement les diagrammes dans les diapositives, jamais dans les modales
+    const nodes = document.querySelectorAll('.slide .mermaid');
     if (!nodes.length) return;
 
-    // Sauvegarde du code source brut avant premier rendu
+    // Sauvegarde sécurisée du code source brut avant rendu
     nodes.forEach(node => {
-      if (!node.dataset.mermaidSrc) {
-        node.dataset.mermaidSrc = node.textContent.trim();
-      }
+      getCleanMermaidSrc(node);
     });
 
     try {
@@ -366,7 +377,7 @@ window.DeckEngine.Mermaid = (function () {
 
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
-        const rawSrc = node.dataset.mermaidSrc;
+        const rawSrc = getCleanMermaidSrc(node);
         if (!rawSrc) continue;
 
         const id = 'mermaid-diag-' + i + '-' + Math.floor(Math.random() * 1000000);
@@ -379,18 +390,19 @@ window.DeckEngine.Mermaid = (function () {
           node.innerHTML = `<div style="color:#EF4444;font-size:0.85rem;font-family:'Fira Code',monospace;padding:1rem;border:1px dashed #EF4444;border-radius:6px;text-align:left;">⚠️ Erreur de rendu Mermaid : ${renderErr.message || renderErr}</div>`;
         }
       }
+      if (window.DeckEngine.Zoom && typeof window.DeckEngine.Zoom.attachBadges === 'function') {
+        window.DeckEngine.Zoom.attachBadges();
+      }
     } catch (err) {
       console.warn('Erreur globale Mermaid:', err);
     }
   }
 
   function init() {
-    const nodes = document.querySelectorAll('.mermaid');
+    const nodes = document.querySelectorAll('.slide .mermaid');
     if (nodes.length > 0) {
       nodes.forEach(n => {
-        if (!n.dataset.mermaidSrc) {
-          n.dataset.mermaidSrc = n.textContent.trim();
-        }
+        getCleanMermaidSrc(n);
       });
       renderAll();
     }
@@ -401,4 +413,159 @@ window.DeckEngine.Mermaid = (function () {
     render: renderAll
   };
 })();
+
+// ==========================================================================
+// MODULE DE ZOOM INTERACTIF SUR CARTES, SCHÉMAS & CODE (CLICK TO ZOOM)
+// ==========================================================================
+window.DeckEngine.Zoom = (function () {
+  let modalEl = null;
+  let contentEl = null;
+
+  const ZOOM_SELECTOR = [
+    '.zoomable',
+    '[data-zoomable="true"]',
+    '.x-card',
+    '.terminal-box',
+    '.schema-box',
+    '.mermaid:has(svg)',
+    'pre:not(.no-zoom)',
+    '.split-code',
+    'table:not(.no-zoom)',
+    '.slide-content img:not(.slide-logo img):not(.no-zoom)'
+  ].join(', ');
+
+  function ensureElements() {
+    if (modalEl && contentEl) return;
+    modalEl = document.getElementById('deckZoomModal');
+    contentEl = document.getElementById('deckZoomContent');
+
+    if (modalEl) {
+      modalEl.addEventListener('click', (e) => {
+        // Ferme si clic en dehors du contenu (sur le fond flou), sur le bouton fermer X, ou sur l'indice
+        if (e.target === modalEl || e.target.closest('#closeZoomBtn') || e.target.closest('.zoom-dismiss-hint') || e.target.classList.contains('zoom-wrapper')) {
+          close();
+        }
+      });
+    }
+  }
+
+  function open(sourceEl) {
+    if (!sourceEl) return;
+    ensureElements();
+    if (!modalEl || !contentEl) return;
+
+    contentEl.innerHTML = '';
+
+    if (sourceEl.tagName === 'IMG') {
+      const img = document.createElement('img');
+      img.src = sourceEl.src;
+      img.alt = sourceEl.alt || 'Aperçu agrandi';
+      contentEl.appendChild(img);
+    } else {
+      const clone = sourceEl.cloneNode(true);
+      clone.classList.remove('zoomable');
+      clone.removeAttribute('data-zoomable');
+
+      // Nettoie les éventuelles pastilles de zoom
+      clone.querySelectorAll('.zoom-indicator-badge').forEach(b => b.remove());
+
+      // Assure que tous les fragments dans le zoom sont 100% visibles
+      clone.querySelectorAll('.fragment').forEach(f => f.classList.add('visible'));
+
+      // Supprime les styles inline de taille de police qui bloqueraient l'agrandissement
+      if (clone.style && clone.style.fontSize) clone.style.fontSize = '';
+      clone.querySelectorAll('[style*="font-size"]').forEach(el => {
+        el.style.fontSize = '';
+      });
+
+      // Supprime les restrictions de largeur inline sur les SVG (Mermaid, etc.)
+      clone.querySelectorAll('svg').forEach(svg => {
+        svg.style.maxWidth = '100%';
+        svg.style.width = '100%';
+        svg.style.height = 'auto';
+      });
+
+      contentEl.appendChild(clone);
+    }
+
+    modalEl.classList.add('open');
+  }
+
+  function close() {
+    if (modalEl && modalEl.classList.contains('open')) {
+      modalEl.classList.remove('open');
+      setTimeout(() => {
+        if (contentEl && !modalEl.classList.contains('open')) {
+          contentEl.innerHTML = '';
+        }
+      }, 240);
+    }
+  }
+
+  function isOpen() {
+    return !!(modalEl && modalEl.classList.contains('open'));
+  }
+
+  function attachBadges() {
+    const candidates = document.querySelectorAll(ZOOM_SELECTOR);
+    candidates.forEach(el => {
+      // Éviter les éléments exclus ou appartenant à l'interface globale
+      if (el.matches('[data-zoomable="false"], .no-zoom')) return;
+      if (el.closest('.slide-logo, .deck-header, .deck-footer, #shortcutsModal, #searchModal, #deckZoomModal, #notesDrawer')) return;
+
+      el.classList.add('zoomable');
+
+      // Ne jamais insérer de pastille de badge enfant directement à l'intérieur d'un .mermaid ou d'une balise <img>
+      if (el.classList.contains('mermaid') || el.tagName === 'IMG') return;
+
+      // Insérer la pastille de zoom uniquement si absente
+      if (!el.querySelector(':scope > .zoom-indicator-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'zoom-indicator-badge';
+        badge.innerHTML = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg><span>Zoom</span>';
+        badge.title = 'Agrandir en plein écran (Cliquer)';
+        el.appendChild(badge);
+      }
+    });
+  }
+
+  function init() {
+    ensureElements();
+    attachBadges();
+
+    // Délégation d'événement en phase de capture (true) pour intercepter le clic avant les gestionnaires de navigation
+    document.addEventListener('click', (e) => {
+      // Ignorer si la modale de zoom est déjà ouverte
+      if (isOpen()) return;
+
+      // Ignorer si on clique sur un élément d'action interactif (boutons, quiz, inputs, liens)
+      if (e.target.closest('a, button, input, textarea, select, .quiz-opt-btn, .ctrl-btn, .palette-dot, .nav-btn, [role="button"]')) {
+        return;
+      }
+
+      // Ignorer si l'utilisateur est en train de sélectionner du texte
+      const sel = window.getSelection()?.toString().trim();
+      if (sel && sel.length > 0) return;
+
+      const zoomTarget = e.target.closest(ZOOM_SELECTOR);
+      if (zoomTarget) {
+        if (zoomTarget.matches('[data-zoomable="false"], .no-zoom')) return;
+        if (zoomTarget.closest('.deck-header, .deck-footer, #shortcutsModal, #searchModal, #deckZoomModal, #notesDrawer')) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        open(zoomTarget);
+      }
+    }, true);
+  }
+
+  return {
+    init: init,
+    open: open,
+    close: close,
+    isOpen: isOpen,
+    attachBadges: attachBadges
+  };
+})();
+
 

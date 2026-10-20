@@ -354,3 +354,21 @@ Pour intégrer un schéma d'architecture, un diagramme de séquence ou un organi
 > - **Thèmes** : Le diagramme s'adapte automatiquement en mode sombre (`dark`) ou clair (`light`).
 > - **Couleur d'Accent** : Les bordures principales, flèches et nœuds actifs adoptent instantanément la couleur d'accent sélectionnée (`C` ou palette).
 > - **Chargement à la Demande** : Le moteur DeckEngine ne télécharge la bibliothèque Mermaid.js que si la page contient au moins un bloc `.mermaid`.
+
+---
+
+## 13. Zoom Interactif sur Schémas & Contenus (`zoomable` / *Click to zoom*)
+
+Pour permettre à l'orateur ou à l'auditoire d'agrandir un schéma technique, un diagramme Mermaid, une capture ou un bloc de code en plein écran :
+
+1. Ajoutez la classe `.zoomable` ou l'attribut `data-zoomable="true"` sur n'importe quelle carte, bloc ou image :
+   ```html
+   <div class="x-card zoomable">
+     <!-- Schéma complexe ou code détaillé -->
+   </div>
+   ```
+2. **Comportement automatique** :
+   - Les blocs `.schema-box` et `.mermaid` bénéficient automatiquement du zoom au survol et au clic.
+   - Une pastille discrète 🔍 apparaît en haut à droite au survol.
+   - Au clic : ouverture en plein écran épuré avec fond flouté (`backdrop-filter: blur(14px)`).
+   - Re-cliquer n'importe où ou presser <kbd>Échap</kbd> referme le zoom instantanément.
