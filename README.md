@@ -1,153 +1,166 @@
-# ⚡ HTML Slide Deck Engine
+# ⚡ HTML Slide Deck Engine (AI-Assisted)
 
-Un moteur de présentation moderne, autonome et zéro-dépendance locale, conçu pour générer des slides web au format 16:9 widescreen avec console présentateur synchronisée et export PDF haute fidélité.
-
----
-
-## 🎯 Philosophie & Fonctionnement
-
-L'outil repose sur une séparation stricte entre le fond et la forme :
-1. **`CONSIGNES_TEMPLATE.md`** : Le cahier des charges et le template de contenu. Tu ne touches qu'à la section contenu pour renseigner tes textes, snippets de code, quiz et liens.
-2. **`presentation.html`** : Le squelette autonome embarquant le moteur d'affichage, le design system, les scripts de navigation, la vue présentateur multi-écrans et les styles d'impression.
-
-Aucun bundler, runtime Node.js ou serveur web local n'est requis : le fichier HTML s'exécute directement par un double-clic dans n'importe quel navigateur moderne (compatible protocole `file://`).
+> **Vous rédigez votre contenu en Markdown. L'IA génère une présentation HTML de classe mondiale. Vous ne touchez jamais au code.**
+> 
+> Un moteur de présentation autonome, zéro-dépendance et calibré pour l'impact visuel, combinant une console orateur dual-screen avec indicateur de rythme (*Pacing Tracker*), recherche instantanée, zoom interactif et export PDF haute fidélité.
 
 ---
 
-## ✨ Fonctionnalités Clés
+## 💡 Le Concept : Zéro Code pour l'Utilisateur
 
-- **Révélation Progressive & Fragments (`class="fragment"`)** :
-  - Découpage et cadence dynamique de vos contenus (cartes, puces, jalons, blocs de code).
-  - Apparition étape par étape via `→` ou `Espace` ; saut direct sans fragment via `Shift + →`.
-  - Aperçu prévisionnel dans la console présentateur (opacité 35% avant révélation) et révélation totale automatique lors de l'export PDF.
-- **Console Présentateur Dual-Screen (`S`) & Pacing Tracker** :
-  - Ouvre une seconde fenêtre dédiée pour l'orateur.
-  - Synchronisation bidirectionnelle en temps réel via l'API native `BroadcastChannel` (avec fallback automatique sur `localStorage`).
-  - Aperçu direct de la slide actuelle et de la slide suivante (*Next Slide*).
-  - **Indicateur de Rythme (*Pacing Tracker*) en direct** : calcul automatique du temps cible par slide, minuteur unitaire de diapositive, jauge comparative double (Temps écoulé vs Slides franchies), temps restant et badge de statut dynamique (🟢 *Dans les temps*, 🟡 *Accélérer*, 🔴 *Retard*, 🔵 *En avance*).
-  - Chronomètre de séance (Play/Pause/Reset), sélecteur d'objectif (15 à 120 min), horloge réelle et réglage dynamique de la taille des notes (`A+` / `A-`).
-- **Catalogue des 7 Ambiances Visuelles (`T`)** :
-  - Menu popover interactif ou raccourci clavier `T` pour alterner séquentiellement entre 7 thèmes complets :
-    1. **Midnight Charcoal** (Défaut sombre contrasté `#141414`)
-    2. **Clean Slate** (Clair épuré papier & bureau `#F8FAFC`)
-    3. **Polar Frost** (Nordic bleu ardoise glacial `#0F172A`)
-    4. **Neon Matrix** (Cyberpunk noir profond & vert fluo `#07090E`)
-    5. **Deep Forest** (Emerald vert végétal sombre `#06150F`)
-    6. **Corporate Navy** (Bleu marine institutionnel `#080E1E`)
-    7. **Editorial Warm** (Sepia café & cuivre chaud `#191614`)
-  - Synchronisation temps réel avec la console présentateur et persistance automatique.
-- **Personnalisation en direct de la Couleur d'Accent (`C`)** :
-  - Palette de couleurs vibrantes ou ajout libre au format hexadécimal `#HEX` avec sauvegarde dans "Mes couleurs".
-  - Persistance automatique en `localStorage`, support des paramètres URL (`?color=...`) et synchronisation instantanée avec la console présentateur.
-- **Tiroir de Notes Écran Unique (`N`)** :
-  - Panneau latéral rétractable pour consulter les notes de chaque slide lorsqu'aucun second écran n'est branché.
-- **Vue Globale / Overview (`O` ou `Échap`)** :
-  - Modal avec vue en grille de toutes les vignettes pour sauter instantanément à n'importe quelle étape du diaporama.
-- **Export PDF 16:9 Haute Fidélité (`P`)** :
-  - Feuille de style dédiée `@media print` calibrée en format paysage 16:9 (`16in x 9in`).
-  - Strictement 1 page par slide, respect fidèle du thème clair/sombre, éléments d'interface masqués et zéro coupure de contenu.
-- **Pointeur Laser Virtuel Haute Visibilité (`L`)** :
-  - Active un pointeur laser lumineux rouge rubis avec halo de diffusion et onde de choc animée au clic pour guider le regard de l'audience.
-  - Masque automatiquement le curseur flèche natif du système pour un rendu fluide et professionnel lors des présentations et captures d'écran.
-- **Mode Masquage d'Écran — Blackout & Whiteout (`B` / `W`)** :
-  - Masque instantanément l'écran de projection en noir complet (`B` ou `.`) ou en blanc pur (`W`) pour couper la lumière du vidéoprojecteur et recentrer 100% de l'attention de l'auditoire sur l'orateur.
-  - Pilotable au clavier, via le bouton dédié dans le header, ou directement à distance depuis la console présentateur (dual-screen). Un simple clic ou n'importe quelle touche de navigation rétablit l'affichage normal.
-- **Palette de Recherche Plein Texte Instantanée (`Cmd + K` / `Ctrl + K` / `/`)** :
-  - Palette de commande flottante façon Spotlight/Raycast permettant de chercher instantanément dans les titres, sous-titres, contenus textuels et notes d'orateur de toutes les diapositives.
-  - Surlignage dynamique des termes trouvés, navigation intégrale au clavier (`↑` / `↓` et `Entrée`) et saut immédiat vers la diapositive sélectionnée.
-- **Coloration Syntaxique Intégrée** :
-  - Rendu de code optimisé via Prism.js (thème sombre *Tomorrow*).
-- **Support Natif des Diagrammes Vectoriels Mermaid.js (`.mermaid`)** :
-  - Écriture directe de code Mermaid dans le HTML (`sequenceDiagram`, `flowchart`, `classDiagram`, `stateDiagram`...).
-  - Chargement à chaud et à la demande (CDN zéro overhead si aucun diagramme n'est présent).
-  - Rendu vectoriel SVG net s'adaptant automatiquement au thème (`dark`/`light`) et à la couleur d'accentuation en temps réel.
-- **Zoom Interactif Plein Écran (*Click to Zoom* / `.zoomable`)** :
-  - Agrandissement instantané au clic de n'importe quel schéma technique, diagramme Mermaid, bloc de code ou carte complexe (`.schema-box`, `.mermaid`, `.zoomable`).
-  - Affichage épuré en très grand format sur fond flouté (`backdrop-filter`), refermable d'un simple clic ou avec la touche <kbd>Échap</kbd>.
-- **Composants Interactifs Intégrés** :
-  - Disposition adaptative en grilles (`.grid-2`, `.grid-3`, `.grid-4`).
-  - Module de Quiz interactif à main levée avec validation visuelle et révélation de la solution argumentée.
-  - Blocs terminal avec bouton de copie en un clic dans le presse-papiers.
-  - Emplacement réservé pour démonstrations vidéo ou widgets dynamiques.
+Créer des slides percutantes dans des outils traditionnels (PowerPoint, Keynote) prend des heures de mise en page manuelle, tandis que coder des slides en HTML/CSS est fastidieux.
+
+Ce projet résout l'équation grâce à une **séparation stricte** et un **workflow piloté par l'IA** :
+
+- **Vous** : Vous ne touchez qu'à la section contenu de **`CONSIGNES_TEMPLATE.md`** pour décrire vos idées, vos puces, vos snippets de code et vos notes d'orateur en Markdown simple. Vous ne codez jamais.
+- **Le Dictionnaire de Composants (`COMPOSANTS_DICTIONNAIRE.md`)** : Il regroupe **l'intégralité des formes et composants visuels nécessaires** pour illustrer n'importe quelle idée ou architecture sans jamais avoir à écrire de CSS :
+  - *Mises en page & Grilles* : 1 à 4 colonnes (`grid-2`, `grid-3`, `grid-4`), split code/schéma, slides de garde hero.
+  - *Cartes & Conteneurs* : cartes standard, mises en avant (`featured`), blocs de métriques, bandeaux de synthèse.
+  - *Processus & Frises* : steppers horizontaux, timelines verticales, cycles vertueux et boucles d'itération.
+  - *Données & Tableaux* : tableaux comparatifs stylisés, indicateurs KPI et jauges de progression.
+  - *Code, Terminaux & Diagrammes* : blocs de code colorés (Prism.js), terminaux avec copie en 1 clic, diagrammes vectoriels Mermaid.js.
+  - *Interactivité & Pédagogie* : quiz QCM interactifs avec validation dynamique et explication argumentée.
+  - *Badges, Puces & Logos* : tags pilules, puces coches contrastées et logos partenaires auto-calibrés.
+- **L'IA** : Elle lit vos consignes, pioche dans ce dictionnaire pour assembler les formes parfaites et génère le fichier HTML final (`presentation.html`).
+- **Le Navigateur** : Ouvrez directement `presentation.html` pour projeter. Zéro serveur, zéro bundler, zéro installation.
 
 ---
 
-## 🎨 Design System
+## 🚀 Le Workflow en 3 Étapes
 
-Le template utilise une esthétique *Dark Mode* sobre et contrastée :
-- **Fond global** : `#141414` (Noir mat profond)
-- **Cartes & Conteneurs** : `#1F1F1F` (Anthracite) / `#2B2B2B` (Survol)
-- **Bordures** : `1px solid #333333`
-- **Accentuation Primaire** : `#E50914` (Rouge vif)
-- **Validation / Succès** : `#10B981` (Vert émeraude)
-- **Erreur / Alerte** : `#EF4444` (Rouge clair)
-- **Typographies** :
-  - Titres : *Montserrat* (Gras 800/900)
-  - Corps de texte : *Inter* (400, 500, 600)
-  - Code & Terminaux : *Fira Code*
+### Étape 1 : Renseigner votre contenu dans `CONSIGNES_TEMPLATE.md`
+Ouvrez le fichier [CONSIGNES_TEMPLATE.md](CONSIGNES_TEMPLATE.md) et remplissez la section **3. Plan de Présentation & Contenu** avec vos propres informations :
+- Sujet et durée totale prévue (ex: 45 min).
+- Pour chaque slide : titre, sous-titre, durée estimée, points clés, cartes, quiz ou diagrammes souhaités.
+- Vos notes d'orateur détaillées (`Notes présentateur`).
+
+> ℹ️ *Vous n'avez besoin d'aucune connaissance en HTML, CSS ou JavaScript. Rédigez simplement en texte brut avec la syntaxe Markdown.*
+
+### Étape 2 : Demander à l'IA d'exécuter la génération
+Fournissez `CONSIGNES_TEMPLATE.md` à votre assistant IA préféré (*Claude 3.7 / 3.5 Sonnet, ChatGPT 4o / o1, Gemini 2.5 Flash / Pro, Cursor, Copilot, etc.*) avec la consigne suivante :
+
+```text
+Génère ou mets à jour le fichier presentation.html en appliquant 
+scrupuleusement les consignes et le plan définis dans CONSIGNES_TEMPLATE.md 
+et en instanciant les composants du fichier COMPOSANTS_DICTIONNAIRE.md.
+```
+
+L'IA prend en charge l'écriture complète du HTML : sélection des mises en page adaptées, formatage du code, création des diagrammes vectoriels Mermaid, intégration des fragments et des notes orateur.
+
+### Étape 3 : Projeter et présenter
+Ouvrez simplement le fichier généré dans votre navigateur web (*Chrome, Edge, Safari, Firefox*), soit par double-clic, soit directement depuis votre terminal :
+
+```bash
+open presentation.html
+# Ou sous Linux : xdg-open presentation.html
+# Ou sous Windows : start presentation.html
+```
+
+- Appuyez sur <kbd>F</kbd> pour passer en mode Plein écran sur le vidéoprojecteur.
+- Appuyez sur <kbd>S</kbd> pour ouvrir la **Console Orateur** synchronisée sur votre écran d'ordinateur portable.
 
 ---
 
-## ⌨️ Raccourcis Clavier
+## 🖥️ Ce que le Moteur Génère Automatiquement
+
+Quand l'IA compile votre plan Markdown, elle produit un diaporama riche doté de toutes les fonctionnalités modernes :
+
+### 1. 🎯 Rythme de Présentation & Attention de l'Auditoire
+- **Révélation progressive par étapes (`class="fragment"`)** : Vos cartes, listes à puces et jalons chronologiques apparaissent un par un avec un fondu fluide lors de l'appui sur <kbd>→</kbd> ou <kbd>Espace</kbd>.
+- **Mode Masquage d'Écran — Blackout & Whiteout (<kbd>B</kbd> / <kbd>W</kbd>)** : Coupez la lumière du vidéoprojecteur en noir (<kbd>B</kbd> ou <kbd>.</kbd>) ou en blanc (<kbd>W</kbd>) d'une simple touche pour ramener 100% de l'attention de la salle sur votre explication orale.
+- **Pointeur Laser Virtuel (<kbd>L</kbd>)** : Un faisceau lumineux rouge rubis avec halo et onde de choc animée au clic pour guider le regard de l'audience sans matériel additionnel.
+- **Zoom Interactif Plein Écran (*Click to Zoom*)** : Cliquez sur n'importe quel schéma, extrait de code ou carte pour l'afficher instantanément en grand format centré sur fond flou.
+
+### 2. ⏱️ Console Présentateur Dual-Screen & Pacing Tracker (<kbd>S</kbd>)
+- **Deuxième fenêtre synchronisée en temps réel** via l'API native `BroadcastChannel` (avec secours automatique sur `localStorage`).
+- **Indicateur de Rythme (*Pacing Tracker*) en direct** : En fonction de la durée totale de votre session, la console calcule la durée théorique idéale et affiche une jauge comparative :
+  - 🟢 **Dans les temps** : Rythme équilibré.
+  - 🟡 **Léger retard** : Invite discrète à synthétiser.
+  - 🔴 **Retard critique** : Alerte de dépassement.
+  - 🔵 **En avance** : Marge pour approfondir ou prendre des questions.
+- **Vue Slide Suivante (*Next Slide*)** et gestion dynamique de la taille du texte des notes (`A+` / `A-`).
+- **Tiroir de Notes Écran Unique (<kbd>N</kbd>)** : Pour répéter ou présenter sans moniteur secondaire.
+
+### 3. 🔍 Navigation & Découverte Pendant le Direct
+- **Recherche Plein Texte Instantanée (<kbd>Cmd + K</kbd> / <kbd>Ctrl + K</kbd> / <kbd>/</kbd>)** : Palette de commande flottante façon Spotlight pour chercher par mot-clé dans les titres, textes et notes, avec navigation au clavier et saut immédiat.
+- **Vue Globale des Slides en Grille — Overview (<kbd>O</kbd> ou <kbd>Échap</kbd>)** : Planche contact de toutes les miniatures 16:9 pour naviguer instantanément pendant la session de questions/réponses.
+- **Navigation Clicker** : Clic gauche ou molette en plein écran pour faire défiler les étapes comme avec une télécommande de présentation.
+
+### 4. 📊 Diagrammes, Code & Interactivité
+- **Support Natif des Diagrammes Vectoriels Mermaid.js (`.mermaid`)** : Génération de diagrammes de séquence, de flux ou d'architecture directement à partir de syntaxe texte, sans aucun logiciel de dessin externe.
+- **Coloration Syntaxique Prism.js** avec bouton de copie en 1 clic dans le presse-papiers.
+- **Quiz Interactifs** avec validation visuelle dynamique et affichage de l'explication argumentée.
+- **Zéro Débordement Garanti** : Le moteur `deck-fit.js` mesure chaque slide et applique un auto-ajustement d'échelle vectoriel adaptatif pour qu'aucun contenu ne déborde, quelle que soit la résolution d'écran.
+
+### 5. 🎨 Ambiances Visuelles & Palette Personnalisable
+- **7 Thèmes Complets en Rotation (<kbd>T</kbd>)** :
+  - 🌑 *Midnight Charcoal* (Noir sombre par défaut)
+  - ☀️ *Clean Slate* (Blanc épuré salle lumineuse)
+  - ❄️ *Polar Frost* (Nordic bleu ardoise)
+  - ⚡ *Neon Matrix* (Cyberpunk noir & vert néon)
+  - 🌲 *Deep Forest* (Vert sombre végétal)
+  - ⚓ *Corporate Navy* (Bleu institutionnel)
+  - ☕ *Editorial Warm* (Sépia café & cuivre)
+- **Palette d'Accentuation Dynamique (<kbd>C</kbd>)** : Changez la couleur primaire en direct via un sélecteur interactif (presets, pipette, code `#HEX`), synchronisée avec la console orateur et persistée dans le navigateur.
+
+### 6. 🖨️ Export PDF 16:9 Haute Fidélité (<kbd>P</kbd>)
+- Feuille de style `@media print` calibrée en format paysage exact (`16in x 9in`).
+- **1 slide = 1 page stricte**, sans coupure de paragraphe, avec révélation automatique de tous les fragments et masquage des éléments de contrôle.
+
+---
+
+## ⌨️ Raccourcis Clavier en Présentation
 
 | Raccourci | Action |
 | :--- | :--- |
-| `→` / `Espace` / `PageDown` | Slide suivante / Révéler le fragment suivant |
-| `←` / `PageUp` | Slide précédente / Masquer le fragment précédent |
-| `Shift + →` / `Shift + ←` | Saut direct vers slide suivante / précédente (sans fragment) |
-| `Clic gauche` *(en plein écran)* | Étape suivante (style télécommande / clicker) |
-| `Molette` *(en plein écran)* | Étape suivante / précédente |
-| `Home` / `End` | Première / Dernière slide |
-| `T` | Changer d'ambiance visuelle (parmi les 7 thèmes) |
-| `C` | Changer la couleur d'accentuation (ou ouvrir la palette) |
-| `S` | Ouvrir la Console Présentateur (dual-screen) |
-| `N` | Ouvrir/Fermer le panneau latéral de notes (écran simple) |
-| `Cmd + K` / `Ctrl + K` / `/` | Ouvrir la Palette de Recherche Plein Texte (Spotlight) |
-| `O` / `Échap` | Vue globale en grille (*Overview*) |
-| `F` | Basculer en mode Plein écran (*Fullscreen*) |
-| `B` / `.` | Masquer l'écran en noir (*Blackout*) |
-| `W` | Masquer l'écran en blanc (*Whiteout*) |
-| `L` | Activer / Désactiver le Pointeur Laser Virtuel (avec onde de choc au clic) |
-| `P` | Lancer l'export PDF via la boîte d'impression navigateur |
-| `?` | Afficher la fenêtre d'aide des raccourcis |
+| <kbd>→</kbd> / <kbd>Espace</kbd> / <kbd>PageDown</kbd> | Étape suivante / Révéler le fragment suivant |
+| <kbd>←</kbd> / <kbd>PageUp</kbd> | Étape précédente / Masquer le fragment précédent |
+| <kbd>Shift</kbd> + <kbd>→</kbd> / <kbd>Shift</kbd> + <kbd>←</kbd> | Saut direct à la slide suivante / précédente (sans fragment) |
+| <kbd>Clic gauche</kbd> *(plein écran)* | Avancer à l'étape suivante (mode télécommande) |
+| <kbd>Molette</kbd> *(plein écran)* | Navigation rapide |
+| <kbd>F</kbd> | Activer / Désactiver le Plein écran (*Fullscreen*) |
+| <kbd>S</kbd> | Ouvrir la Console Présentateur (dual-screen) |
+| <kbd>N</kbd> | Ouvrir / Fermer le tiroir latéral de notes (écran simple) |
+| <kbd>Cmd</kbd> + <kbd>K</kbd> / <kbd>Ctrl</kbd> + <kbd>K</kbd> / <kbd>/</kbd> | Ouvrir la recherche plein texte instantanée (*Spotlight*) |
+| <kbd>O</kbd> / <kbd>Échap</kbd> | Vue d'ensemble en grille de miniatures (*Overview*) |
+| <kbd>T</kbd> | Changer d'ambiance visuelle (parmi les 7 thèmes) |
+| <kbd>C</kbd> | Changer la couleur d'accentuation |
+| <kbd>L</kbd> | Activer / Désactiver le Pointeur Laser Virtuel |
+| <kbd>B</kbd> / <kbd>.</kbd> | Masquer l'écran en noir (*Blackout*) |
+| <kbd>W</kbd> | Masquer l'écran en blanc (*Whiteout*) |
+| <kbd>Clic sur carte/code</kbd> | Agrandir en plein écran (*Click to Zoom*) |
+| <kbd>P</kbd> | Lancer l'export PDF haute définition |
+| <kbd>?</kbd> | Afficher l'aide des raccourcis |
 
 ---
 
-## 📂 Structure du Projet
+## 📂 Organisation du Dépôt
 
 ```text
 .
-├── CONSIGNES_TEMPLATE.md          # Schéma et prompt-type pour la génération du contenu
-├── COMPOSANTS_DICTIONNAIRE.md     # Référentiel des balises et structures graphiques
-├── template_presentation.html     # Squelette HTML épuré des slides et composants
-├── presentation.html              # Exemple complet de présentation autonome (Elixir & Phoenix)
+├── CONSIGNES_TEMPLATE.md          # ✍️ VOTRE COCKPIT : Cahier des charges & contenu Markdown à remplir
+├── COMPOSANTS_DICTIONNAIRE.md     # 📚 LE DICTIONNAIRE : Référentiel des composants pour l'IA
+├── template_presentation.html     # 뼈 LE SQUELETTE : Modèle HTML de départ épuré
 ├── src/
-│   ├── css/
-│   │   ├── deck.css               # Point d'entrée CSS principal (@import des sous-modules)
-│   │   ├── variables.css          # Design tokens, variables CSS & transitions de thème
-│   │   ├── base.css               # Reset global & échelle typographique responsive
-│   │   ├── layout.css             # Conteneur deck, viewport et disposition des slides 16:9
-│   │   ├── chrome.css             # Header, footer, barre de progression & boutons de commande
-│   │   ├── components.css         # Dictionnaire des composants (cartes, grilles, code, quizz...)
-│   │   ├── modals.css             # Tiroir de notes, modales d'aide & vue grille (Overview)
-│   │   ├── color-picker.css       # Palette d'accent dynamique & popover de couleur
-│   │   └── print.css              # Export PDF 16:9 paysage & styles d'impression
-│   └── js/
-│       ├── deck.js                # Orchestrateur principal du Deck Engine
-│       ├── deck-dom.js            # Injection dynamique du chrome d'interface et des modales
-│       ├── deck-navigation.js     # Moteur de navigation, raccourcis clavier & BroadcastChannel
-│       ├── deck-theme.js          # Gestion des thèmes Clair / Sombre & auto-détection
-│       ├── deck-palette.js        # Gestionnaire de couleur d'accent (hex, pipette, presets)
-│       ├── deck-overview.js       # Vue d'ensemble en grille avec aperçus miniatures 16:9
-│       ├── deck-print.js          # Synchronisation des thèmes avant export PDF (Print)
-│       ├── speaker.js             # Console présentateur dual-screen & synchro BroadcastChannel
-│       └── interactive.js         # Widgets interactifs (Quizz cliquable, copie terminal)
-└── README.md                      # Documentation du projet
+│   ├── css/                       # Design system modulaire (thèmes, cartes, modales, print)
+│   │   ├── deck.css               # Point d'entrée CSS principal
+│   │   ├── variables.css          # Design tokens & 7 thèmes
+│   │   ├── components.css         # Styles des cartes, quiz, frises et Mermaid
+│   │   ├── modals.css             # Modales (Recherche Spotlight, Zoom, Overview)
+│   │   └── print.css              # Calibrage PDF 16:9 paysage
+│   └── js/                        # Moteur autonome du diaporama (zéro runtime externe)
+│       ├── deck.js                # Orchestrateur maître
+│       ├── deck-dom.js            # Injection dynamique de l'interface
+│       ├── deck-fit.js            # Auto-ajustement d'échelle anti-débordement
+│       ├── deck-navigation.js     # Moteur de navigation & raccourcis clavier
+│       ├── speaker.js             # Console orateur dual-screen & Pacing Tracker
+│       └── interactive.js         # Fragments, laser, blackout, zoom et Mermaid
+├── LICENSE.md                     # 📄 Licence open-source MIT
+└── README.md                      # Documentation centrale du projet
 ```
 
-## 🚀 Prise en Main Rapide
+---
 
-1. Clone ou duplique le projet :
-   ```bash
-   git clone git@github.com:antonindeloison/html-slides-template.git
-   cd html-slides-template
+## 📄 Licence
+
+Ce projet est distribué sous licence [MIT](LICENSE.md). Libre d'utilisation pour vos présentations académiques, soutenances, conférences et réunions professionnelles.
