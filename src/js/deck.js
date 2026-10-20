@@ -41,7 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DeckEngine.Print.init();
   }
 
-  // 6. Initialisation du moteur de navigation et raccourcis clavier
+  // 6. Initialisation de l'auto-ajustement d'échelle des slides (zéro débordement)
+  if (window.DeckEngine.Fit && typeof window.DeckEngine.Fit.init === 'function') {
+    window.DeckEngine.Fit.init();
+  }
+
+  // 7. Initialisation du moteur de navigation et raccourcis clavier
   if (window.DeckEngine.Navigation && typeof window.DeckEngine.Navigation.init === 'function') {
     window.DeckEngine.Navigation.init();
   }

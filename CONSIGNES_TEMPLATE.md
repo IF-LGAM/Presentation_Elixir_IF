@@ -89,6 +89,7 @@ Le moteur de présentation (`Deck Engine`) applique le thème de manière hiéra
    - **Personnalisation en direct de la Couleur d'accentuation** : touche `C` ou menu palette dans le header (palette de presets vibrants : Rouge Crimson, Bleu Cobalt, Vert Émeraude, Violet Cyber, Ambre, Rose Néon, Cyan + ajout libre de nuances au format hexadécimal `#HEX` avec sauvegarde dans "Mes couleurs", persistance `localStorage`, paramètre URL `?color=...`, et synchronisation temps réel dual-screen).
    - **Export PDF haute fidélité** : touche `P` ou bouton dédié (mode paysage 16:9 strict, exactement 1 page par slide, respect fidèle du thème clair/sombre de chaque slide, 0 coupure de page).
    - **Fenêtre d'aide des raccourcis** : touche `?`.
+   - **Auto-ajustement d'échelle dynamique (Zéro débordement)** : le moteur mesure automatiquement le contenu de chaque slide et applique un facteur d'échelle adaptatif centré (`transform: scale(...)`) pour garantir qu'aucune slide ne déborde de l'écran (laptop, écran externe ou plein écran).
    - **Barre de progression dynamique & compteur** de slides dans le header.
 4. **🎙️ Mode Présentateur Avancé (Dual-Screen / Speaker View)** :
    - **Fenêtre dédiée synchronisée (touche `S` ou bouton Présentateur)** :

@@ -66,6 +66,11 @@ window.DeckEngine.Navigation = (function () {
       window.DeckEngine.Theme.updateAutoTheme(activeSlide);
     }
 
+    // Auto-ajustement d'échelle dynamique pour garantir zéro débordement
+    if (window.DeckEngine.Fit && activeSlide) {
+      window.DeckEngine.Fit.fitSlide(activeSlide);
+    }
+
     // Mise à jour de l'interface du Header
     const currentSlideNumEl = document.getElementById('currentSlideNum');
     const progressFill = document.getElementById('progressFill');

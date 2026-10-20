@@ -44,12 +44,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1.25rem 2.5rem;
+  padding: clamp(0.75rem, 2vh, 1.4rem) clamp(1.2rem, 3vw, 2.5rem);
   opacity: 0;
   visibility: hidden;
   transform: translateX(35px);
   transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s ease;
   pointer-events: none;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .slide.active {
@@ -57,6 +59,13 @@
   visibility: visible;
   transform: translateX(0);
   pointer-events: auto;
+}
+
+/* Réserve d'espace de sécurité automatique pour ne jamais chevaucher les logos */
+.slide.has-bottom-logo,
+.slide:has(.slide-logo),
+.slide:has(.slide-bottom-logos) {
+  padding-bottom: clamp(68px, 10vh, 92px) !important;
 }
 
 .slide.prev-slide {
@@ -72,4 +81,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transform-origin: center center;
+  will-change: transform;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }

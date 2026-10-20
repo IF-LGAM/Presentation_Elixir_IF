@@ -119,10 +119,16 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 
 ---
 
-## 11. Logos de Pied de Slide (Positionnement & Redimensionnement Automatique)
+## 11. Logos de Pied de Slide (Positionnement & Redimensionnement Multi-Niveaux)
 
-Le moteur gère l'affichage et l'auto-calibrage de logos positionnés **en bas à gauche**, **au milieu** ou **en bas à droite**.
-> ⚡ **Redimensionnement automatique garanti** : tout logo (`SVG`, `PNG`, `JPG`, `WebP`) est automatiquement retaillé à la hauteur optimale 16:9 (`clamp(24px, 3.8vh, 38px)`), avec ratio d'aspect préservé (`object-fit: contain`), ombre portée douce et zéro risque de déborder ou de casser la mise en page.
+Le moteur gère l'affichage, le redimensionnement précis et l'auto-calibrage de logos positionnés **en bas à gauche**, **au milieu** ou **en bas à droite**.
+> 🛡️ **Anti-chevauchement garanti** : la présence d'un logo applique automatiquement un dégagement de sécurité en bas de slide (`padding-bottom: clamp(48px, 7vh, 64px)`), et l'auto-fit adapte la hauteur du contenu pour que celui-ci s'arrête strictement **au-dessus** du logo sans jamais passer par-dessus.
+>
+> 📏 **Contrôle total de la taille** :
+> 1. **Style inline direct** : `<img src="..." style="height: 22px;">` ou `style="width: 40px;">`
+> 2. **Attribut de taille** : `<div class="slide-logo bottom-center" data-size="20px">`
+> 3. **Variable CSS** : `style="--logo-height: 20px;"`
+> 4. **Classes prêtes à l'emploi** : `.logo-xs` (16px), `.logo-sm` (22px), `.logo-md` (30px), `.logo-lg` (42px), `.logo-xl` (56px)
 
 | Alias court | Classe / Balise HTML | Utilisation & Description |
 | :--- | :--- | :--- |
@@ -131,9 +137,13 @@ Le moteur gère l'affichage et l'auto-calibrage de logos positionnés **en bas �
 | `logo-right` / `bottom-right` | `<div class="slide-logo bottom-right"><img src="..."></div>` | Ancre un ou plusieurs logos **en bas à droite** de la diapositive. |
 | `logo-bar` | `<div class="slide-bottom-logos">` | Barre de pied de slide complète avec 3 slots : `.logo-group.left`, `.logo-group.center`, `.logo-group.right`. |
 | `logo-direct` | `<img class="slide-logo bottom-left" src="...">` | Balise image directe portant les classes de positionnement. |
-| `logo-sm` | `<div class="slide-logo bottom-left logo-sm">` | Variante compacte discrète (`max-height: ~24px`). |
-| `logo-lg` | `<div class="slide-logo bottom-left logo-lg">` | Variante plus imposante pour sponsor principal ou slide de titre (`max-height: ~48px`). |
-| `logo-framed` | `<div class="slide-logo bottom-left framed">` | Ajoute un cadre discret semi-transparent (glassmorphism) pour assurer le contraste de logos sombres sur fond sombre. |
+| `logo-xs` | `<div class="slide-logo bottom-center logo-xs">` | Format miniature (`height: 16px`). |
+| `logo-sm` | `<div class="slide-logo bottom-center logo-sm">` | Format compact (`height: 22px`). |
+| `logo-md` | `<div class="slide-logo bottom-center logo-md">` | Format standard par défaut (`height: 30px`). |
+| `logo-lg` | `<div class="slide-logo bottom-center logo-lg">` | Format agrandi (`height: 42px`). |
+| `logo-xl` | `<div class="slide-logo bottom-center logo-xl">` | Format imposant (`height: 56px`). |
+| `data-size="..."` | Sur `.slide-logo` ou `img` | Règle directement la hauteur souhaitée (ex: `data-size="20px"`). |
+| `logo-framed` | `<div class="slide-logo bottom-center framed">` | Ajoute un cadre discret semi-transparent (glassmorphism) pour assurer le contraste de logos sombres sur fond sombre. |
 | `data-logo-left\|center\|right` | Sur `.deck-container` ou `<section class="slide">` | **Mode automatique (Zero-config)** : injecte automatiquement les logos spécifiés sans écrire de balises HTML manuelles. |
 | `data-no-logos="true"` | Sur `<section class="slide">` | Masque les logos globaux sur une slide spécifique (ex: slide de titre ou conclusion). |
 
@@ -257,3 +267,36 @@ Le moteur gère l'affichage et l'auto-calibrage de logos positionnés **en bas �
   ...
 </div>
 ```
+
+#### Contrôle Total du Redimensionnement & Zéro Chevauchement
+Toutes les approches suivantes sont supportées nativement pour redimensionner les logos sans jamais risquer de chevaucher le contenu :
+
+1. **Classes utilitaires calibrées** : `.logo-xs` (16px), `.logo-sm` (22px), `.logo-md` (30px), `.logo-lg` (42px), `.logo-xl` (56px)
+   ```html
+   <div class="slide-logo bottom-center logo-sm">
+     <img src="assets/logos/elixir.svg" alt="Elixir">
+   </div>
+   ```
+
+2. **Style inline direct** (`height: ...` ou `width: ...`) :
+   ```html
+   <div class="slide-logo bottom-center" style="height: 24px;">
+     <img src="assets/logos/elixir.svg" alt="Elixir">
+   </div>
+   ```
+
+3. **Attribut `data-size="..."`** :
+   ```html
+   <div class="slide-logo bottom-center" data-size="24px">
+     <img src="assets/logos/elixir.svg" alt="Elixir">
+   </div>
+   ```
+
+4. **Variables CSS personnalisées** :
+   ```html
+   <div class="slide-logo bottom-center" style="--logo-height: 24px;">
+     <img src="assets/logos/elixir.svg" alt="Elixir">
+   </div>
+   ```
+
+> 🛡️ **Garantie Zéro Chevauchement** : Le moteur `deck-fit.js` et le layout CSS réservent automatiquement une zone de sécurité dynamique au bas de chaque diapositive dotée de logos (`logoReserve = maxLogoHeight + 44px`). Le contenu de la slide (`.slide-content`) est automatiquement mis à l'échelle pour s'arrêter strictement au-dessus du logo avec une marge respirante.

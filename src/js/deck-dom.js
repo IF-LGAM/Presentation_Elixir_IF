@@ -304,8 +304,18 @@ window.DeckEngine.DOM = (function () {
           logoContainer.appendChild(img);
         });
 
+        const customSize = slide.getAttribute('data-logo-size') || container.getAttribute('data-logo-size');
+        if (customSize) {
+          logoContainer.style.setProperty('--logo-height', customSize);
+        }
+
         slide.appendChild(logoContainer);
+        slide.classList.add('has-bottom-logo');
       });
+
+      if (slide.querySelector('.slide-logo, .slide-bottom-logos')) {
+        slide.classList.add('has-bottom-logo');
+      }
     });
   }
 
