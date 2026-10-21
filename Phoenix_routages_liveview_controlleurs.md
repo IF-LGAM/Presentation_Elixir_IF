@@ -2,7 +2,7 @@
 ## Routage, Contrôleurs & LiveView en Action
 
 > ⏱️ **Durée d'intervention :** 10 minutes (Slides 12 à 15)  
-> 👤 **Intervenant :** fgogo  
+> 👤 **Intervenant :** Gautier 
 > 📂 **Dépôt applicatif de référence :** `les_bons_comptes` (Master MIAGE — IF)  
 > 🎨 **Conformité visuelle :** `COMPOSANTS_DICTIONNAIRE.md` & thèmes Deck Engine  
 
@@ -90,26 +90,23 @@
         use LesBonsComptesWeb, :controller
         alias LesBonsComptes.{Expenses, Wallets}
 
+        # 1. Extraction directe de l'identifiant URL
         def index(conn, %{"id" => id}) do
-          case parse_wallet_id(id) do
-            {:ok, wallet_id} ->
-              case Wallets.get_wallet(wallet_id) do
-                nil ->
-                  conn |> put_status(:not_found) |> json(%{error: "Introuvable"})
+          case Wallets.get_wallet(id) do
+            nil ->
+              conn
+              |> put_status(:not_found)
+              |> json(%{error: "Porte-monnaie introuvable"})
 
-                wallet ->
-                  settlements = Expenses.calculate_settlements(wallet)
-                  creditors = Expenses.calculate_creditors(wallet)
+            wallet ->
+              settlements = Expenses.calculate_settlements(wallet)
+              creditors = Expenses.calculate_creditors(wallet)
 
-                  render(conn, :index,
-                    wallet: wallet,
-                    settlements: settlements,
-                    creditors: creditors
-                  )
-              end
-
-            :error ->
-              conn |> put_status(:not_found) |> json(%{error: "ID invalide"})
+              render(conn, :index,
+                wallet: wallet,
+                settlements: settlements,
+                creditors: creditors
+              )
           end
         end
       end

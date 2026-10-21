@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elixir &amp; Phoenix : Fonctionnalités Clés &amp; Atelier Pratique</title>
+
+  <!-- Google Fonts : Montserrat, Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Prism.js Syntax Highlighting (Dark Tomorrow) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+  <!-- Design System & Deck Engine Styles -->
+  <link rel="stylesheet" href="src/css/deck.css">
+
+  <style>
+    /* Préservation du formatage multi-lignes dans le tiroir de notes rapide */
+    #notesContent {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================================
+       CONTENEUR DU DIAPORAMA (DÉCOUPLÉ À 100%)
+       Le Header, Footer, Modale d'Overview, Drawer de Notes et Modale Raccourcis
+       sont injectés automatiquement par src/js/deck.js.
+       Thème global défini une seule fois sur le conteneur racine.
+       ===================================================================== -->
+  <div class="deck-container" id="deckContainer" data-brand="MASTER MIAGE — IF"
+    data-title="Elixir &amp; Phoenix : Fonctionnalités Clés &amp; Atelier Pratique" data-total-duration="15"
+    data-theme="dark">
+
+    <main class="slides-viewport" id="viewport">
+
+      <!-- ==========================================
+           SLIDE 12 : LE ROUTAGE PHOENIX (SCOPES, PIPELINES & LIVE SESSIONS)
+           ========================================== -->
+      <section class="slide active" data-slide="12"
+        data-title="Slide 12 — Le Routage Phoenix : Scopes, Pipelines &amp; Live Sessions"
+        data-duration="2.5 min"
+        data-notes="• Prise de parole (2 min 30) : Regardons comment s'articule le routage dans notre application réelle « Les bons comptes ».&#10;• Les pipelines : En haut, deux tuyaux distincts : :browser pour la navigation humaine avec gestion de session, et :api pour les échanges de données JSON.&#10;• La puissance de live_session : Remarquez le bloc live_session :authenticated_user. Toutes nos pages de gestion (WalletLive.Show, ExpenseNew) sont protégées par le hook ensure_authenticated avant même d'ouvrir le WebSocket.&#10;• L'ouverture REST : En bas, le même routeur expose aussi une API REST standard /api/wallets/:id/settlements pour des intégrations externes.&#10;• Transition : Regardons maintenant comment fonctionne le contrôleur de cette API REST.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <h2 class="slide-title">Le Routage Phoenix : Scopes, Pipelines &amp; Live Sessions</h2>
+            <p class="slide-subtitle">Coexistence native du Web classique, des APIs REST et des tunnels temps réel</p>
+          </div>
+
+          <div class="split-code">
+            <div class="x-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span class="pill-tag solid">Aiguillage Réseau</span>
+                <h3 style="margin-top: 0.6rem; margin-bottom: 0.8rem;">Des flux étanches et composables</h3>
+                <ul style="padding-left: 0; margin-bottom: 0;">
+                  <li class="bullet-check"><strong>Pipelines modulaires :</strong> <code class="inline-code">:browser</code> gère cookies et CSRF ; <code class="inline-code">:api</code> traite du JSON stateless pur.</li>
+                  <li class="bullet-check"><strong>Scopes hiérarchiques :</strong> Découpage explicite entre routes publiques, zone authentifiée et API <code class="inline-code">/api</code>.</li>
+                  <li class="bullet-check"><strong>Sécurisation live_session :</strong> Le hook <code class="inline-code">ensure_authenticated</code> filtre dès la poignée de main WebSocket.</li>
+                  <li class="bullet-check"><strong>Vérification compilation :</strong> Le sigil vérifié <code class="inline-code">~p</code> interdit toute URL invalide à la compilation.</li>
+                </ul>
+              </div>
+
+              <div class="summary-box" style="margin-top: 1rem; border-left: 3px solid var(--accent-primary); font-size: 0.82rem;">
+                <span style="font-weight: 700; color: var(--accent-primary);">Garantie BEAM :</span>
+                <span>Chaque requête HTTP ou WebSocket est isolée dans son micro-processus indépendant.</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="code-header">lib/les_bons_comptes_web/router.ex</div>
+              <pre class="code-box" style="font-size: 0.8rem; line-height: 1.4;"><code class="language-elixir">defmodule LesBonsComptesWeb.Router do
+  use LesBonsComptesWeb, :router
+
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :protect_from_forgery
+  end
+
+  pipeline :api do
+    plug :accepts, ["json"]
+  end
+
+  # Scope Web & LiveView sous session sécurisée
+  scope "/", LesBonsComptesWeb do
+    pipe_through :browser
+
+    live_session :authenticated_user,
+      on_mount: [{UserAuth, :ensure_authenticated}] do
+      live "/wallets", WalletLive.Index, :index
+      live "/wallets/:id", WalletLive.Show, :show
+      live "/wallets/:id/expenses/new", WalletLive.ExpenseNew, :new
+    end
+  end
+
+  # API REST JSON pour tiers & scripts
+  scope "/api", LesBonsComptesWeb do
+    pipe_through :api
+    get "/wallets/:id/settlements", SettlementController, :index
+  end
+end</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <span><strong>Principe directeur :</strong> Un seul fichier pour gouverner tout le trafic : pages HTML, endpoints REST et applications LiveView.</span>
+          </div>
+        </div>
+
+        <img src="assets/logos/elixir.svg" alt="Elixir Logo" class="slide-logo bottom-left logo-sm">
+      </section>
+
+      <!-- ==========================================
+           SLIDE 13 : CONTRÔLEURS STANDARD & APIS JSON
+           ========================================== -->
+      <section class="slide" data-slide="13"
+        data-title="Slide 13 — Contrôleurs Standard : Fonctions Pures &amp; Algorithmique Métier"
+        data-duration="2.5 min"
+        data-notes="• Cas d'usage (2 min 30) : Voici le contrôleur réel calculant les remboursements optimisés entre colocataires.&#10;• Le pattern matching imbriqué : Admirez la lisibilité : on extrait l'identifiant, on tente de récupérer le wallet, et on calcule l'équilibrage.&#10;• Séparation des responsabilités : Le contrôleur ne fait aucun calcul mathématique lui-même. Il sollicite le contexte métier Expenses.&#10;• Rendu JSON : En cas de succès, il formate la réponse ; en cas d'erreur, il renvoie un code 404 sans jamais lever d'exception lourde.&#10;• Transition : Ce contrôleur HTTP répond parfaitement au besoin d'une API. Mais pour notre interface utilisateur, nous voulons de la réactivité immédiate sans rechargement : c'est là qu'intervient Phoenix LiveView.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <h2 class="slide-title">Contrôleurs Standard : Fonctions Pures &amp; Algorithmique Métier</h2>
+            <p class="slide-subtitle">Pattern matching en signature, gestion d'erreurs et calcul des dettes</p>
+          </div>
+
+          <div class="split-code">
+            <div class="x-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span class="pill-tag solid">Paradigme MVC Pur</span>
+                <h3 style="margin-top: 0.6rem; margin-bottom: 0.8rem;">Une transformation de données immuable</h3>
+                <ul style="padding-left: 0; margin-bottom: 0;">
+                  <li class="bullet-check"><strong>Action = Fonction pure :</strong> L'action reçoit <code class="inline-code">(conn, params)</code> et renvoie une nouvelle structure <code class="inline-code">conn</code>.</li>
+                  <li class="bullet-check"><strong>Pattern Matching en signature :</strong> Déstructuration immédiate de l'identifiant URL (<code class="inline-code">%{"id" =&gt; id}</code>).</li>
+                  <li class="bullet-check"><strong>Algorithmique dans le Contexte :</strong> Le contrôleur n'exécute pas de SQL, il sollicite <code class="inline-code">Expenses.calculate_settlements/1</code>.</li>
+                  <li class="bullet-check"><strong>Rendu sans exception :</strong> Les cas d'erreur (<code class="inline-code">nil</code>) sont gérés par retour de statuts HTTP propres sans crash.</li>
+                </ul>
+              </div>
+
+              <div class="summary-box" style="margin-top: 1rem; border-left: 3px solid var(--accent-primary); font-size: 0.82rem;">
+                <span style="font-weight: 700; color: var(--accent-primary);">Flux de données pur :</span>
+                <span>Requête HTTP ➔ Router (~p) ➔ Controller ➔ Context Expenses ➔ Réponse JSON</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="code-header">lib/les_bons_comptes_web/controllers/settlement_controller.ex</div>
+              <pre class="code-box" style="font-size: 0.8rem; line-height: 1.42;"><code class="language-elixir">defmodule LesBonsComptesWeb.SettlementController do
+  use LesBonsComptesWeb, :controller
+  alias LesBonsComptes.{Expenses, Wallets}
+
+  # 1. Extraction directe de l'identifiant URL
+  def index(conn, %{"id" => id}) do
+    case Wallets.get_wallet(id) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "Porte-monnaie introuvable"})
+
+      wallet ->
+        settlements = Expenses.calculate_settlements(wallet)
+        creditors = Expenses.calculate_creditors(wallet)
+
+        render(conn, :index,
+          wallet: wallet,
+          settlements: settlements,
+          creditors: creditors
+        )
+    end
+  end
+end</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <span><strong>Règle d'or :</strong> Zéro état persistant dans le contrôleur : f(conn, params) -&gt; conn. Prévisible, testable et sans effets de bord.</span>
+          </div>
+        </div>
+
+        <img src="assets/logos/elixir.svg" alt="Elixir Logo" class="slide-logo bottom-left logo-sm">
+      </section>
+
+      <!-- ==========================================
+           SLIDE 14 : PHOENIX LIVEVIEW & PUBSUB TEMPS RÉEL
+           ========================================== -->
+      <section class="slide" data-slide="14"
+        data-title="Slide 14 — LiveView &amp; PubSub : Collaboration Temps Réel Native"
+        data-duration="3.5 min"
+        data-notes="• Le joyau technique (3 min 30) : Voici le code réel le plus représentatif de la force de Phoenix dans notre application.&#10;• L'abonnement PubSub : Dans mount, chaque participant connecté au porte-monnaie s'abonne au topic &quot;wallet:#{id}&quot;.&#10;• Le déclencheur : Dès qu'un utilisateur clique sur supprimer une dépense, l'événement delete_expense est traité côté serveur.&#10;• La synchronisation collective : Dans handle_info, TOUS les membres reçoivent la notification de mise à jour. LiveView recalcule le diff et pousse les nouveaux chiffres sur chaque écran.&#10;• Bilan d'infrastructure : Pas de serveur Node.js séparé, pas de cluster Redis, pas de Redux dans le navigateur. Tout est géré par la machine virtuelle BEAM en 25 lignes.&#10;• Transition : Faut-il alors tout coder en LiveView ? C'est ce que nous récapitulons dans la matrice suivante.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <h2 class="slide-title">LiveView &amp; PubSub : Collaboration Temps Réel Native</h2>
+            <p class="slide-subtitle">Synchronisation instantanée entre utilisateurs sans Redis ni polling JavaScript</p>
+          </div>
+
+          <div class="split-code">
+            <div class="x-card featured" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span class="pill-tag solid">Rupture Technologique</span>
+                <h3 style="margin-top: 0.6rem; margin-bottom: 0.8rem;">La Triade Réactive de Phoenix</h3>
+                <ul style="padding-left: 0; margin-bottom: 0;">
+                  <li class="bullet-check"><strong>1. Abonnement PubSub :</strong> À l'ouverture du WebSocket, le client s'abonne au topic <code class="inline-code">"wallet:#{id}"</code> sur la BEAM.</li>
+                  <li class="bullet-check"><strong>2. Événement utilisateur :</strong> Clic suppression dépense &rarr; écriture en base et diffusion instantanée.</li>
+                  <li class="bullet-check"><strong>3. Réception collective :</strong> Tous les participants reçoivent <code class="inline-code">{:wallet_updated, id}</code> et leur vue s'actualise.</li>
+                  <li class="bullet-check"><strong>Diffing chirurgical :</strong> Seuls les octets modifiés transitent sur le WebSocket (&lt; 10 ms).</li>
+                </ul>
+              </div>
+
+              <div class="summary-box" style="margin-top: 1rem; border-left: 3px solid var(--accent-primary); font-size: 0.82rem;">
+                <span style="font-weight: 700; color: var(--accent-primary);">Zéro JavaScript :</span>
+                <span>La BEAM orchestre l'état serveur et pousse les deltas binaires sur WebSocket.</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="code-header">lib/les_bons_comptes_web/live/wallet_live/show.ex</div>
+              <pre class="code-box" style="font-size: 0.8rem; line-height: 1.42;"><code class="language-elixir">defmodule LesBonsComptesWeb.WalletLive.Show do
+  use LesBonsComptesWeb, :live_view
+  alias LesBonsComptes.{Expenses, Wallets}
+
+  # 1. Montage et abonnement au canal du porte-monnaie
+  def mount(%{"id" => id}, _session, socket) do
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(PubSub, "wallet:#{id}")
+    end
+
+    wallet = Wallets.get_wallet!(id)
+    {:ok, assign(socket, wallet_id: id, wallet: wallet)}
+  end
+
+  # 2. Réaction à la suppression d'une dépense
+  def handle_event("delete_expense", %{"id" => exp_id}, socket) do
+    Expenses.delete_expense(socket.assigns.current_user, exp_id)
+    {:noreply, put_flash(socket, :info, "Dépense supprimée")}
+  end
+
+  # 3. Notification PubSub reçue par TOUS les participants
+  def handle_info({:wallet_updated, wallet_id}, socket) do
+    {:ok, data} = load_wallet_data(wallet_id)
+    {:noreply, assign(socket, data)}
+  end
+end</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <span><strong>Révolution :</strong> Alice supprime une dépense -&gt; l'écran de Bob ajuste ses soldes en direct sans recharger la page et sans une ligne de JS.</span>
+          </div>
+        </div>
+
+        <img src="assets/logos/elixir.svg" alt="Elixir Logo" class="slide-logo bottom-left logo-sm">
+      </section>
+
+      <!-- ==========================================
+           SLIDE 15 : MATRICE DÉCISIONNELLE : REST VS PHOENIX LIVEVIEW
+           ========================================== -->
+      <section class="slide" data-slide="15"
+        data-title="Slide 15 — Matrice Décisionnelle : Choisir l'Outil Adapté"
+        data-duration="1.5 min"
+        data-notes="• Conclusion de mon passage (1 min 30) : Pour résumer cette partie technique, Phoenix offre le meilleur des deux mondes.&#10;• L'équilibre dans notre projet : Nous conservons des contrôleurs classiques pour notre API REST de règlements et pour la gestion des cookies de session.&#10;• Pour le reste : LiveView prend en charge 90% de l'interface avec une réactivité et une économie de code incomparables.&#10;• Passage de relais vers la Démo : Vous avez vu l'architecture et le code réel. Place maintenant à l'action : je passe la main à mon camarade pour la démonstration en direct de l'application « Les bons comptes » !">
+        <div class="slide-content">
+          <div class="slide-header">
+            <h2 class="slide-title">Matrice Décisionnelle : Choisir l'Outil Adapté</h2>
+            <p class="slide-subtitle">Pourquoi « Les bons comptes » combine harmonieusement contrôleurs HTTP et LiveView</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="x-card">
+              <span class="pill-tag gray">Contrôleurs Standard (HTTP)</span>
+              <h3>Cas d'Usage Recommandés</h3>
+              <ul>
+                <li class="bullet-check"><strong>APIs REST / JSON publiques :</strong> Endpoints exposés aux tiers ou applications mobiles (<code class="inline-code">SettlementController</code>).</li>
+                <li class="bullet-check"><strong>Cookies d'authentification :</strong> Écriture sécurisée des en-têtes HTTP de session (<code class="inline-code">UserSessionController</code>).</li>
+                <li class="bullet-check"><strong>Webhooks externes :</strong> Réception des callbacks de passerelles de paiement (Stripe).</li>
+                <li class="bullet-check"><strong>Téléchargements de fichiers :</strong> Streaming de bilans ou d'exports comptables PDF/CSV.</li>
+              </ul>
+            </div>
+
+            <div class="x-card featured">
+              <span class="pill-tag solid">Phoenix LiveView (WebSocket)</span>
+              <h3>Cas d'Usage Privilégiés</h3>
+              <ul>
+                <li class="bullet-check"><strong>Interfaces collaboratives :</strong> Modification partagée et temps réel de dépenses (<code class="inline-code">WalletLive.Show</code>).</li>
+                <li class="bullet-check"><strong>Formulaires réactifs :</strong> Validation en direct à la frappe sans duplication de code front/back.</li>
+                <li class="bullet-check"><strong>Tableaux de bord dynamiques :</strong> Visualisation instantanée des soldes et des dettes croisées.</li>
+                <li class="bullet-check"><strong>Productivité maximale :</strong> Élimination du boilerplate d'API REST pour la majorité des vues.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <span><strong>Synthèse :</strong> Phoenix n'impose aucun dogme : il associe la robustesse du HTTP classique à la réactivité d'une SPA moderne.</span>
+          </div>
+        </div>
+
+        <img src="assets/logos/elixir.svg" alt="Elixir Logo" class="slide-logo bottom-left logo-sm">
+      </section>
+
+      <!-- ==========================================
+           SLIDE 16 : CADRAGE DE L'ATELIER PRATIQUE & TP (CLÔTURE)
+           ========================================== -->
+      <section class="slide" data-slide="16"
+        data-title="Slide 16 — Atelier Pratique : Déployer et Scaler « Les Bons Comptes »"
+        data-duration="5 min"
+        data-notes="• Lancement de la Partie 3 (5 min) : Merci. Je reprends la parole pour clore cette présentation et cadrer notre atelier pratique de 2 heures.&#10;• Pas de code from scratch : Rassurez-vous, vous n'allez pas tout recoder. L'application est fournie clé en main avec sa base de données PostgreSQL pré-remplie.&#10;• Votre mission concrète : Vous allez vous concentrer sur une brique précise : afficher les données existantes avec Ecto, implémenter l'ajout d'une nouvelle dépense, et voir la magie de LiveView où votre saisie s'affiche en temps réel sur l'écran de votre voisin sans recharger la page.&#10;• L'environnement zéro friction : Pas besoin d'installer Elixir ni PostgreSQL. Trois commandes Docker Compose suffisent pour être immédiatement opérationnel sur localhost:4000.&#10;• Le jeu de test : 130+ porte-monnaies et 440+ dépenses sont déjà là pour tester la charge en direct.&#10;• Top départ : Les dépôts sont ouverts, les commandes sont affichées au tableau. Bon atelier à tous, nous passons dans les rangs pour vous accompagner !">
+        <div class="slide-content">
+          <div class="slide-header">
+            <h2 class="slide-title">Atelier Pratique : Déployer et Étendre « Les Bons Comptes »</h2>
+            <p class="slide-subtitle">Une application fonctionnelle fournie pour se concentrer sur l'affichage et l'ajout temps réel</p>
+          </div>
+
+          <div class="grid-3">
+            <div class="x-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span class="pill-tag solid">Missions Ciblées</span>
+                <h3 style="margin-top: 0.6rem; margin-bottom: 0.8rem;">Focus sur la Réactivité</h3>
+                <ul style="padding-left: 0; margin-bottom: 0;">
+                  <li class="bullet-check"><strong>Base fournie clé en main :</strong> Aucun temps perdu sur la configuration : l'architecture, l'auth et la BDD sont déjà en place.</li>
+                  <li class="bullet-check"><strong>Exploitation BDD (Ecto) :</strong> Requêter PostgreSQL et afficher dynamiquement les dépenses dans les templates HEEx (<code class="inline-code">~H</code>).</li>
+                  <li class="bullet-check"><strong>Ajout de données en direct :</strong> Implémenter le formulaire de saisie réactif et valider les données côté serveur.</li>
+                  <li class="bullet-check"><strong>Synchronisation collective :</strong> Diffuser l'ajout via PubSub pour que la dépense apparaisse chez tout le monde en direct.</li>
+                </ul>
+              </div>
+
+              <div class="summary-box" style="margin-top: 1rem; border-left: 3px solid var(--accent-primary); font-size: 0.82rem;">
+                <span style="font-weight: 700; color: var(--accent-primary);">Effet LiveView :</span>
+                <span>Ouvrez l'app à deux : chaque dépense ajoutée s'affiche instantanément chez le voisin.</span>
+              </div>
+            </div>
+
+            <div class="x-card featured" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span class="pill-tag solid">Zéro Friction</span>
+                <h3 style="margin-top: 0.6rem; margin-bottom: 0.8rem;">Stack &amp; Outils Intégrés</h3>
+                <ul style="padding-left: 0; margin-bottom: 0;">
+                  <li class="bullet-check"><strong>Pile 100% Dockerisée :</strong> Phoenix 1.7 + PostgreSQL 15. Aucun runtime Elixir requis en local.</li>
+                  <li class="bullet-check"><strong>Dataset « Think HUGE » :</strong> 130+ porte-monnaies et 440+ dépenses pré-générées pour observer la scalabilité.</li>
+                  <li class="bullet-check"><strong>LiveDashboard :</strong> Métriques machine et introspection des processus BEAM sur <code class="inline-code">/dev/dashboard</code>.</li>
+                  <li class="bullet-check"><strong>Compte de test :</strong> <code class="inline-code">admin@exemple.com</code> / mot de passe : <code class="inline-code">admin123</code>.</li>
+                </ul>
+              </div>
+
+              <div class="summary-box" style="margin-top: 1rem; border-left: 3px solid var(--accent-primary); font-size: 0.82rem;">
+                <span style="font-weight: 700; color: var(--accent-primary);">LiveReload actif :</span>
+                <span>Toute modification de code Elixir / HEEx recompile à chaud dans le navigateur.</span>
+              </div>
+            </div>
+
+            <div class="x-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <span class="pill-tag gray">Terminal Rapide</span>
+                <h3 style="margin-top: 0.6rem; margin-bottom: 0.8rem;">Démarrage en 3 Commandes</h3>
+                <div class="terminal-box" style="font-size: 0.76rem; line-height: 1.45; padding: 0.75rem 0.9rem;">
+                  <div style="color: var(--text-dim); margin-bottom: 0.35rem;"># 1. Cloner et lancer la pile</div>
+                  <div style="color: var(--accent-primary); font-weight: 600;">$ git clone git@github.com:IF-LGAM/les_bons_comptes.git</div>
+                  <div style="color: var(--text-main);">$ cd les_bons_comptes &amp;&amp; docker compose up -d</div>
+                  <div style="color: var(--text-dim); margin-top: 0.5rem; margin-bottom: 0.35rem;"># 2. Initialiser la base &amp; le dataset</div>
+                  <div style="color: var(--text-main);">$ docker compose exec web mix ecto.setup</div>
+                  <div style="color: var(--text-dim); margin-top: 0.5rem; margin-bottom: 0.35rem;"># 3. Ouvrir dans le navigateur</div>
+                  <div style="color: var(--text-accent); font-weight: 600;">http://localhost:4000</div>
+                </div>
+              </div>
+
+              <div class="summary-box" style="margin-top: 1rem; border-left: 3px solid var(--accent-primary); font-size: 0.82rem;">
+                <span style="font-weight: 700; color: var(--accent-primary);">Support GitHub :</span>
+                <span>Guide d'installation pas-à-pas documenté dans le README du dépôt.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <span><strong>Consigne générale :</strong> Clonez le dépôt et suivez les instructions. L'équipe passe dans les rangs pour vous accompagner. Bon atelier à tous !</span>
+          </div>
+        </div>
+
+        <img src="assets/logos/elixir.svg" alt="Elixir Logo" class="slide-logo bottom-left logo-sm">
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts du Deck Engine (Injectent automatiquement le header, footer, modales & contrôles) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-elixir.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="src/js/deck-dom.js"></script>
+  <script src="src/js/deck-palette.js"></script>
+  <script src="src/js/deck-theme.js"></script>
+  <script src="src/js/deck-fit.js"></script>
+  <script src="src/js/deck-overview.js"></script>
+  <script src="src/js/deck-print.js"></script>
+  <script src="src/js/deck-navigation.js"></script>
+  <script src="src/js/deck.js"></script>
+  <script src="src/js/speaker.js"></script>
+  <script src="src/js/interactive.js"></script>
+</body>
+
+</html>
