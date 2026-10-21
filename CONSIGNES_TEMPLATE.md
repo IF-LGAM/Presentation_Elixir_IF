@@ -815,12 +815,380 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
       - Pas de mutation de variable : Les boucles traditionnelles `for`/`while` avec compteurs incrémentés sont impossibles.
       - Transformations pures : Tout se gère par récursivité ou via le module `Enum` (`Enum.map`, `Enum.reduce`). On ne boucle pas, on transforme un flux.
   - **Pied de slide** : banner
-    - Mindset Elixir : L'immuabilité et la supervision changent radicalement la façon d'écrire et de fiabiliser un logiciel.
+---
+
+#### Slide 18 : Annonce de Partie — Framework Phoenix & Temps Réel
+- **Type de slide** : hero
+- **Durée estimée** : 1 min *(Introduction de la Partie 2, durée totale : 34 min)*
+- **Titre (title-slide)** : PARTIE 2 : Framework Phoenix & Temps Réel
+- **Sous-titre (subtitle-slide)** : L'architecture web haute performance et temps réel propulsée par la BEAM (Durée : 34 min)
+- **Mise en page** : hero
+- **Contenu & Composants** :
+  - **Organisation (Sous-parties abordées)** : grid-4
+    - **Jalon 1 (3 min)** : card
+      - badge-solid : 3 min
+      - Titre : Pourquoi Phoenix ?
+      - Description : Rupture avec le modèle requête/réponse éphémère et adoption du modèle d'acteurs pour connexions persistantes.
+    - **Jalon 2 (5 min)** : card
+      - badge-gray : 5 min
+      - Titre : Architecture Interne & Découplage
+      - Description : Le contrat Plug comme pipeline de fonctions pures et l'isolation métier via les Contexts Phoenix.
+    - **Jalon 3 (3 min)** : card
+      - badge-gray : 3 min
+      - Titre : Modèle de Rendu Réactif
+      - Description : Comparatif avec Thymeleaf/SSR classique et compilation de gabarits HEEx à différentiel binaire.
+    - **Jalon 4 (10 min)** : card
+      - badge-gray : 10 min
+      - Titre : Routage, Contrôleurs & LiveView
+      - Description : Pipelines HTTP, APIs REST immuables, collaboration temps réel sur WebSocket et matrice décisionnelle.
+  - **Pied de slide** : banner
+    - Formule clé : 34 minutes pour maîtriser l'architecture du framework Phoenix et la révolution LiveView.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Prise de parole & Cadrage (1 min) :** Merci. Nous abordons maintenant la deuxième grande partie consacrée au framework Phoenix, pour une durée de 34 minutes.
+  > - **Pourquoi Phoenix :** Nous avons vu les fondations exceptionnelles d'Elixir et de la BEAM. Phoenix est l'outil qui met toute cette puissance au service du web moderne.
+  > - **Au programme :** Comprendre pourquoi les architectures web traditionnelles s'essoufflent, explorer le moteur Plug et les Contextes métier, comparer le rendu Phoenix face à Thymeleaf, puis plonger dans le code avec LiveView et le temps réel.
+  > - **Lancement :** Démarrons tout de suite en nous posant la question essentielle : Pourquoi créer Phoenix ?
+
+---
+
+#### Slide 19 : Pourquoi Phoenix ?
+- **Type de slide** : slide
+- **Durée estimée** : 3 min
+- **Titre (title-slide)** : Pourquoi Phoenix ?
+- **Sous-titre (subtitle-slide)** : L'inadéquation des architectures web classiques face à la persistance
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Le Décalage Conceptuel)** : card
+    - badge-gray : L'Héritage des Années 2000
+    - Titre : Quand le Web passe du « Document » à « L'État Persistant »
+    - Liste (icon-bullet) :
+      - Modèle historique « Éphémère » : Le Web a été pensé pour des cycles courts : Requête $\rightarrow$ Réponse $\rightarrow$ Fermeture.
+      - Nouveaux usages « Vivants » : Chats, tableaux de bord partagés, notifications et synchronisation collaborative exigent des connexions ouvertes en continu (WebSockets).
+      - Le piège du Thread OS : Assigner un thread système lourd (1 à 8 Mo de RAM) à chaque utilisateur juste pour attendre passivement un événement sature immédiatement la mémoire.
+      - La fuite en avant d'infrastructure : Obligation d'empiler des briques externes (Redis Pub/Sub, workers, brokers) pour relier des serveurs devenus incapables de se parler directement.
+  - **Colonne Droite (La Vision Phoenix)** : card-featured
+    - badge-solid : Le Web Pensé comme un Système d'Acteurs
+    - Titre : Concurrence Native & Tolérance aux Pannes
+    - Liste (icon-bullet) :
+      - Un acteur par connexion : Chaque client connecté est un micro-processus BEAM isolé pesant à peine ~2 Ko en mémoire.
+      - Attente passive à coût zéro : Un processus au repos ne consomme aucun cycle CPU et s'éveille uniquement lorsqu'un message lui parvient.
+      - Réseau distribué intégré : Le moteur de diffusion (Pub/Sub) fonctionne nativement entre les nœuds de la machine virtuelle, sans avoir besoin d'un cluster Redis dédié.
+      - Zéro effet de contagion : L'erreur d'un utilisateur n'impacte jamais la connexion des autres clients grâce à l'isolation stricte des acteurs.
+  - **Pied de slide** : banner
+    - Clé de voûte : Phoenix a été pensé dès le premier jour pour un Web où chaque utilisateur maintient un lien persistant avec le serveur.
 - **Logos de pied de slide** :
 - **Notes d'orateur (data-notes)** :
-  > - **Synthèse des pièges :** Pour conclure ma partie, voici les 4 points où les nouveaux venus trébuchent le plus :
-  > - **1. L'immuabilité :** Si vous faites un `List.delete(l, 1)` sans écrire `l = List.delete(l, 1)`, votre liste d'origine n'a pas bougé !
-  > - **2. Let it crash :** Ne cherchez pas à blinder votre code avec des try/catch partout. En Elixir, on laisse planter les micro-processus car l'arbre de supervision les relance instantanément.
-  > - **3. Les guillemets :** Attention : `"texte"` (String binaire) n'est pas `'texte'` (Charlist / liste d'entiers Erlang). Les libs Erlang demandent souvent des simples guillemets.
-  > - **4. Fin des boucles :** Pas de `while` ni de `for` mutable. On utilise `Enum.map` ou la récursion. On transforme la donnée.
-  > - **Transition vers la Partie 2 :** Vous avez maintenant en main tous les concepts fondamentaux d'Elixir. Je passe la parole à mon camarade pour découvrir comment le framework Phoenix exploite toute cette puissance pour révolutionner le web temps réel !
+  > - **L'origine du problème (1 min) :** Pourquoi concevoir un nouveau framework web en 2014 ? Parce que les frameworks existants (Rails, Django, Spring) ont été conçus à une époque où le Web n'était qu'un échange de documents éphémères : je clique, le serveur calcule, répond et ferme la porte.
+  > - **Le blocage architectural (1 min) :** Aujourd'hui, une application web moderne ressemble à une application de bureau : tout le monde est connecté en continu. Si on utilise des threads systèmes pour maintenir ces connexions, on gaspille des gigaoctets de mémoire à ne rien faire, et on doit installer un Redis juste pour faire passer un message d'un utilisateur à l'autre.
+  > - **L'apport conceptuel de Phoenix (1 min) :** Phoenix transpose le modèle d'acteurs d'Erlang au Web. Chaque onglet ouvert dans un navigateur devient un micro-processus isolé de 2 Ko. Le serveur peut ainsi gérer des millions de connexions persistantes naturellement, sans surchauffe et sans machinerie complexe.
+
+---
+
+#### Slide 20 : Le Moteur Sous le Capot : Le Contrat Plug
+- **Type de slide** : slide
+- **Durée estimée** : 2 min 30
+- **Titre (title-slide)** : Fonctionnement Interne : Le Modèle Plug
+- **Sous-titre (subtitle-slide)** : Une architecture web pensée comme un pipeline de transformations pures
+- **Mise en page** : split-code
+- **Contenu & Composants** :
+  - **Colonne Gauche (Le Concept)** : card
+    - badge-solid : Fondations
+    - Titre : Une Requête = Une Donnée Immuable
+    - Liste (icon-bullet) :
+      - Spécification unifiée : Plug est la brique minimale entre le serveur HTTP et Phoenix (l'équivalent de Rack en Ruby ou des Servlets Java).
+      - L'état encapsulé (%Plug.Conn{}) : Une structure de données unique et immuable contenant l'entrée (headers, body, session) et la sortie en construction (status, réponse).
+      - Composition par tuyaux : Pas d'effets de bord cachés ni d'objets request/response mutables séparés ; la connexion traverse une suite de fonctions pures : `conn |> plug_1 |> plug_2`.
+  - **Colonne Droite (Le Schéma de Flux)** : terminal-box
+    - terminal-header : Flux d'une Connexion Plug
+    - Terminal-Content :
+      [Client HTTP]
+            │
+            ▼
+      [Endpoint]         --> Parsing headers, SSL, logs
+            │
+            ▼
+      [Router Pipelines] --> Sécurité CSRF, gestion session
+            │
+            ▼
+      [Dispatch]         --> Aiguillage vers la logique de réponse
+  - **Pied de slide** : banner
+    - Principe directeur : Dans Phoenix, une application web n'est pas un graphe d'objets complexes, mais une fonction mathématique f(conn) = conn.
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **Objectif de la slide (2 min 30) :** Expliquer la plomberie interne sans entrer dans le code des contrôleurs.
+  > - **Ce qu'est Plug :** Insister sur le fait que Plug est la spécification centrale. Contrairement à Java EE où on manipule HttpServletRequest et HttpServletResponse avec des états mutables, Phoenix regroupe tout dans une seule structure immuable : Conn.
+  > - **L'avantage mental :** C'est un simple tuyau de fonctions pures. Cela rend le flux prévisible, traçable et instantanément testable sans avoir à émuler un serveur complet.
+
+---
+
+#### Slide 21 : Structuration Métier : Les Contextes Phoenix
+- **Type de slide** : slide
+- **Durée estimée** : 2 min 30
+- **Titre (title-slide)** : Découplage : Le Web n'est qu'un Détail
+- **Sous-titre (subtitle-slide)** : Séparer strictement le domaine métier des protocoles de transport
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Le Piège des Frameworks Web)** : card
+    - badge-gray : L'Écueil Classique
+    - Titre : Le Couplage Web & Modèles
+    - Liste (icon-bullet) :
+      - Modèles obèses (Fat Models) : Règles de gestion, validations et requêtes SQL souvent mélangées aux contrôleurs web.
+      - Dépendance au protocole : Impossible de tester une règle de calcul sans simuler une session ou un contrôleur HTTP.
+      - Dette technique rapide : À mesure que l'application grandit, le code métier devient indémêlable du framework.
+  - **Colonne Droite (L'Approche Phoenix)** : card-featured
+    - badge-solid : Architecture Contexts
+    - Titre : Frontières Déclaratives (DDD-lite)
+    - Liste (icon-bullet) :
+      - Séparation explicite : Deux dossiers distincts dans le projet — `lib/mon_app` (le métier pur) et `lib/mon_app_web` (l'interface utilisateur).
+      - API publiques internes : Les Contextes sont des modules Elixir exposant des fonctions métier claires (ex: `Accounts`, `Expenses`).
+      - Indépendance totale : La logique de calcul s'exécute de la même manière, qu'elle soit appelée par une requête HTTP, un canal temps réel ou un script CLI.
+  - **Pied de slide** : banner
+    - Règle d'or architecturale : L'interface web n'est qu'un adaptateur de présentation au-dessus de votre domaine applicatif.
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **Rôle de la slide (2 min 30) :** Montrer comment Phoenix structure une application avant de voir les contrôleurs.
+  > - **Le problème résolu :** Dans beaucoup de frameworks, les modèles deviennent des fourre-tout géants. Phoenix impose dès la génération une séparation nette.
+  > - **La frontière métier / web :** L'interface web (contrôleurs, vues) n'a pas le droit d'écrire directement dans la base de données : elle passe obligatoirement par un Contexte qui encapsule les règles métier.
+
+---
+
+#### Slide 22 : Comparaison : Phoenix face au SSR Traditionnel
+- **Type de slide** : slide
+- **Durée estimée** : 3 min
+- **Titre (title-slide)** : Modèle de Rendu : Phoenix face à Thymeleaf
+- **Sous-titre (subtitle-slide)** : De la régénération HTML complète au différentiel binaire sur socket
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Rendu Serveur Classique - ex: Spring / Thymeleaf)** : card
+    - badge-gray : SSR Traditionnel
+    - Titre : Concaténation Statique par Requête
+    - Liste (icon-bullet) :
+      - Modèle synchrone : Chaque interaction utilisateur impose une nouvelle requête HTTP et le renvoi complet de l'arbre HTML.
+      - Rupture d'expérience : Latence perceptible, rechargement complet de la page (*flash blanc*).
+      - Impasse de l'interactivité : Pour rendre un composant dynamique, obligation d'abandonner Thymeleaf, de monter une API REST et d'ajouter un framework JS lourd (React/Vue).
+  - **Colonne Droite (Rendu Phoenix & HEEx)** : card-featured
+    - badge-solid : Modèle Réactif Phoenix
+    - Titre : Compilation de Gabarits & Diffs Chirurgicaux
+    - Liste (icon-bullet) :
+      - Templates compilés : À la compilation, Phoenix distingue les fragments statiques (HTML fixe) des parties variables.
+      - Économie de bande passante : Lorsqu'une donnée change, Phoenix n'envoie ni une nouvelle page, ni un gros JSON : uniquement les quelques octets modifiés.
+      - Simplicité préservée : Le confort de développement du rendu serveur (SSR) sans la complexité d'une SPA JavaScript cliente.
+  - **Pied de slide** : banner
+    - Comparatif clé : Thymeleaf renvoie des blocs HTML complets à chaque clic ; Phoenix maintient une vue vivante et n'envoie que les deltas de texte.
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **L'enjeu de la comparaison (3 min) :** Dans beaucoup de projets académiques ou d'entreprise, on utilise Spring Boot avec Thymeleaf.
+  > - **Le point de blocage de Thymeleaf :** Dès qu'on veut du temps réel ou une mise à jour partielle, Thymeleaf ne suffit plus et oblige à introduire React ou Vue avec une API REST.
+  > - **Comment Phoenix fait la différence :** Grâce à ses gabarits HEEx compilés, Phoenix garde l'état côté serveur et transmet uniquement les petites différences de texte. On garde la simplicité du SSR sans le surcoût d'un frontend séparé.
+  > - **Passage de relais :** Maintenant que nous comprenons ce fonctionnement, nous allons pouvoir découvrir concrètement dans la partie suivante comment s'écrivent les routes, les contrôleurs et les composants interactifs.
+
+---
+
+#### Slide 23 : Le Routage Phoenix (Scopes, Pipelines & Live Sessions)
+- **Type de slide** : slide
+- **Durée estimée** : 2 min 30
+- **Titre (title-slide)** : Le Routage Phoenix : Scopes, Pipelines & Live Sessions
+- **Sous-titre (subtitle-slide)** : Coexistence native du Web classique, des APIs REST et des tunnels temps réel
+- **Mise en page** : split-code
+- **Contenu & Composants** :
+  - **Colonne Gauche (Explication Conceptuelle)** : card
+    - badge-solid : Aiguillage Réseau
+    - Titre : Des flux étanches et composables
+    - Liste (icon-bullet) :
+      - Pipelines modulaires : `:browser` empile la gestion de session et la protection CSRF ; `:api` traite du JSON stateless pur.
+      - Scopes hiérarchiques : Découpage explicite entre routes publiques, zone authentifiée et API externe `/api`.
+      - Sécurisation live_session : La directive `on_mount` (`ensure_authenticated`) verrouille l'accès avant l'ouverture du canal WebSocket.
+      - Vérification à la compilation : Le sigil de route vérifié `~p` élimine tout risque d'URLs cassées au runtime.
+  - **Colonne Droite (Snippet de Code Réel)** : code-box
+    - code-header : lib/les_bons_comptes_web/router.ex
+    - Code (language-elixir) :
+      defmodule LesBonsComptesWeb.Router do
+        use LesBonsComptesWeb, :router
+
+        pipeline :browser do
+          plug :accepts, ["html"]
+          plug :fetch_session
+          plug :protect_from_forgery
+        end
+
+        pipeline :api do
+          plug :accepts, ["json"]
+        end
+
+        scope "/", LesBonsComptesWeb do
+          pipe_through :browser
+
+          # Pages temps réel sous tunnel WebSocket sécurisé
+          live_session :authenticated_user,
+            on_mount: [{LesBonsComptesWeb.UserAuth, :ensure_authenticated}] do
+            live "/wallets", WalletLive.Index, :index
+            live "/wallets/:id", WalletLive.Show, :show
+            live "/wallets/:id/expenses/new", WalletLive.ExpenseNew, :new
+          end
+        end
+
+        # API REST pour les services tiers
+        scope "/api", LesBonsComptesWeb do
+          pipe_through :api
+          get "/wallets/:id/settlements", SettlementController, :index
+        end
+      end
+  - **Pied de slide** : banner
+    - Principe directeur : Un seul fichier pour gouverner tout le trafic : pages HTML, endpoints REST et applications LiveView.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Prise de parole (2 min 30) :** Regardons comment s'articule le routage dans notre application réelle « Les bons comptes ».
+  > - **Les pipelines :** En haut, deux tuyaux distincts : `:browser` pour la navigation humaine avec gestion de session, et `:api` pour les échanges de données JSON.
+  > - **La puissance de live_session :** Remarquez le bloc `live_session :authenticated_user`. Toutes nos pages de gestion (`WalletLive.Show`, `ExpenseNew`) sont protégées par le hook `ensure_authenticated` avant même d'ouvrir le WebSocket.
+  > - **L'ouverture REST :** En bas, le même routeur expose aussi une API REST standard `/api/wallets/:id/settlements` pour des intégrations externes.
+  > - **Transition :** Regardons maintenant comment fonctionne le contrôleur de cette API REST.
+
+---
+
+#### Slide 24 : Contrôleurs Standard & APIs JSON
+- **Type de slide** : slide
+- **Durée estimée** : 2 min 30
+- **Titre (title-slide)** : Contrôleurs Standard : Fonctions Pures & Algorithmique Métier
+- **Sous-titre (subtitle-slide)** : Pattern matching en signature, gestion d'erreurs et calcul des dettes
+- **Mise en page** : split-code
+- **Contenu & Composants** :
+  - **Colonne Gauche (Explication Conceptuelle)** : card
+    - badge-solid : Paradigme MVC Pur
+    - Titre : Une transformation de données immuable
+    - Liste (icon-bullet) :
+      - Action = Fonction pure : L'action reçoit `(conn, params)` et renvoie une nouvelle structure `conn` transformée.
+      - Pattern Matching en signature : Déstructuration immédiate des paramètres d'URL (`%{"id" => id}`).
+      - Algorithmique dans le Contexte : Le contrôleur n'exécute pas de SQL, il appelle `Expenses.calculate_settlements/1`.
+      - Rendu sans exception : Les cas d'erreur (`{:error, :not_found}`) sont gérés par retour de statuts HTTP propres sans crash.
+  - **Colonne Droite (Snippet de Code Réel)** : code-box
+    - code-header : lib/les_bons_comptes_web/controllers/settlement_controller.ex
+    - Code (language-elixir) :
+      defmodule LesBonsComptesWeb.SettlementController do
+        use LesBonsComptesWeb, :controller
+        alias LesBonsComptes.{Expenses, Wallets}
+
+        # 1. Extraction directe de l'identifiant URL
+        def index(conn, %{"id" => id}) do
+          case Wallets.get_wallet(id) do
+            nil ->
+              conn
+              |> put_status(:not_found)
+              |> json(%{error: "Porte-monnaie introuvable"})
+
+            wallet ->
+              settlements = Expenses.calculate_settlements(wallet)
+              creditors = Expenses.calculate_creditors(wallet)
+
+              render(conn, :index,
+                wallet: wallet,
+                settlements: settlements,
+                creditors: creditors
+              )
+          end
+        end
+      end
+  - **Pied de slide** : banner
+    - Règle d'or : Zéro état persistant dans le contrôleur : f(conn, params) -> conn. Prévisible, testable et sans effets de bord.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Cas d'usage (2 min 30) :** Voici le contrôleur réel calculant les remboursements optimisés entre colocataires.
+  > - **Le pattern matching imbriqué :** Admirez la lisibilité : on extrait l'identifiant, on tente de récupérer le wallet, et on calcule l'équilibrage.
+  > - **Séparation des responsabilités :** Le contrôleur ne fait aucun calcul mathématique lui-même. Il sollicite le contexte métier `Expenses`.
+  > - **Rendu JSON :** En cas de succès, il formate la réponse ; en cas d'erreur, il renvoie un code 404 sans jamais lever d'exception lourde.
+  > - **Transition :** Ce contrôleur HTTP répond parfaitement au besoin d'une API. Mais pour notre interface utilisateur, nous voulons de la réactivité immédiate sans rechargement : c'est là qu'intervient Phoenix LiveView.
+
+---
+
+#### Slide 25 : Phoenix LiveView & PubSub Temps Réel
+- **Type de slide** : slide
+- **Durée estimée** : 3 min 30
+- **Titre (title-slide)** : LiveView & PubSub : Collaboration Temps Réel Native
+- **Sous-titre (subtitle-slide)** : Synchronisation instantanée entre utilisateurs sans Redis ni polling JavaScript
+- **Mise en page** : split-code
+- **Contenu & Composants** :
+  - **Colonne Gauche (Explication Conceptuelle)** : card-featured
+    - badge-solid : Rupture Technologique
+    - Titre : La Triade Réactive de Phoenix
+    - Liste (icon-bullet) :
+      - 1. Abonnement PubSub (mount/3) : À l'ouverture du WebSocket, le client s'abonne au topic `"wallet:#{id}"` sur la BEAM.
+      - 2. Événement utilisateur (handle_event) : Clic sur supprimer une dépense -> mise à jour en base et diffusion instantanée.
+      - 3. Réception synchrone (handle_info) : Tous les membres connectés reçoivent `{:wallet_updated, id}` et leur affichage s'actualise.
+      - Diffing minimal : Seuls les quelques octets modifiés transitent sur le WebSocket (moins de 10 ms de latence).
+  - **Colonne Droite (Snippet de Code Réel)** : code-box
+    - code-header : lib/les_bons_comptes_web/live/wallet_live/show.ex
+    - Code (language-elixir) :
+      defmodule LesBonsComptesWeb.WalletLive.Show do
+        use LesBonsComptesWeb, :live_view
+        alias LesBonsComptes.{Expenses, Wallets}
+
+        # 1. Montage et abonnement au canal du porte-monnaie
+        def mount(%{"id" => id}, _session, socket) do
+          if connected?(socket) do
+            Phoenix.PubSub.subscribe(LesBonsComptes.PubSub, "wallet:#{id}")
+          end
+          {:ok, assign(socket, wallet_id: id, wallet: Wallets.get_wallet!(id))}
+        end
+
+        # 2. Réaction à la suppression d'une dépense
+        def handle_event("delete_expense", %{"id" => exp_id}, socket) do
+          Expenses.delete_expense(socket.assigns.current_user, exp_id)
+          {:noreply, socket |> put_flash(:info, "Dépense supprimée")}
+        end
+
+        # 3. Notification PubSub reçue par TOUS les participants
+        def handle_info({:wallet_updated, wallet_id}, socket) do
+          {:ok, data} = load_wallet_data(wallet_id)
+          {:noreply, assign(socket, data)}
+        end
+      end
+  - **Pied de slide** : banner
+    - Révolution : Alice supprime une dépense -> l'écran de Bob ajuste ses soldes en direct sans recharger la page et sans une ligne de JS.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Le joyau technique (3 min 30) :** Voici le code réel le plus représentatif de la force de Phoenix dans notre application.
+  > - **L'abonnement PubSub :** Dans `mount`, chaque participant connecté au porte-monnaie s'abonne au topic `"wallet:#{id}"`.
+  > - **Le déclencheur :** Dès qu'un utilisateur clique sur supprimer une dépense, l'événement `delete_expense` est traité côté serveur.
+  > - **La synchronisation collective :** Dans `handle_info`, TOUS les membres reçoivent la notification de mise à jour. LiveView recalcule le diff et pousse les nouveaux chiffres sur chaque écran.
+  > - **Bilan d'infrastructure :** Pas de serveur Node.js séparé, pas de cluster Redis, pas de Redux dans le navigateur. Tout est géré par la machine virtuelle BEAM en 25 lignes.
+  > - **Transition :** Faut-il alors tout coder en LiveView ? C'est ce que nous récapitulons dans la matrice suivante.
+
+---
+
+#### Slide 26 : Matrice Décisionnelle : REST vs Phoenix LiveView
+- **Type de slide** : slide
+- **Durée estimée** : 1 min 30
+- **Titre (title-slide)** : Matrice Décisionnelle : Choisir l'Outil Adapté
+- **Sous-titre (subtitle-slide)** : Pourquoi « Les bons comptes » combine harmonieusement contrôleurs HTTP et LiveView
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Le Modèle HTTP / REST)** : card
+    - badge-gray : Contrôleurs Standard (HTTP)
+    - Titre : Cas d'Usage Recommandés
+    - Liste (icon-bullet) :
+      - APIs REST / JSON publiques : Endpoints exposés aux tiers ou applications mobiles (`SettlementController`).
+      - Cookies d'authentification : Écriture sécurisée des en-têtes HTTP de session (`UserSessionController`).
+      - Webhooks externes : Réception des callbacks de passerelles de paiement (Stripe).
+      - Téléchargements de fichiers : Streaming de bilans ou d'exports comptables PDF/CSV.
+  - **Colonne Droite (La Révolution LiveView)** : card-featured
+    - badge-solid : Phoenix LiveView (WebSocket)
+    - Titre : Cas d'Usage Privilégiés
+    - Liste (icon-bullet) :
+      - Interfaces collaboratives : Modification partagée et temps réel de dépenses (`WalletLive.Show`).
+      - Formulaires réactifs : Validation en direct à la frappe sans duplication de code front/back.
+      - Tableaux de bord dynamiques : Visualisation instantanée des soldes et des dettes croisées.
+      - Productivité maximale : Élimination du boilerplate d'API REST pour la majorité des vues.
+  - **Pied de slide** : banner
+    - Synthèse : Phoenix n'impose aucun dogme : il associe la robustesse du HTTP classique à la réactivité d'une SPA moderne.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Conclusion de mon passage (1 min 30) :** Pour résumer cette partie technique, Phoenix offre le meilleur des deux mondes.
+  > - **L'équilibre dans notre projet :** Nous conservons des contrôleurs classiques pour notre API REST de règlements et pour la gestion des cookies de session.
+  > - **Pour le reste :** LiveView prend en charge 90% de l'interface avec une réactivité et une économie de code incomparables.
+  > - **Passage de relais vers la Démo :** Vous avez vu l'architecture et le code réel. Place maintenant à l'action : je passe la main à mon camarade pour la démonstration en direct de l'application « Les bons comptes » !
+
