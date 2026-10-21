@@ -67,7 +67,7 @@
 .slide.has-bottom-logo,
 .slide:has(.slide-logo),
 .slide:has(.slide-bottom-logos) {
-  padding-bottom: clamp(68px, 10vh, 92px) !important;
+  padding-bottom: clamp(76px, 11vh, 98px) !important;
 }
 
 .slide.prev-slide {

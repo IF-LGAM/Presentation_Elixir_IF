@@ -210,7 +210,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Module Infrastructures & Frameworks — Master MIAGE
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Accroche & Cadre (2 min) :** Bienvenue à tous. Aujourd'hui, nous vous présentons le duo Elixir et Phoenix.
   > - **Objectif de la séance :** Comprendre comment ce langage fonctionnel et son framework phare apportent une réponse radicale aux enjeux modernes de scalabilité et de temps réel.
@@ -246,7 +246,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : 21 minutes pour asseoir les fondations conceptuelles d'Elixir avant d'aborder Phoenix et le web temps réel.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Prise de parole & Cadrage (1 min) :** Nous ouvrons cette première grande partie dédiée aux fondations d'Elixir, pour une durée totale de 21 minutes.
   > - **Pourquoi cette étape :** Avant d'aborder un framework comme Phoenix, il est indispensable de comprendre le moteur fonctionnel qui le propulse.
@@ -844,7 +844,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : 34 minutes pour maîtriser l'architecture du framework Phoenix et la révolution LiveView.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Prise de parole & Cadrage (1 min) :** Merci. Nous abordons maintenant la deuxième grande partie consacrée au framework Phoenix, pour une durée de 34 minutes.
   > - **Pourquoi Phoenix :** Nous avons vu les fondations exceptionnelles d'Elixir et de la BEAM. Phoenix est l'outil qui met toute cette puissance au service du web moderne.
@@ -1038,7 +1038,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Principe directeur : Un seul fichier pour gouverner tout le trafic : pages HTML, endpoints REST et applications LiveView.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Prise de parole (2 min 30) :** Regardons comment s'articule le routage dans notre application réelle « Les bons comptes ».
   > - **Les pipelines :** En haut, deux tuyaux distincts : `:browser` pour la navigation humaine avec gestion de session, et `:api` pour les échanges de données JSON.
@@ -1093,7 +1093,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Règle d'or : Zéro état persistant dans le contrôleur : f(conn, params) -> conn. Prévisible, testable et sans effets de bord.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Cas d'usage (2 min 30) :** Voici le contrôleur réel calculant les remboursements optimisés entre colocataires.
   > - **Le pattern matching imbriqué :** Admirez la lisibilité : on extrait l'identifiant, on tente de récupérer le wallet, et on calcule l'équilibrage.
@@ -1148,7 +1148,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Révolution : Alice supprime une dépense -> l'écran de Bob ajuste ses soldes en direct sans recharger la page et sans une ligne de JS.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Le joyau technique (3 min 30) :** Voici le code réel le plus représentatif de la force de Phoenix dans notre application.
   > - **L'abonnement PubSub :** Dans `mount`, chaque participant connecté au porte-monnaie s'abonne au topic `"wallet:#{id}"`.
@@ -1185,7 +1185,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Synthèse : Phoenix n'impose aucun dogme : il associe la robustesse du HTTP classique à la réactivité d'une SPA moderne.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Conclusion de mon passage (1 min 30) :** Pour résumer cette partie technique, Phoenix offre le meilleur des deux mondes.
   > - **L'équilibre dans notre projet :** Nous conservons des contrôleurs classiques pour notre API REST de règlements et pour la gestion des cookies de session.
@@ -1217,7 +1217,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Place à la pratique : bascule sur l'écran pour la démonstration en direct !
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Bascule immédiate :** Quitter la présentation pour afficher le terminal et l'IDE sur l'écran principal.
   > - **Plan B (Secours) :** En cas d'aléa réseau ou machine, cliquer sur « Lancer la Vidéo de Secours » pour diffuser la vidéo de 7 minutes et continuer le commentaire en voix off.
@@ -1267,7 +1267,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Consigne générale : Forkez le dépôt GitHub (`IF-LGAM/les_bons_comptes`) et travaillez en binôme. L'équipe passe dans les rangs pour vous accompagner.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **0:00 - 0:45 (Lancement & Cadrage) :** « Merci. Pour clore cette soutenance et passer de la théorie à la pratique, nous vous proposons un atelier de 2 heures en binôme autour de notre application « Les Bons Comptes ». »
   > - **0:45 - 1:45 (Pas de code from scratch & Fork) :** « Rassurez-vous : nous ne vous demandons pas de réinventer la roue. Le projet est hébergé sur GitHub sous l'organisation IF-LGAM. La première consigne est simple : forkez le dépôt sur votre propre compte GitHub et clonez votre copie en local. »
@@ -1297,7 +1297,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Animation de la question (1 min) :** « Passons à notre premier quiz interactif pour valider l'ensemble des concepts abordés ! Première question : quel est le paradigme fondamental d'Elixir ? »
   > - **Résolution & Débriefing :** « C'est évidemment la réponse A. Pas d'objets, pas d'état mutable partagé : tout repose sur des fonctions pures et la transformation continue de données. »
@@ -1324,7 +1324,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Animation de la question (1 min) :** « Deuxième question, essentielle pour comprendre la scalabilité de Phoenix : combien pèse un micro-processus à sa création ? »
   > - **Résolution & Débriefing :** « Réponse C : 2 Ko seulement ! C'est ce qui permet à Phoenix d'ouvrir des millions de connexions WebSocket concurrentes là où d'autres architectures saturent dès quelques milliers. »
@@ -1351,7 +1351,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Animation de la question (1 min) :** « Troisième question sur la devise la plus célèbre de l'écosystème Erlang/Elixir : « Let it crash » ! »
   > - **Résolution & Débriefing :** « Réponse A : plutôt que de masquer un état corrompu, on laisse le micro-processus mourir pour que l'arbre de supervision le redémarre instantanément dans un état propre. C'est l'autoguérison native. »
@@ -1378,7 +1378,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Animation de la question (1 min) :** « Quatrième question : nous avons vu le composant Plug lors de l'étude de Phoenix. Quelle est sa nature exacte ? »
   > - **Résolution & Débriefing :** « Réponse D : c'est l'équivalent direct des Servlets en Java ou des middlewares. Tout le web Phoenix est un pipeline de Plugs pures recevant et transformant une structure Conn. »
@@ -1405,7 +1405,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Animation de la question (1 min) :** « Cinquième question sur l'organisation interne de Phoenix : quel est le rôle d'un Context ? »
   > - **Résolution & Débriefing :** « Réponse C : les Contexts incarnent le principe « le web n'est qu'un détail ». Ils isolent la logique métier des contrôleurs et des sockets pour garder une architecture propre et pérenne. »
@@ -1432,7 +1432,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Animation de la question (1 min) :** « Sixième question sur la concurrence : comment s'échangent les données entre deux processus isolés ? »
   > - **Résolution & Débriefing :** « Réponse D : par échange de messages asynchrones. C'est l'essence même du modèle d'acteurs, qui garantit l'absence totale de verrous (locks) et de bugs de concurrence. »
@@ -1459,7 +1459,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+  - `bottom-left logo-lg` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Animation de la question (1 min) :** « Dernière question pour clore ce quiz : que représente réellement le signe = en Elixir ? »
   > - **Résolution & Débriefing :** « Réponse D : le filtrage par motif (Pattern Matching). C'est la pierre angulaire de tout le code Elixir, de la déstructuration de tuples à la gestion des erreurs. Bravo à tous ! »

@@ -914,9 +914,9 @@ img.slide-logo.logo-md {
 .slide-bottom-logos.logo-lg svg,
 .logo-lg img,
 img.slide-logo.logo-lg {
-  height: 42px !important;
-  max-height: 42px !important;
-  max-width: 175px;
+  height: 54px !important;
+  max-height: 54px !important;
+  max-width: 285px;
 }
 
 .slide-logo.logo-xl img,
