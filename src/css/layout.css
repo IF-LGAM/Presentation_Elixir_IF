@@ -1,0 +1,89 @@
+/* ==========================================================================
+   STRUCTURE DU DECK & VIEWPORT DES SLIDES (16:9 WIDESCREEN)
+   ========================================================================== */
+.deck-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-dark);
+}
+
+.slides-viewport {
+  position: absolute;
+  top: 33px;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+/* Extension à 100% de la hauteur en plein écran */
+:fullscreen .slides-viewport {
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
+:-webkit-full-screen .slides-viewport {
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
+.is-fullscreen .slides-viewport,
+[data-fullscreen="true"] .slides-viewport {
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(0.75rem, 2vh, 1.4rem) clamp(1.2rem, 3vw, 2.5rem);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(35px);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s ease;
+  pointer-events: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--bg-dark);
+  color: var(--text-main);
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* Réserve d'espace de sécurité automatique pour ne jamais chevaucher les logos */
+.slide.has-bottom-logo,
+.slide:has(.slide-logo),
+.slide:has(.slide-bottom-logos) {
+  padding-bottom: clamp(68px, 10vh, 92px) !important;
+}
+
+.slide.prev-slide {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-35px);
+}
+
+.slide-content {
+  width: 100%;
+  max-width: 1350px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transform-origin: center center;
+  will-change: transform;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}

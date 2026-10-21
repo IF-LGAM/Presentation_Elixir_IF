@@ -9,18 +9,72 @@ function populateSpeakerWindow(speakerWindow) {
   const totalSlides = slides.length;
   const currentIndex = window.getCurrentSlideIndex ? window.getCurrentSlideIndex() : 0;
 
-  // Détection du thème du document parent
-  const isParentLight = document.querySelector('.deck-container')?.classList.contains('theme-light') ||
-                        document.querySelector('.deck-container')?.getAttribute('data-theme') === 'light' ||
-                        document.body.classList.contains('theme-light') ||
-                        document.documentElement.classList.contains('theme-light');
+  // Détection du thème du document parent (support des 7 ambiances)
+  const KNOWN_THEMES = ['dark', 'light', 'nordic', 'cyberpunk', 'emerald', 'navy', 'sepia'];
+  const THEME_ICONS = {
+    dark: '🌑',
+    light: '☀️',
+    nordic: '❄️',
+    cyberpunk: '⚡',
+    emerald: '🌲',
+    navy: '⚓',
+    sepia: '☕'
+  };
 
+  const detectedTheme = (window.DeckEngine?.Theme && typeof window.DeckEngine.Theme.getCurrentThemeId === 'function' ? window.DeckEngine.Theme.getCurrentThemeId() : null) ||
+                        document.querySelector('.deck-container')?.getAttribute('data-theme') ||
+                        document.body.getAttribute('data-theme') ||
+                        localStorage.getItem('deck_sync_theme') ||
+                        localStorage.getItem('deck_user_theme') ||
+                        (document.body.classList.contains('theme-light') ? 'light' : 'dark');
+  const activeParentTheme = KNOWN_THEMES.includes(detectedTheme) ? detectedTheme : 'dark';
+  const isParentLight = activeParentTheme === 'light';
+
+  function lightenColor(col, percent) {
+    if (!col || typeof col !== 'string' || !col.startsWith('#')) return col || '#FF2A2A';
+    let num = parseInt(col.replace('#', ''), 16);
+    if (isNaN(num)) return col;
+    let r = (num >> 16) + Math.round(255 * (percent / 100));
+    let g = ((num >> 8) & 0x00FF) + Math.round(255 * (percent / 100));
+    let b = (num & 0x0000FF) + Math.round(255 * (percent / 100));
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  const containerEl = document.querySelector('.deck-container');
   const currentAccentColor = localStorage.getItem('deck_accent_color') ||
+    (containerEl && getComputedStyle(containerEl).getPropertyValue('--accent-primary').trim()) ||
     getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() ||
     '#E50914';
+  const currentAccentHover = lightenColor(currentAccentColor, 16);
 
   // 1. Récupération des styles inline éventuels
   const parentStyles = Array.from(document.querySelectorAll('style')).map(s => s.innerHTML).join('\n');
+
+  function parseDurationToSeconds(val) {
+    if (!val) return 0;
+    val = val.toString().trim().toLowerCase();
+    if (val.includes('min') || val.endsWith('m')) {
+      const num = parseFloat(val.replace(/[^0-9.]/g, ''));
+      return isNaN(num) ? 0 : Math.round(num * 60);
+    }
+    if (val.includes('s')) {
+      const num = parseFloat(val.replace(/[^0-9.]/g, ''));
+      return isNaN(num) ? 0 : Math.round(num);
+    }
+    const num = parseFloat(val);
+    return isNaN(num) ? 0 : Math.round(num * 60);
+  }
+
+  const detectedTargetMin = parseInt(
+    containerEl?.getAttribute('data-total-duration') ||
+    containerEl?.getAttribute('data-duration') ||
+    localStorage.getItem('deck_pacing_target_min') ||
+    '60',
+    10
+  );
 
   // 2. Récupération des données sérialisées de toutes les slides
   const slidesData = [];
@@ -29,15 +83,30 @@ function populateSpeakerWindow(speakerWindow) {
     if (!slideTheme) {
       if (s.classList.contains('light') || s.classList.contains('theme-light')) slideTheme = 'light';
       else if (s.classList.contains('dark') || s.classList.contains('theme-dark')) slideTheme = 'dark';
-      else slideTheme = isParentLight ? 'light' : 'dark';
+      else slideTheme = ''; // Suit dynamiquement le thème actif
     }
+
+    let slideDuration = parseDurationToSeconds(s.getAttribute('data-duration') || s.getAttribute('data-time'));
+    if (!slideDuration) {
+      const text = s.innerText || '';
+      const match = text.match(/⏱\s*(?:Durée\s*:\s*)?([0-9]+)\s*min/i);
+      if (match && match[1]) {
+        slideDuration = parseInt(match[1], 10) * 60;
+      }
+    }
+
+    const contentHtml = s.querySelector('.slide-content')?.innerHTML || '';
+    const logosHtml = Array.from(s.querySelectorAll('.slide-logo, .slide-bottom-logos')).map(el => el.outerHTML).join('');
 
     slidesData.push({
       index: idx,
       title: s.getAttribute('data-title') || `Slide ${idx + 1}`,
       notes: s.getAttribute('data-notes') || 'Aucune note disponible.',
       theme: slideTheme,
-      html: s.querySelector('.slide-content')?.innerHTML || ''
+      accent: s.getAttribute('data-accent') || '',
+      accentHover: s.getAttribute('data-accent-hover') || '',
+      duration: slideDuration,
+      html: contentHtml + logosHtml
     });
   });
 
@@ -59,30 +128,105 @@ function populateSpeakerWindow(speakerWindow) {
 
     /* VARIABLES SPÉCIFIQUES CONSOLE PRÉSENTATEUR (SOMBRE & CLAIR) */
     :root {
-      --accent-primary: ;
-      --accent-hover: ;
+      --accent-primary: ${currentAccentColor};
+      --accent-hover: ${currentAccentHover};
     }
 
-    :root, body.theme-dark {
-      --sp-bg: #121212;
-      --sp-panel: #1A1A1A;
-      --sp-panel-header: #161616;
+    /* VARIABLES DU PRÉSENTATEUR PAR THÈME D'AMBIANCE */
+    :root,
+    body {
+      --sp-bg: #141414;
+      --sp-panel: #1F1F1F;
+      --sp-panel-header: #2B2B2B;
       --sp-border: #333333;
       --sp-text: #FFFFFF;
-      --sp-text-muted: #888888;
-      --sp-box-bg: #0A0A0A;
+      --sp-text-muted: #A3A3A3;
+      --sp-box-bg: #0B0B0B;
       --sp-inner-border: #2B2B2B;
     }
 
-    body.theme-light {
-      --sp-bg: #F1F5F9;
-      --sp-panel: #FFFFFF;
-      --sp-panel-header: #F8FAFC;
-      --sp-border: #CBD5E1;
-      --sp-text: #0F172A;
-      --sp-text-muted: #475569;
-      --sp-box-bg: #E2E8F0;
-      --sp-inner-border: #CBD5E1;
+    body.theme-light,
+    body[data-theme="light"] {
+      --sp-bg: #F8FAFC !important;
+      --sp-panel: #FFFFFF !important;
+      --sp-panel-header: #F1F5F9 !important;
+      --sp-border: #E2E8F0 !important;
+      --sp-text: #0F172A !important;
+      --sp-text-muted: #475569 !important;
+      --sp-box-bg: #E2E8F0 !important;
+      --sp-inner-border: #CBD5E1 !important;
+    }
+
+    body.theme-dark,
+    body[data-theme="dark"] {
+      --sp-bg: #141414 !important;
+      --sp-panel: #1F1F1F !important;
+      --sp-panel-header: #2B2B2B !important;
+      --sp-border: #333333 !important;
+      --sp-text: #FFFFFF !important;
+      --sp-text-muted: #A3A3A3 !important;
+      --sp-box-bg: #0B0B0B !important;
+      --sp-inner-border: #2B2B2B !important;
+    }
+
+    body.theme-nordic,
+    body[data-theme="nordic"] {
+      --sp-bg: #0F172A !important;
+      --sp-panel: #1E293B !important;
+      --sp-panel-header: #334155 !important;
+      --sp-border: #334155 !important;
+      --sp-text: #F1F5F9 !important;
+      --sp-text-muted: #94A3B8 !important;
+      --sp-box-bg: #090E17 !important;
+      --sp-inner-border: #334155 !important;
+    }
+
+    body.theme-cyberpunk,
+    body[data-theme="cyberpunk"] {
+      --sp-bg: #07090E !important;
+      --sp-panel: #111622 !important;
+      --sp-panel-header: #192033 !important;
+      --sp-border: #222C42 !important;
+      --sp-text: #F0F6FC !important;
+      --sp-text-muted: #8B949E !important;
+      --sp-box-bg: #030407 !important;
+      --sp-inner-border: #222C42 !important;
+    }
+
+    body.theme-emerald,
+    body[data-theme="emerald"] {
+      --sp-bg: #06150F !important;
+      --sp-panel: #0C241B !important;
+      --sp-panel-header: #14382B !important;
+      --sp-border: #184233 !important;
+      --sp-text: #ECFDF5 !important;
+      --sp-text-muted: #A7F3D0 !important;
+      --sp-box-bg: #030B07 !important;
+      --sp-inner-border: #184233 !important;
+    }
+
+    body.theme-navy,
+    body[data-theme="navy"] {
+      --sp-bg: #080E1E !important;
+      --sp-panel: #121D38 !important;
+      --sp-panel-header: #1B2B50 !important;
+      --sp-border: #233766 !important;
+      --sp-text: #F8FAFC !important;
+      --sp-text-muted: #94A3B8 !important;
+      --sp-box-bg: #040812 !important;
+      --sp-inner-border: #233766 !important;
+    }
+
+    body.theme-sepia,
+    body[data-theme="sepia"] {
+      --sp-bg: #191614 !important;
+      --sp-panel: #26221F !important;
+      --sp-panel-header: #38322E !important;
+      --sp-border: #453D38 !important;
+      --sp-text: #FAF5F0 !important;
+      --sp-text-muted: #D6C7BC !important;
+      --sp-box-bg: #0F0D0C !important;
+      --sp-inner-border: #453D38 !important;
     }
 
     html, body {
@@ -129,7 +273,7 @@ function populateSpeakerWindow(speakerWindow) {
       font-family: inherit;
     }
     .sp-btn:hover { background: var(--sp-border); }
-    .sp-btn.primary { background: var(--accent-primary, #15803D); border-color: var(--accent-primary, #15803D); color: #FFF; }
+    .sp-btn.primary { background: var(--accent-primary, #E50914); border-color: var(--accent-primary, #E50914); color: #FFF; }
     .sp-btn.primary:hover { opacity: 0.9; }
 
     main.sp-main {
@@ -182,22 +326,24 @@ function populateSpeakerWindow(speakerWindow) {
 
     .sp-preview-inner {
       width: 1240px;
-      height: 700px;
+      min-height: 700px;
+      height: auto;
       position: absolute;
       transform-origin: center center;
       pointer-events: none;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 2rem;
+      padding: 1.5rem 2.2rem;
       box-sizing: border-box;
       border-radius: 8px;
       border: 1px solid var(--sp-inner-border);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       transition: background-color 0.25s ease, color 0.25s ease;
+      overflow: hidden;
     }
 
-    /* Adaptation dynamique selon le mode clair/sombre de la slide */
+    /* Adaptation dynamique selon le mode d'ambiance de chaque slide dans l'aperçu */
     .sp-preview-inner.theme-light,
     .sp-preview-inner[data-theme="light"] {
       background: #F8FAFC !important;
@@ -224,6 +370,96 @@ function populateSpeakerWindow(speakerWindow) {
       --text-muted: #A3A3A3;
       --text-dim: #737373;
       --code-bg: #0B0B0B;
+    }
+
+    .sp-preview-inner.theme-nordic,
+    .sp-preview-inner[data-theme="nordic"] {
+      background: #0F172A !important;
+      color: #F1F5F9 !important;
+      --bg-dark: #0F172A;
+      --card-bg: #1E293B;
+      --card-hover: #334155;
+      --border-dark: #334155;
+      --text-main: #F1F5F9;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --code-bg: #090E17;
+    }
+
+    .sp-preview-inner.theme-cyberpunk,
+    .sp-preview-inner[data-theme="cyberpunk"] {
+      background: #07090E !important;
+      color: #F0F6FC !important;
+      --bg-dark: #07090E;
+      --card-bg: #111622;
+      --card-hover: #192033;
+      --border-dark: #222C42;
+      --text-main: #F0F6FC;
+      --text-muted: #8B949E;
+      --text-dim: #586069;
+      --code-bg: #030407;
+    }
+
+    .sp-preview-inner.theme-emerald,
+    .sp-preview-inner[data-theme="emerald"] {
+      background: #06150F !important;
+      color: #ECFDF5 !important;
+      --bg-dark: #06150F;
+      --card-bg: #0C241B;
+      --card-hover: #14382B;
+      --border-dark: #184233;
+      --text-main: #ECFDF5;
+      --text-muted: #A7F3D0;
+      --text-dim: #6EE7B7;
+      --code-bg: #030B07;
+    }
+
+    .sp-preview-inner.theme-navy,
+    .sp-preview-inner[data-theme="navy"] {
+      background: #080E1E !important;
+      color: #F8FAFC !important;
+      --bg-dark: #080E1E;
+      --card-bg: #121D38;
+      --card-hover: #1B2B50;
+      --border-dark: #233766;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --code-bg: #040812;
+    }
+
+    .sp-preview-inner.theme-sepia,
+    .sp-preview-inner[data-theme="sepia"] {
+      background: #191614 !important;
+      color: #FAF5F0 !important;
+      --bg-dark: #191614;
+      --card-bg: #26221F;
+      --card-hover: #38322E;
+      --border-dark: #453D38;
+      --text-main: #FAF5F0;
+      --text-muted: #D6C7BC;
+      --text-dim: #A8998C;
+      --code-bg: #0F0D0C;
+    }
+
+    /* Rendu des fragments dans les aperçus de la console présentateur */
+    .sp-preview-inner .fragment {
+      opacity: 0.35 !important;
+      transform: none !important;
+      transition: opacity 0.2s ease;
+      outline: 1px dashed color-mix(in srgb, var(--accent-primary, #E50914) 40%, transparent);
+      outline-offset: 2px;
+    }
+
+    .sp-preview-inner .fragment.visible {
+      opacity: 1 !important;
+      outline: none !important;
+    }
+
+    /* Dans l'aperçu de la prochaine slide, tous les éléments sont lisibles immédiatement */
+    #nextSlideContent .fragment {
+      opacity: 1 !important;
+      outline: none !important;
     }
 
     .sp-notes-box {
@@ -260,14 +496,97 @@ function populateSpeakerWindow(speakerWindow) {
       font-family: inherit;
       font-size: 0.85rem;
     }
+
+    /* BARRE D'INDICATEUR DE RYTHME (PACING TRACKER) */
+    .sp-pacing-bar {
+      background: var(--sp-panel);
+      border-bottom: 1px solid var(--sp-border);
+      padding: 0.38rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.78rem;
+      color: var(--sp-text-muted);
+      flex-shrink: 0;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .sp-pace-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .sp-pace-badge.pace-ontrack {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .sp-pace-badge.pace-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .sp-pace-badge.pace-behind {
+      background: rgba(239, 68, 68, 0.15);
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .sp-pace-badge.pace-ahead {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60A5FA;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .sp-pacing-track {
+      flex: 1;
+      max-width: 200px;
+      min-width: 120px;
+      height: 7px;
+      background: var(--sp-inner-border, #333);
+      border-radius: 9999px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sp-pacing-time-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+    }
+
+    .sp-pacing-slide-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: var(--accent-primary, #E50914);
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+      opacity: 0.88;
+    }
   </style>
 </head>
-<body class="${isParentLight ? 'theme-light' : 'theme-dark'}">
+<body class="theme-${activeParentTheme}" data-theme="${activeParentTheme}">
   <header class="sp-header">
     <div style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.92rem; display: flex; align-items: center; gap: 0.6rem;">
-      <span>CONSOLE <span style="color: var(--accent-primary, #15803D);">PRÉSENTATEUR</span></span>
-      <button id="spThemeToggleBtn" class="sp-btn" title="Basculer Mode Clair / Sombre de la console">
-        ${isParentLight ? '🌙' : '☀️'}
+      <span>CONSOLE <span style="color: var(--accent-primary, #E50914);">PRÉSENTATEUR</span></span>
+      <button id="spThemeToggleBtn" class="sp-btn" title="Changer l'ambiance visuelle de la console">
+        ${THEME_ICONS[activeParentTheme] || '🌑'}
       </button>
     </div>
     
@@ -279,11 +598,45 @@ function populateSpeakerWindow(speakerWindow) {
     </div>
 
     <div style="display: flex; gap: 0.4rem; align-items: center;">
+      <button id="spBlackoutBtn" class="sp-btn" title="Masquer l'écran principal (Écran Noir) - Touche B">📺 Masquer (B)</button>
       <span style="font-size: 0.75rem; color: var(--sp-text-muted);">Notes :</span>
       <button id="notesMinusBtn" class="sp-btn">A-</button>
       <button id="notesPlusBtn" class="sp-btn">A+</button>
     </div>
   </header>
+
+  <!-- Pacing Tracker Bar (Indicateur de Rythme en Temps Réel) -->
+  <div class="sp-pacing-bar">
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <span>⏱ Slide : <strong id="slideTimerText" style="color: var(--sp-text); font-family: 'Fira Code', monospace;">00:00</strong> / <span id="slideTargetText" style="font-family: 'Fira Code', monospace;">--:--</span></span>
+      <span id="slidePaceBadge" class="sp-pace-badge pace-ontrack">● En cours</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.65rem; flex: 1; justify-content: center; max-width: 460px;">
+      <span style="font-size: 0.72rem; color: var(--sp-text-muted);">Progression vs Temps :</span>
+      <div class="sp-pacing-track" title="Barre blanche : Temps écoulé | Barre couleur : Slides franchies">
+        <div id="pacingTimeFill" class="sp-pacing-time-fill" style="width: 0%;"></div>
+        <div id="pacingSlideFill" class="sp-pacing-slide-fill" style="width: 0%;"></div>
+      </div>
+      <span style="font-size: 0.72rem;">Reste : <strong id="timeRemainingText" style="font-family: 'Fira Code', monospace; color: var(--sp-text);">--:--</strong></span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <span id="globalPaceBadge" class="sp-pace-badge pace-ontrack">● Rythme idéal</span>
+      <div style="display: flex; align-items: center; gap: 0.35rem;">
+        <span style="font-size: 0.72rem;">Cible :</span>
+        <select id="pacingTargetSelect" class="sp-select" style="padding: 0.18rem 0.45rem; font-size: 0.75rem;">
+          <option value="15">15 min</option>
+          <option value="30">30 min</option>
+          <option value="45">45 min</option>
+          <option value="60">60 min</option>
+          <option value="75">75 min</option>
+          <option value="90">90 min</option>
+          <option value="120">120 min</option>
+        </select>
+      </div>
+    </div>
+  </div>
 
   <main class="sp-main">
     <!-- Colonne Gauche : Aperçus Slides (Actuelle & Suivante) -->
@@ -301,7 +654,7 @@ function populateSpeakerWindow(speakerWindow) {
       <div class="sp-panel" style="flex: 0.75;">
         <div class="sp-panel-header">
           <span>Slide Suivante (Next)</span>
-          <span id="nextSlideTitleTxt" style="color: var(--accent-primary, #15803D); font-weight: 700;">-</span>
+          <span id="nextSlideTitleTxt" style="color: var(--accent-primary, #E50914); font-weight: 700;">-</span>
         </div>
         <div class="sp-preview-box" id="nextBox">
           <div id="nextSlideContent" class="sp-preview-inner slide-content"></div>
@@ -326,14 +679,59 @@ function populateSpeakerWindow(speakerWindow) {
       <select id="jumpSlideSelect" class="sp-select"></select>
     </div>
     <div style="font-size: 0.75rem; color: var(--sp-text-muted);">
-      Touches Clavier actives (<kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>Espace</kbd>)
+      Touches Clavier actives (<kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>Espace</kbd> <kbd>B</kbd> <kbd>W</kbd>)
     </div>
   </footer>
 
   <script>
-    const slidesData = ${JSON.stringify(slidesData)};
+    const slidesData = ${JSON.stringify(slidesData).replace(/<\/script/gi, '<\\/script')};
     let activeIdx = ${currentIndex};
     let currentFontSize = 1.15;
+
+    function lightenColor(col, percent) {
+      if (!col || typeof col !== 'string' || !col.startsWith('#')) return col || '#FF2A2A';
+      let num = parseInt(col.replace('#', ''), 16);
+      if (isNaN(num)) return col;
+      let r = (num >> 16) + Math.round(255 * (percent / 100));
+      let g = ((num >> 8) & 0x00FF) + Math.round(255 * (percent / 100));
+      let b = (num & 0x0000FF) + Math.round(255 * (percent / 100));
+      r = Math.min(255, Math.max(0, r));
+      g = Math.min(255, Math.max(0, g));
+      b = Math.min(255, Math.max(0, b));
+      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function setAccentColor(color) {
+      if (!color) return;
+      document.documentElement.style.setProperty('--accent-primary', color);
+      document.documentElement.style.setProperty('--accent-hover', lightenColor(color, 16));
+    }
+
+    function syncPreviewFragments(stepIdx) {
+      const curElem = document.getElementById('currentSlideContent');
+      if (!curElem) return;
+      const frags = Array.from(curElem.querySelectorAll('.fragment'));
+      if (frags.length === 0) return;
+
+      const hasIndices = frags.some(f => f.hasAttribute('data-fragment-index'));
+      let steps = [];
+      if (hasIndices) {
+        const groups = {};
+        frags.forEach(f => {
+          const idx = f.hasAttribute('data-fragment-index') ? parseInt(f.getAttribute('data-fragment-index'), 10) : 999;
+          if (!groups[idx]) groups[idx] = [];
+          groups[idx].push(f);
+        });
+        steps = Object.keys(groups).sort((a, b) => Number(a) - Number(b)).map(k => groups[k]);
+      } else {
+        steps = frags.map(f => [f]);
+      }
+
+      steps.forEach((step, idx) => {
+        const isVis = idx <= stepIdx;
+        step.forEach(el => el.classList.toggle('visible', isVis));
+      });
+    }
 
     const channel = new BroadcastChannel('deck_channel_sync');
     channel.onmessage = (e) => {
@@ -342,11 +740,16 @@ function populateSpeakerWindow(speakerWindow) {
           setConsoleTheme(e.data.theme);
         }
         if (e.data.type === 'accentColor' && e.data.color) {
-          document.documentElement.style.setProperty('--accent-primary', e.data.color);
-          document.documentElement.style.setProperty('--accent-hover', e.data.color);
+          setAccentColor(e.data.color);
         }
-        if (typeof e.data.slideIndex === 'number') {
-          updateUI(e.data.slideIndex, false);
+        if (e.data.type === 'fragmentStep' && e.data.slideIndex === activeIdx) {
+          syncPreviewFragments(e.data.fragmentStep);
+        }
+        if (e.data.type === 'blankState') {
+          updateBlankStateUI(e.data.mode);
+        }
+        if (typeof e.data.slideIndex === 'number' && e.data.type !== 'fragmentStep') {
+          updateUI(e.data.slideIndex, false, e.data.fragmentStep);
         }
       }
     };
@@ -358,26 +761,55 @@ function populateSpeakerWindow(speakerWindow) {
       if (e.key === 'deck_sync_theme' && e.newValue !== null) {
         setConsoleTheme(e.newValue);
       }
+      if ((e.key === 'deck_sync_accent_color' || e.key === 'deck_accent_color') && e.newValue) {
+        setAccentColor(e.newValue);
+      }
+      if (e.key === 'deck_sync_blank_state' && e.newValue !== null) {
+        try {
+          const d = JSON.parse(e.newValue);
+          updateBlankStateUI(d.mode);
+        } catch (err) {}
+      }
+      if (e.key === 'deck_sync_fragment' && e.newValue !== null) {
+        try {
+          const d = JSON.parse(e.newValue);
+          if (d.slideIndex === activeIdx) syncPreviewFragments(d.fragmentStep);
+        } catch (err) {}
+      }
     });
 
+    const KNOWN_THEMES = ['dark', 'light', 'nordic', 'cyberpunk', 'emerald', 'navy', 'sepia'];
+    const THEME_ICONS = {
+      dark: '🌑',
+      light: '☀️',
+      nordic: '❄️',
+      cyberpunk: '⚡',
+      emerald: '🌲',
+      navy: '⚓',
+      sepia: '☕'
+    };
+
     function setConsoleTheme(theme) {
-      const isLight = theme === 'light';
-      document.body.classList.toggle('theme-light', isLight);
-      document.body.classList.toggle('theme-dark', !isLight);
+      const activeTheme = KNOWN_THEMES.includes(theme) ? theme : 'dark';
+      KNOWN_THEMES.forEach(function (t) {
+        document.body.classList.remove('theme-' + t);
+      });
+      document.body.classList.add('theme-' + activeTheme);
+      document.body.setAttribute('data-theme', activeTheme);
       const btn = document.getElementById('spThemeToggleBtn');
-      if (btn) btn.textContent = isLight ? '🌙' : '☀️';
-      scaleElement('currentBox', 'currentSlideContent');
-      scaleElement('nextBox', 'nextSlideContent');
+      if (btn) btn.textContent = THEME_ICONS[activeTheme] || '🌑';
+      updateUI(activeIdx, false);
     }
 
     const spThemeBtn = document.getElementById('spThemeToggleBtn');
     if (spThemeBtn) {
       spThemeBtn.onclick = () => {
-        const isCurrentlyLight = document.body.classList.contains('theme-light');
-        const newTheme = isCurrentlyLight ? 'dark' : 'light';
-        setConsoleTheme(newTheme);
-        channel.postMessage({ theme: newTheme });
-        localStorage.setItem('deck_sync_theme', newTheme);
+        const curTheme = document.body.getAttribute('data-theme') || 'dark';
+        const curIdx = KNOWN_THEMES.indexOf(curTheme);
+        const nextTheme = KNOWN_THEMES[(curIdx + 1) % KNOWN_THEMES.length];
+        setConsoleTheme(nextTheme);
+        channel.postMessage({ theme: nextTheme });
+        localStorage.setItem('deck_sync_theme', nextTheme);
       };
     }
 
@@ -401,11 +833,20 @@ function populateSpeakerWindow(speakerWindow) {
       const box = document.getElementById(boxId);
       const content = document.getElementById(contentId);
       if (!box || !content) return;
-      const scale = Math.min((box.clientWidth - 30) / 1240, (box.clientHeight - 30) / 700);
-      content.style.transform = 'scale(' + Math.max(scale, 0.1) + ')';
+
+      const contentWidth = 1240;
+      // Mesure de la hauteur naturelle réelle requise par le contenu (plancher à 700px pour préserver le 16:9)
+      const naturalHeight = Math.max(700, content.offsetHeight || 0, content.scrollHeight || 0);
+
+      const availableWidth = Math.max(20, box.clientWidth - 24);
+      const availableHeight = Math.max(20, box.clientHeight - 24);
+
+      // Calcul de l'échelle assurant que largeur et hauteur sont TOUTES LES DEUX 100% contenues
+      const scale = Math.min(availableWidth / contentWidth, availableHeight / naturalHeight);
+      content.style.transform = 'scale(' + Math.max(scale, 0.05) + ')';
     }
 
-    function updateUI(idx, notify = true) {
+    function updateUI(idx, notify = true, fragmentStep = -1) {
       if (idx < 0) idx = 0;
       if (idx >= slidesData.length) idx = slidesData.length - 1;
       activeIdx = idx;
@@ -417,10 +858,20 @@ function populateSpeakerWindow(speakerWindow) {
       // Mise à jour de l'aperçu actuel avec le thème propre à la slide ou le thème global
       const sData = slidesData[activeIdx];
       const curElem = document.getElementById('currentSlideContent');
-      const curTheme = sData.theme || (document.body.classList.contains('theme-light') ? 'light' : 'dark');
-      curElem.className = 'sp-preview-inner slide-content ' + (curTheme === 'light' ? 'theme-light' : 'theme-dark');
+      const curGlobalTheme = document.body.getAttribute('data-theme') || 'dark';
+      const curTheme = sData.theme || curGlobalTheme;
+      KNOWN_THEMES.forEach(t => curElem.classList.remove('theme-' + t));
+      curElem.classList.add('theme-' + curTheme);
       curElem.setAttribute('data-theme', curTheme);
+      if (sData.accent) {
+        curElem.style.setProperty('--accent-primary', sData.accent);
+        curElem.style.setProperty('--accent-hover', sData.accentHover || lightenColor(sData.accent, 16));
+      } else {
+        curElem.style.removeProperty('--accent-primary');
+        curElem.style.removeProperty('--accent-hover');
+      }
       curElem.innerHTML = sData.html;
+      syncPreviewFragments(typeof fragmentStep === 'number' ? fragmentStep : -1);
 
       document.getElementById('speakerNotesArea').textContent = sData.notes;
 
@@ -429,18 +880,43 @@ function populateSpeakerWindow(speakerWindow) {
       if (activeIdx < slidesData.length - 1) {
         const nextData = slidesData[activeIdx + 1];
         const nextTheme = nextData.theme || curTheme;
-        nextElem.className = 'sp-preview-inner slide-content ' + (nextTheme === 'light' ? 'theme-light' : 'theme-dark');
+        KNOWN_THEMES.forEach(t => nextElem.classList.remove('theme-' + t));
+        nextElem.classList.add('theme-' + nextTheme);
         nextElem.setAttribute('data-theme', nextTheme);
+        if (nextData.accent) {
+          nextElem.style.setProperty('--accent-primary', nextData.accent);
+          nextElem.style.setProperty('--accent-hover', nextData.accentHover || lightenColor(nextData.accent, 16));
+        } else {
+          nextElem.style.removeProperty('--accent-primary');
+          nextElem.style.removeProperty('--accent-hover');
+        }
         document.getElementById('nextSlideTitleTxt').textContent = nextData.title;
         nextElem.innerHTML = nextData.html;
+        nextElem.querySelectorAll('.fragment').forEach(f => f.classList.add('visible'));
       } else {
         document.getElementById('nextSlideTitleTxt').textContent = 'Fin de la présentation';
-        nextElem.className = 'sp-preview-inner slide-content ' + (curTheme === 'light' ? 'theme-light' : 'theme-dark');
+        KNOWN_THEMES.forEach(t => nextElem.classList.remove('theme-' + t));
+        nextElem.classList.add('theme-' + curTheme);
+        nextElem.setAttribute('data-theme', curTheme);
+        nextElem.style.removeProperty('--accent-primary');
+        nextElem.style.removeProperty('--accent-hover');
         nextElem.innerHTML = '<div style="text-align:center;color:var(--sp-text-muted);font-size:2rem;font-weight:800;padding-top:200px;">FIN DES SLIDES</div>';
       }
 
       scaleElement('currentBox', 'currentSlideContent');
       scaleElement('nextBox', 'nextSlideContent');
+
+      // Deuxième passe dans une frame suivante pour garantir la mesure post-rendu
+      requestAnimationFrame(() => {
+        scaleElement('currentBox', 'currentSlideContent');
+        scaleElement('nextBox', 'nextSlideContent');
+      });
+
+      if (typeof lastRenderedSlideIndex !== 'undefined' && lastRenderedSlideIndex !== activeIdx) {
+        slideSeconds = 0;
+        lastRenderedSlideIndex = activeIdx;
+      }
+      if (typeof updatePacing === 'function') updatePacing();
 
       if (notify) sendSlideChange(activeIdx);
     }
@@ -450,14 +926,112 @@ function populateSpeakerWindow(speakerWindow) {
       scaleElement('nextBox', 'nextSlideContent');
     });
 
-    document.getElementById('prevSlideBtn').onclick = () => { if (activeIdx > 0) sendSlideChange(activeIdx - 1); };
-    document.getElementById('nextSlideBtn').onclick = () => { if (activeIdx < slidesData.length - 1) sendSlideChange(activeIdx + 1); };
+    function requestNext(skip = false) {
+      const act = skip ? 'nextDirect' : 'next';
+      let sent = false;
+      if (channel) {
+        try {
+          channel.postMessage({ type: 'action', action: act });
+          sent = true;
+        } catch (e) { sent = false; }
+      }
+      if (!sent) {
+        try {
+          localStorage.setItem('deck_sync_action', JSON.stringify({ action: act, t: Date.now() }));
+        } catch (e) {}
+      }
+    }
+
+    function requestPrev(skip = false) {
+      const act = skip ? 'prevDirect' : 'prev';
+      let sent = false;
+      if (channel) {
+        try {
+          channel.postMessage({ type: 'action', action: act });
+          sent = true;
+        } catch (e) { sent = false; }
+      }
+      if (!sent) {
+        try {
+          localStorage.setItem('deck_sync_action', JSON.stringify({ action: act, t: Date.now() }));
+        } catch (e) {}
+      }
+    }
+
+    let currentBlankMode = null;
+    function updateBlankStateUI(mode) {
+      currentBlankMode = mode;
+      const btn = document.getElementById('spBlackoutBtn');
+      if (btn) {
+        if (mode === 'black') {
+          btn.innerHTML = '📺 <strong>Masqué (Noir)</strong>';
+          btn.style.background = '#FF1E1E';
+          btn.style.color = '#FFFFFF';
+          btn.style.borderColor = '#FF1E1E';
+        } else if (mode === 'white') {
+          btn.innerHTML = '📺 <strong>Masqué (Blanc)</strong>';
+          btn.style.background = '#FFFFFF';
+          btn.style.color = '#000000';
+          btn.style.borderColor = '#CCCCCC';
+        } else {
+          btn.innerHTML = '📺 Masquer (B)';
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }
+      }
+    }
+
+    function toggleBlank(mode) {
+      const target = currentBlankMode === mode ? 'unblank' : (mode === 'white' ? 'whiteout' : 'blackout');
+      let sent = false;
+      if (channel) {
+        try {
+          channel.postMessage({ type: 'action', action: target });
+          sent = true;
+        } catch (e) { sent = false; }
+      }
+      if (!sent) {
+        try {
+          localStorage.setItem('deck_sync_action', JSON.stringify({ action: target, t: Date.now() }));
+        } catch (e) {}
+      }
+      updateBlankStateUI(currentBlankMode === mode ? null : mode);
+    }
+
+    const spBlackoutBtn = document.getElementById('spBlackoutBtn');
+    if (spBlackoutBtn) {
+      spBlackoutBtn.onclick = () => toggleBlank('black');
+    }
+
+    // Récupération de l'état initial du masquage s'il existe
+    try {
+      const savedBlank = localStorage.getItem('deck_sync_blank_state');
+      if (savedBlank) {
+        const d = JSON.parse(savedBlank);
+        if (d && d.mode) updateBlankStateUI(d.mode);
+      }
+    } catch (e) {}
+
+    document.getElementById('prevSlideBtn').onclick = () => requestPrev(false);
+    document.getElementById('nextSlideBtn').onclick = () => requestNext(false);
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-        e.preventDefault(); if (activeIdx < slidesData.length - 1) sendSlideChange(activeIdx + 1);
+        e.preventDefault();
+        requestNext(e.shiftKey);
       } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-        e.preventDefault(); if (activeIdx > 0) sendSlideChange(activeIdx - 1);
+        e.preventDefault();
+        requestPrev(e.shiftKey);
+      } else if (e.key === 'b' || e.key === 'B' || e.key === '.') {
+        e.preventDefault();
+        toggleBlank('black');
+      } else if (e.key === 'w' || e.key === 'W') {
+        e.preventDefault();
+        toggleBlank('white');
+      } else if (e.key === 'Escape' && currentBlankMode) {
+        e.preventDefault();
+        toggleBlank(currentBlankMode);
       }
     });
 
@@ -473,14 +1047,119 @@ function populateSpeakerWindow(speakerWindow) {
     };
 
     let seconds = 0;
+    let slideSeconds = 0;
     let running = true;
+    let lastRenderedSlideIndex = -1;
+
+    function formatTimeMMSS(sec) {
+      const isNeg = sec < 0;
+      const abs = Math.abs(sec);
+      const m = String(Math.floor(abs / 60)).padStart(2, '0');
+      const s = String(abs % 60).padStart(2, '0');
+      return (isNeg ? '-' : '') + m + ':' + s;
+    }
+
+    const pacingTargetSelect = document.getElementById('pacingTargetSelect');
+    if (pacingTargetSelect) {
+      const savedTarget = localStorage.getItem('deck_pacing_target_min');
+      pacingTargetSelect.value = savedTarget || "${detectedTargetMin}" || "60";
+      pacingTargetSelect.onchange = () => {
+        try { localStorage.setItem('deck_pacing_target_min', pacingTargetSelect.value); } catch(e) {}
+        updatePacing();
+      };
+    }
+
+    function updatePacing() {
+      const targetMin = parseInt(pacingTargetSelect ? pacingTargetSelect.value : 60, 10) || 60;
+      const totalTargetSec = targetMin * 60;
+
+      // Calcul des allocations de temps par slide
+      const assignedSec = slidesData.reduce((acc, s) => acc + (s.duration || 0), 0);
+      const unassignedCount = slidesData.filter(s => !s.duration).length;
+      const unassignedShare = unassignedCount > 0 
+        ? Math.max(10, Math.round((totalTargetSec - assignedSec) / unassignedCount)) 
+        : Math.round(totalTargetSec / Math.max(1, slidesData.length));
+
+      const slideTargets = slidesData.map(s => s.duration || unassignedShare);
+
+      // Temps cible cumulé jusqu'à la slide actuelle (incluse)
+      let cumulativeTarget = 0;
+      for (let i = 0; i <= activeIdx; i++) {
+        cumulativeTarget += slideTargets[i];
+      }
+
+      const currentSlideTarget = slideTargets[activeIdx] || unassignedShare;
+
+      // 1. Minuteur et cible de la slide courante
+      const slideTimerEl = document.getElementById('slideTimerText');
+      const slideTargetEl = document.getElementById('slideTargetText');
+      if (slideTimerEl) slideTimerEl.textContent = formatTimeMMSS(slideSeconds);
+      if (slideTargetEl) slideTargetEl.textContent = formatTimeMMSS(currentSlideTarget);
+
+      // 2. Statut unitaire de la slide courante
+      const slidePaceBadge = document.getElementById('slidePaceBadge');
+      if (slidePaceBadge) {
+        const slideDelta = slideSeconds - currentSlideTarget;
+        if (slideDelta > 45) {
+          slidePaceBadge.className = 'sp-pace-badge pace-behind';
+          slidePaceBadge.textContent = '▲ Dépassé (+' + formatTimeMMSS(slideDelta) + ')';
+        } else if (slideDelta > 0) {
+          slidePaceBadge.className = 'sp-pace-badge pace-warning';
+          slidePaceBadge.textContent = '▲ Conclure (+' + formatTimeMMSS(slideDelta) + ')';
+        } else if (slideSeconds >= currentSlideTarget * 0.8) {
+          slidePaceBadge.className = 'sp-pace-badge pace-warning';
+          slidePaceBadge.textContent = '● Fin imminente';
+        } else {
+          slidePaceBadge.className = 'sp-pace-badge pace-ontrack';
+          slidePaceBadge.textContent = '● En cours (' + formatTimeMMSS(currentSlideTarget - slideSeconds) + ' restant)';
+        }
+      }
+
+      // 3. Statut du rythme global (en avance / à l'heure / en retard)
+      const globalBadge = document.getElementById('globalPaceBadge');
+      if (globalBadge) {
+        const globalDelta = seconds - cumulativeTarget;
+        if (globalDelta > 120) {
+          globalBadge.className = 'sp-pace-badge pace-behind';
+          globalBadge.textContent = '▲ Retard (+' + formatTimeMMSS(globalDelta) + ')';
+        } else if (globalDelta > 40) {
+          globalBadge.className = 'sp-pace-badge pace-warning';
+          globalBadge.textContent = '▲ Accélérer (+' + formatTimeMMSS(globalDelta) + ')';
+        } else if (globalDelta < -60) {
+          globalBadge.className = 'sp-pace-badge pace-ahead';
+          globalBadge.textContent = '▼ En avance (' + formatTimeMMSS(globalDelta) + ')';
+        } else {
+          globalBadge.className = 'sp-pace-badge pace-ontrack';
+          globalBadge.textContent = '● Dans les temps (' + (globalDelta >= 0 ? '+' : '') + formatTimeMMSS(globalDelta) + ')';
+        }
+      }
+
+      // 4. Temps restant total
+      const remainingSec = totalTargetSec - seconds;
+      const remainElem = document.getElementById('timeRemainingText');
+      if (remainElem) {
+        remainElem.textContent = (remainingSec >= 0 ? '' : 'Dépassé +') + formatTimeMMSS(Math.abs(remainingSec));
+        remainElem.style.color = remainingSec >= 0 ? 'var(--sp-text)' : '#EF4444';
+      }
+
+      // 5. Jauges superposées
+      const timePercent = Math.min(100, Math.max(0, (seconds / totalTargetSec) * 100));
+      const slidePercent = Math.min(100, Math.max(0, ((activeIdx + 1) / Math.max(1, slidesData.length)) * 100));
+      const timeFill = document.getElementById('pacingTimeFill');
+      const slideFill = document.getElementById('pacingSlideFill');
+      if (timeFill) timeFill.style.width = timePercent + '%';
+      if (slideFill) slideFill.style.width = slidePercent + '%';
+    }
+
     setInterval(() => {
       if (running) {
         seconds++;
+        slideSeconds++;
         const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
         const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
         const s = String(seconds % 60).padStart(2, '0');
         document.getElementById('timerText').textContent = h + ':' + m + ':' + s;
+        updatePacing();
       }
       document.getElementById('clockText').textContent = new Date().toLocaleTimeString();
     }, 1000);
@@ -492,10 +1171,15 @@ function populateSpeakerWindow(speakerWindow) {
     };
     document.getElementById('resetTimerBtn').onclick = () => {
       seconds = 0;
+      slideSeconds = 0;
       document.getElementById('timerText').textContent = '00:00:00';
+      updatePacing();
     };
 
-    setTimeout(() => updateUI(activeIdx, false), 50);
+    setTimeout(() => {
+      updateUI(activeIdx, false);
+      updatePacing();
+    }, 50);
   <\/script>
 </body>
 </html>`);
@@ -509,7 +1193,7 @@ function showPopupBlockedModal() {
     modal.id = 'popupBlockedModal';
     modal.className = 'modal-overlay open';
     modal.innerHTML = `
-      <div class="x-card" style="max-width: 540px; width: 92vw; border: 1.5px solid var(--accent-primary, #15803D); box-shadow: 0 10px 45px rgba(0,0,0,0.25); text-align: center; padding: 1.8rem;">
+      <div class="x-card" style="max-width: 540px; width: 92vw; border: 1.5px solid var(--accent-primary, #E50914); box-shadow: 0 10px 45px rgba(0,0,0,0.25); text-align: center; padding: 1.8rem;">
         <div style="font-size: 2.2rem; margin-bottom: 0.6rem;">🖥️</div>
         <h3 style="font-size: 1.3rem; color: var(--text-main); margin-bottom: 0.6rem;">Mode Présentateur Dual-Screen</h3>
         <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 1.3rem;">
@@ -577,7 +1261,15 @@ function openSpeakerWindow() {
     return;
   }
 
-  populateSpeakerWindow(speakerWindow);
+  try {
+    speakerWindow.focus();
+  } catch (e) {}
+
+  try {
+    populateSpeakerWindow(speakerWindow);
+  } catch (err) {
+    console.error('Erreur lors du peuplement de la fenêtre présentateur:', err);
+  }
 }
 
 window.openSpeakerWindow = openSpeakerWindow;
@@ -585,8 +1277,8 @@ window.openSpeakerWindow = openSpeakerWindow;
 function attachSpeakerListeners() {
   ['speakerWindowBtn', 'speakerModeBtn'].forEach(id => {
     const btn = document.getElementById(id);
-    if (btn) {
-      btn.removeEventListener('click', openSpeakerWindow);
+    if (btn && !btn.dataset.speakerBound) {
+      btn.dataset.speakerBound = 'true';
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         openSpeakerWindow();
