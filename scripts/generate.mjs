@@ -133,6 +133,12 @@ function validatePresentation(targetFile = 'presentation.html') {
     console.log(`✔ Titres présents pour la palette Spotlight et l'Overview`);
   }
 
+  // Contrôle du Favicon / Logo d'onglet
+  const hasFavicon = /<link[^>]+rel=["'][^"']*icon[^"']*["']/i.test(content) || /data-(?:logo|favicon)=/i.test(content);
+  if (hasFavicon) {
+    console.log(`✔ Logo / Favicon d'onglet configuré`);
+  }
+
   // Détection des composants
   const hasMermaid = /class="mermaid"/i.test(content);
   const hasQuiz = /class="quiz-container"/i.test(content);
@@ -179,6 +185,7 @@ RÈGLES CRITIQUES D'INTÉGRATION :
 2. INTERDICTION FORMELLE d'ajouter data-theme sur les balises <section class="slide"> : toutes les slides doivent hériter du thème global pour garantir un contraste parfait (clair/sombre).
 3. Chaque slide doit comporter des data-slide numérotés, un data-title descriptif et un attribut data-notes très riche et complet pour la console orateur.
 4. Utilise systématiquement les classes et structures standardisées du Dictionnaire de Composants fourni ci-dessous (cartes, badges, grilles, steppers, tableaux, terminaux, cercles vertueux, Mermaid, quiz).
+5. Ajoute systématiquement un lien favicon (<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">) dans le <head> et renseigne si souhaité data-logo="assets/favicon.svg" sur <div class="deck-container"> pour afficher le logo dans l'onglet du navigateur et dans l'entête.
 
 === CONSIGNES & PLAN DE CONTENU ===
 ${consignes}
