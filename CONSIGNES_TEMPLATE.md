@@ -8,14 +8,16 @@ Génère une présentation complète au format fichier unique HTML (`presentatio
 > Un dictionnaire complet de composants prêts à l'emploi est formalisé dans le fichier [`COMPOSANTS_DICTIONNAIRE.md`](COMPOSANTS_DICTIONNAIRE.md).
 > **RÈGLE OBLIGATOIRE POUR LA CRÉATION DES SLIDES** :
 > Pour concevoir et structurer le contenu des diapositives, vous devez **systématiquement vous appuyer sur ce dictionnaire** pour instancier les objets souhaités :
-> - **Mises en page & Layouts** : `slide`, `grid-2`, `grid-3`, `grid-4`, `split-code`, `hero`
+> - **Mises en page & Layouts** : `slide`, `grid-2`, `grid-3`, `grid-4`, `split-code`, `split-schema`, `hero`
 > - **Cartes & Conteneurs** : `x-card`, `x-card.featured`, `x-card.metric`, `summary-box`
+> - **Schémas & Médias** : `schema-box`, `schema-box.framed`, `schema-img`, `schema-caption`, `split-schema`
 > - **Données & Tableaux** : `data-table`, `metric-value` (KPI), `progress-track`
 > - **Frises & Processus** : `stepper-horizontal` (`step-node`), `timeline-vertical` (`timeline-card`)
 > - **Boucles & Cycles** : `virtuous-circle` (`cycle-core`, `cycle-step`)
 > - **Actions & Liens** : `text-link`, `btn-action`, `link-card`, `repo-link`
 > - **Développeur & Terminal** : `code-box` (Prism.js), `code-header`, `terminal-box`, `inline-code`
 > - **Badges & Typo** : `pill-tag`, `pill-tag.solid`, `pill-tag.gray`, `bullet-check`
+> - **Logos & Sponsors** : `slide-logo.bottom-left`, `slide-logo.bottom-center`, `slide-logo.bottom-right`, `slide-bottom-logos` (avec auto-calibrage de taille garanti)
 > - **Interactivité** : `quiz-container`, `quiz-opt-btn`, `quiz-explanation-box`
 > - **Métadonnées** : `data-notes`, `data-theme="light|dark"`, `slide-title`, `slide-subtitle`
 
@@ -24,28 +26,25 @@ Génère une présentation complète au format fichier unique HTML (`presentatio
 ## 🎨 1. Système de Design & Thème Global (Clair / Foncé)
 
 ### 1.1 Principe « Thème Global & Zéro Configuration »
-> **RÈGLE FONDAMENTALE — LE THÈME SE DÉFINIT AU GLOBAL** :
+> ⛔ **RÈGLE CRITIQUE — LE THÈME SE DÉFINIT EXCLUSIVEMENT AU GLOBAL** :
 > 1. Le thème graphique par défaut de la présentation est défini **au niveau global** sur le conteneur racine : `<div class="deck-container" data-theme="dark">` (mode sombre par défaut) ou `data-theme="light"` (mode clair).
-> 2. **Toutes les diapositives héritent automatiquement du thème global.**
-> 3. **Interdiction de répéter le thème sur chaque slide** : Ne mettez JAMAIS `data-theme="dark"` ou `data-theme="light"` sur les balises `<section class="slide">` lorsque toute la présentation partage le même thème.
-> 4. La structure du site (header, footer, barre de progression, boutons de navigation, modales, tiroir de notes) s'adapte automatiquement au thème actif sans aucune configuration manuelle requise.
+> 2. **Toutes les diapositives doivent hériter automatiquement du thème global.**
+> 3. **BANISSEMENT STRICT de `data-theme` sur les balises `<section class="slide">`** : Ne mettez JAMAIS `data-theme="..."` sur les slides individuelles. Cela briserait la cohérence visuelle lors de la bascule de thème par l'orateur (ex: touche `T` vers Clean Slate / mode clair) et produirait des textes illisibles (texte blanc sur fond clair).
+> 4. La structure complète (textes, titres, cartes, frises, formulaires, quiz, tableaux, header, footer, tiroir de notes) s'adapte automatiquement et harmonieusement au thème sélectionné par l'orateur sans aucune configuration manuelle.
 
 ---
 
-### 1.2 Fonctionnement & Exceptions Ponctuelles
+### 1.2 Fonctionnement & Adaptation Automatique
 Le moteur de présentation (`Deck Engine`) applique le thème de manière hiérarchique et fluide :
 
-1. **Héritage global (Cas standard)** :
-   - Par défaut, toutes les slides `<section class="slide">` adoptent le thème défini sur `.deck-container`.
-   - En mode sombre (`dark`), fond noir mat `#141414`, cartes anthracite `#1F1F1F`, textes blancs, séparateurs discrets.
-   - En mode clair (`light`), fond blanc-cassé `#F8FAFC`, cartes blanches `#FFFFFF`, textes ardoise `#0F172A`, ombres douces.
-2. **Exception ponctuelle par slide (Cas particulier)** :
-   - Si et seulement si une slide spécifique nécessite un contraste inverse du reste du diaporama (ex: une diapositive de schéma blanc au sein d'un deck sombre), vous pouvez lui attribuer localement `data-theme="light"` ou `data-theme="dark"`.
-   - Le moteur basculera alors l'habillage de manière fluide lors de l'affichage de cette diapositive, puis rétablira le thème global sur les diapositives suivantes.
-3. **Bascule manuelle par l'orateur (`T`)** :
-   - L'utilisateur peut basculer manuellement entre mode clair et mode sombre à tout moment via la touche `T` ou le bouton du header. Ce choix utilisateur prévaut sur toute la présentation.
-4. **Héritage automatique des accents de couleur** :
-   - Si une slide ou son contenu utilise une couleur d'accent propre (ex: vert menthe `#10B981`, bleu `#2563EB`, ou rouge `#E50914`), la barre de progression, les badges et les contours actifs l'adoptent automatiquement.
+1. **Héritage global universel** :
+   - Toutes les slides `<section class="slide">` adoptent le thème défini sur `.deck-container`.
+   - En mode sombre (`dark`, `nordic`, `cyberpunk`, `emerald`, `navy`, `sepia`), fond sombre, cartes contrastées, textes clairs `#FFFFFF`, séparateurs discrets.
+   - En mode clair (`light` / *Clean Slate*), fond blanc-cassé `#F8FAFC`, cartes blanches `#FFFFFF`, textes ardoise `#0F172A`, ombres douces.
+2. **Bascule dynamique par l'orateur (`T`)** :
+   - L'orateur peut basculer en direct entre les 7 ambiances visuelles à tout moment via la touche `T` ou le popover du header. Tous les textes et composants de toutes les slides s'adaptent instantanément avec un contraste garanti à 100%.
+3. **Héritage automatique des accents de couleur** :
+   - Les badges, jauges, frises et contours actifs adoptent la couleur d'accent active de manière homogène.
 
 ---
 
@@ -63,8 +62,22 @@ Le moteur de présentation (`Deck Engine`) applique le thème de manière hiéra
   - Cycles vertueux & Boucles systémiques (`.virtuous-circle`, `.cycle-core`, `.cycle-step`)
   - Tableaux de données & KPIs (`.data-table`, `.metric-value`)
   - Badges pills (`.pill-tag`, `.pill-tag.solid`, `.pill-tag.gray`, `.bullet-check`)
+  - Logos de pied de slide auto-calibrés (`.slide-logo.bottom-left`, `.slide-logo.bottom-center`, `.slide-logo.bottom-right`, `.slide-bottom-logos` ou `data-logo-*`)
   - Blocs de code & Terminaux annotés (`.code-box`, `.terminal-box`)
   - Quizz interactifs avec feedback immédiat (`.quiz-opt-btn`, `.quiz-explanation-box`)
+
+---
+
+### 1.4 Logo d'Entête & Favicon d'Onglet (Zéro Onglet Vide)
+Le moteur garantit qu'aucun onglet de navigateur ne s'affiche avec le globe vide ou une entête blanche sans identité :
+- **Favicon automatique** : Si rien n'est renseigné, le moteur injecte automatiquement le logo vectoriel SVG haute résolution (`assets/favicon.svg`) dans l'onglet du navigateur et dans la console orateur.
+- **Personnalisation via le conteneur racine** :
+  - `data-logo="assets/favicon.svg"` (ou tout chemin d'image, SVG ou emoji comme `data-logo="⚡"`) : affiche le logo dans l'entête à côté du titre de la présentation ET configure le favicon d'onglet.
+  - `data-favicon="chemin/vers/icone.svg"` : configure spécifiquement l'icône de l'onglet si vous souhaitez une icône distincte de l'entête.
+- **Balise HTML standard** : Vous pouvez également déclarer le favicon directement dans le `<head>` de votre page :
+  ```html
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  ```
 
 ---
 
@@ -83,20 +96,22 @@ Le moteur de présentation (`Deck Engine`) applique le thème de manière hiéra
    - **Mode plein écran** : touche `F` ou bouton dédié.
    - **Vue globale en grille (Overview)** : touche `O` ou `Échap` avec vignettes cliquables.
    - **Bascule manuelle Thème Clair / Sombre** : touche `T` ou bouton dédié dans le header.
-   - **Personnalisation en direct de la Couleur d'accentuation** : touche `C` ou menu palette dans le header (palette de presets vibrants : Rouge Crimson, Bleu Cobalt, Vert Émeraude, Violet Cyber, Ambre, Rose Néon, Cyan + sélecteur libre sur-mesure, persistance `localStorage`, paramètre URL `?color=...`, et synchronisation temps réel dual-screen).
    - **Export PDF haute fidélité** : touche `P` ou bouton dédié (mode paysage 16:9 strict, exactement 1 page par slide, respect fidèle du thème clair/sombre de chaque slide, 0 coupure de page).
    - **Fenêtre d'aide des raccourcis** : touche `?`.
+   - **Auto-ajustement d'échelle dynamique (Zéro débordement)** : le moteur mesure automatiquement le contenu de chaque slide et applique un facteur d'échelle adaptatif centré (`transform: scale(...)`) pour garantir qu'aucune slide ne déborde de l'écran (laptop, écran externe ou plein écran).
+   - **Révélation Progressive & Fragments (`class="fragment"`)** : animation par étapes au sein d'une même slide (`→` / `Espace` révèle le prochain élément, `Shift + →` saute directement à la slide suivante). Entièrement visible à l'export PDF et dans la grille Overview.
    - **Barre de progression dynamique & compteur** de slides dans le header.
 4. **🎙️ Mode Présentateur Avancé (Dual-Screen / Speaker View)** :
    - **Fenêtre dédiée synchronisée (touche `S` ou bouton Présentateur)** :
      - Ouvre une seconde fenêtre / onglet autonome réservée à l'orateur (`window.open` avec paramètre ou mode dédié).
-     - **Synchronisation temps réel bidirectionnelle** via l'API native `BroadcastChannel` (et fallback `localStorage`) : tout changement de slide sur l'écran présentateur met immédiatement à jour l'écran projeté pour le public, et vice-versa.
+     - **Synchronisation temps réel bidirectionnelle** via l'API native `BroadcastChannel` (et fallback `localStorage`) : tout changement de slide ou de fragment sur l'écran présentateur met immédiatement à jour l'écran projeté pour le public, et vice-versa.
    - **Interface complète du Mode Présentateur** :
-     - **Slide actuelle** en aperçu direct.
-     - **Slide suivante (Next Slide)** pour anticiper ses transitions et propos.
-     - **Chronomètre / Timer interactif** : affichage du temps écoulé (heures, minutes, secondes), bouton Pause/Play, Reset, et indicateur visuel de l'heure courante.
-     - **Zone de Notes d'orateur grand format** : affichage clair et lisible des notes renseignées sur chaque slide (`data-notes`), avec contrôles pour agrandir/réduire le texte des notes.
-     - **Contrôles de navigation orateur** : boutons Précédent / Suivant et liste de saut direct vers n'importe quelle slide.
+     - **Indicateur de Rythme (*Pacing Tracker*) en direct** : calcul automatique de la cible idéale par diapositive, minuteur unitaire qui se réinitialise à chaque slide, jauge comparative double (Temps écoulé vs Slides franchies), temps restant et badge de statut dynamique (🟢 *Dans les temps*, 🟡 *Accélérer*, 🔴 *Retard*, 🔵 *En avance*).
+     - **Slide actuelle & Aperçu des fragments** : les fragments à venir apparaissent en filigrane (opacité 35%) pour anticiper la suite.
+     - **Slide suivante (Next Slide)** : affichage à 100% pour préparer ses transitions.
+     - **Chronomètre / Timer interactif** : temps global de séance, boutons Pause/Play, Reset, et horloge courante.
+     - **Zone de Notes d'orateur grand format** : affichage lisible des notes de chaque slide (`data-notes`), avec boutons de taille de police `A+` / `A-`.
+     - **Contrôles de navigation orateur** : boutons Précédent / Suivant et liste déroulante de saut direct vers n'importe quelle slide.
    - **Tiroir rapide de secours (Drawer de notes)** : activable directement sur la slide principale avec la touche `N` pour les cas où l'on n'a qu'un seul écran.
 5. **Composants interactifs disponibles** :
    - Cartes en grille : 2, 3 ou 4 colonnes (`.grid-2`, `.grid-3`, `.grid-4`).
@@ -111,345 +126,368 @@ Le moteur de présentation (`Deck Engine`) applique le thème de manière hiéra
 
 > **À REMPLIR : Insérez ci-dessous le contenu spécifique de votre sujet.**
 
-### Métadonnées Générales :
-- **Titre de la présentation** : Elixir & Phoenix : Le Web Haute Performance et Temps Réel
-- **Sous-titre / Thème** : Module Infrastructures & Frameworks — Master MIAGE
-- **Durée totale estimée** : 60 min (Atelier complet de présentation)
-- **Public visé** : Étudiants MIAGE
-- **Thème visuel global** : dark
+### 3.1 Indication de Densité & Style de Contenu (Volume Textuel vs Pur Support)
+
+Avant de rédiger ou de générer les diapositives, vous **DEVEZ définir le niveau de densité textuelle souhaité**. Ce choix fondamental régit la façon dont l'information est répartie entre l'écran visible et les notes d'orateur :
+
+| Niveau de Densité | Contexte & Intention | Rendu Visible à l'Écran | Déport dans les Notes d'Orateur (`data-notes`) |
+| :--- | :--- | :--- | :--- |
+| **`pur-support`** *(Minimal)* | **Soutenance orale, Conférence, Keynote, Pitch**<br>Le public doit écouter l'orateur et non lire l'écran. | **Ultra-épuré & Visuel** :<br>• 1 seule idée maîtresse par slide.<br>• Mots-clés percutants (3 à 6 mots maximum par bloc).<br>• Zéro phrase rédigée avec verbe conjugué.<br>• Accent mis sur les chiffres géants (`.x-card.metric`), icônes et schémas (`.schema-box`). | **TRÈS FOURNI & EXPLICITE (Obligatoire)** :<br>Tout le discours oral, les explications complètes, les transitions et les exemples sont rédigés dans `data-notes="..."` pour être lus dans la **Console Présentateur (`S`)**. |
+| **`balanced`** *(Modéré / Standard)* | **Présentation technique d'équipe, Réunion de cadrage**<br>Équilibre entre clarté visuelle et autonomie de lecture. | **Synthétique & Structuré** :<br>• Puces courtes formulées sous forme de constats clés (1 ligne max).<br>• Cartes modulaires (`.x-card`) bien compartimentées.<br>• 1 boîte de synthèse concise (`.summary-box`). | **Équilibré** :<br>Points d'appui oraux, détails complémentaires, arguments de relance et réponses aux questions anticipées. |
+| **`dense`** *(Documentation / Référence)* | **Support de cours, Polycopié de référence, Livrable sans orateur**<br>Le diaporama doit être totalement auto-porteur. | **Complet & Détaillé** *(ex: `presentation.html`)* :<br>• Paragraphes explicatifs complets, définitions précises.<br>• Listes à puces circonstanciées, démonstrations et synthèses exhaustives.<br>• Plusieurs niveaux d'information par diapositive.<br>• *(Pris en charge automatiquement sans débordement par `deck-fit.js`)*. | **Complémentaire** :<br>Précisions de timing, références bibliographiques ou coulisses du projet. |
+
+> 💡 **RÈGLES D'OR POUR LA GÉNÉRATION DES SLIDES** :
+> 1. **Si le mode `pur-support` est sélectionné** : **INTERDICTION de surcharger l'écran**. Toute phrase explicative doit être impérativement résumée en 1 mot-clé ou 1 chiffre sur la slide, et la phrase complète doit être déplacée dans l'attribut `data-notes` de la slide.
+> 2. **Si le mode `dense` est sélectionné** : Utilisez la hiérarchie des composants de [`COMPOSANTS_DICTIONNAIRE.md`](COMPOSANTS_DICTIONNAIRE.md) (`.split-2`, `.timeline-milestones`, `.x-card.featured`, `.bullet-check`, `.summary-box`) pour maintenir une lisibilité optimale malgré la richesse du contenu.
+
+---
+
+### 3.2 Métadonnées Générales :
+- **Titre de la présentation** : ⚡ Démonstrateur Deck Engine : Guide Visuel des Composants & Capacités
+- **Sous-titre / Thème** : Catalogue Interactif des Modèles & Objets Prêts à l'Emploi
+- **Durée totale estimée** : 40 min *(Alimente l'objectif de séance du Pacing Tracker)*
+- **Public visé** : Présentateurs, Développeurs, Designers & Formateurs
+- **Thème visuel global** : dark *(choix parmi : dark | light | nordic | cyberpunk | emerald | navy | sepia)*
+- **Densité de contenu** : balanced *(choix parmi : `pur-support` | `balanced` | `dense`)*
 
 > ⚠️ **RÈGLE CRITIQUE POUR LA GÉNÉRATION DES SLIDES** :
 > - **Le thème visuel est défini UNE SEULE FOIS au global** (dans les métadonnées et sur `<div class="deck-container" data-theme="dark|light">`).
 > - **NE JAMAIS écrire ni répéter `theme: dark` ou `theme: light` sur chaque slide** dans le plan Markdown ou dans le code HTML.
 > - Seule une slide faisant l'objet d'une exception délibérée de contraste par rapport au reste du diaporama peut porter un attribut `data-theme` unitaire.
 
-### Structure des Slides :
+---
 
-#### Slide 1 : Titre & Sommaire
-- **Type de slide** : slide
+### 3.3 Canevas & Structure Type d'une Slide (Comment Structurer le Contenu)
+
+Chaque diapositive du plan doit obligatoirement respecter le canevas standardisé ci-dessous pour être interprétée et codée fidèlement par l'agent HTML :
+
+```markdown
+#### Slide [Numéro] : [Titre Court / Sujet de la Slide]
+- **Type de slide** : slide | hero
+- **Durée estimée** : X min *(Crucial pour le Pacing Tracker : calibre le minuteur unitaire et le calcul d'avance/retard)*
+- **Titre (title-slide)** : Titre principal affiché en haut de la slide
+- **Sous-titre (subtitle-slide)** : Sous-titre ou fil d'Ariane conceptuel
+- **Mise en page** : hero | grid-2 | grid-3 | grid-4 | split-code | split-schema
+- **Contenu & Composants** : (s'appuyer sur COMPOSANTS_DICTIONNAIRE.md pour les classes standardisées)
+  - Blocs & cartes : card (.x-card), card-featured (.x-card.featured), card-metric (.x-card.metric), banner (.summary-box)
+  - Badges : pill-tag, pill-tag.solid, pill-tag.gray, bullet-check
+  - Visuels : schema-box, code-box, stepper-horizontal, data-table, virtuous-circle, timeline-vertical, mermaid
+- **Animation & Révélation progressive (Fragments)** : *(Optionnel mais recommandé pour cadencer)*
+  - Spécifier les éléments à révéler au clic (ex: « les cartes apparaissent une par une via fragment »).
+- **Logos de pied de slide (optionnel)** :
+  - Emplacements : bottom-left, bottom-center, bottom-right avec classes de calibrage (.logo-xs à .logo-xl).
+- **Notes d'orateur (data-notes)** : *(OBLIGATOIRE, particulièrement en mode pur-support)*
+  - Discours parlé intégral, explications approfondies, détails techniques et relance vers la slide suivante.
+```
+
+---
+
+### 3.4 Plan Détaillé des Slides de Démonstration :
+
+#### Slide 1 : Couverture & Sommaire Exécutif (Hero)
+- **Type de slide** : hero
+- **Durée estimée** : 3 min
+- **Titre (title-slide)** : ⚡ Deck Engine Showcase
+- **Sous-titre (subtitle-slide)** : Le Moteur de Présentation HTML Augmenté par l'IA — Zéro Dépendance, Zéro Débordement
 - **Mise en page** : hero
-- **Titre (title-slide)** : Elixir & Phoenix Framework
-- **Sous-titre (subtitle-slide)** : Scalabilité massive, résilience et paradigme fonctionnel au service du web moderne
-- **Organisation** : grid-3
-  - **Colonne 1** : card
-    - badge-solid : Partie 1
-    - Titre : Fondations & Langage Elixir
-    - Description : Genèse, paradigme fonctionnel et concepts clés
-    - badge-gray : 21 min
-  - **Colonne 2** : card
-    - badge-solid : Partie 2
-    - Titre : Framework Phoenix & Temps Réel
-    - Description : Architecture, comparaison SSR/LiveView, routage et démo
-    - badge-gray : 34 min
-  - **Colonne 3** : card
-    - badge-solid : Partie 3
-    - Titre : Atelier Pratique & TP
-    - Description : Mise en œuvre de l'application « Les bons comptes »
-    - badge-gray : 5 min
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Accroche & Cadre :** Bienvenue à tous. Aujourd'hui, nous vous présentons le duo Elixir et Phoenix.
-  > - **Objectif de la séance :** Comprendre comment ce langage fonctionnel et son framework phare apportent une réponse radicale aux enjeux modernes de scalabilité et de temps réel.
-  > - **Organisation (60 min) :** Présentation découpée en 3 grandes parties, avant d'enchaîner sur l'atelier pratique de 2 heures.
-  > - **Lancement :** Entrons tout de suite dans la première partie consacrée au langage Elixir.
+- **Contenu & Composants** :
+  - En-tête : Badges `pill-tag.solid` ("Démonstrateur Officiel") et `pill-tag.gray` ("⏱ Durée globale : ~40 min • 11 Slides")
+  - Grille centrale (`grid-3`) : 3 cartes `x-card.featured` présentant les grands axes du moteur :
+    - Carte 1 : Badge "01" accentué + Titre "Mises en Page & Cartes" + Descriptif (Grilles 2 à 4 colonnes, comparatifs et blocs de synthèse)
+    - Carte 2 : Badge "02" accentué + Titre "Données, Code & Schémas" + Descriptif (Tableaux de données, métriques KPI géantes, blocs Prism.js et SVG)
+    - Carte 3 : Badge "03" accentué + Titre "Interactivité & Vecteurs" + Descriptif (Quizz cliquables, diagrammes Mermaid.js et console orateur)
+  - Pied de hero : `summary-box` avec guide rapide des touches (<kbd>&larr;</kbd>/<kbd>&rarr;</kbd> naviguer, <kbd>S</kbd> console orateur, <kbd>O</kbd> aperçu grille, <kbd>T</kbd> thème, <kbd>P</kbd> export PDF).
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/elixir.svg` (Icône moteur)
+  - `bottom-right logo-sm` : `assets/logos/erlang.svg` (Icône robustesse)
+- **Notes d'orateur (data-notes)** :
+  > • Bienvenue à cette démonstration complète du Slide Deck Engine.  
+  > • Ce diaporama a un double objectif : vous montrer le rendu esthétique haut de gamme du moteur, et servir de banc d'essai exhaustif pour tous les composants décrits dans COMPOSANTS_DICTIONNAIRE.md.  
+  > • Vous allez découvrir 11 diapositives calibrées, toutes animées et conçues pour être projetées sans aucun outil externe.  
+  > • Appuyez sur Espace ou Flèche droite pour lancer le parcours !
 
 ---
 
-#### Slide 2 : Annonce de Partie (Intertitre / Transition)
+#### Slide 2 : Comparatif & Révélation Progressive (Fragments)
 - **Type de slide** : slide
-- **Mise en page** : hero
-- **Badge section** : badge-solid : PARTIE 1
-- **Titre (title-slide)** : Fondations & Langage Elixir
-- **Sous-titre (subtitle-slide)** : Pourquoi réinventer un langage pour le web moderne ? (Durée : 21 min)
-- **Organisation (Sous-parties abordées)** : grid-4
-  - **Jalon 1** : card
-    - badge-gray : 3 min (Mon passage)
-    - Titre : Genèse & Histoire
-    - Description : José Valim, limites du modèle objet et l'héritage d'Erlang/BEAM.
-  - **Jalon 2** : card
-    - badge-gray : 4 min
-    - Titre : Caractéristiques
-    - Description : Typage dynamique, compilation bytecode et runtime BEAM.
-  - **Jalon 3** : card
-    - badge-gray : 4 min
-    - Titre : Paradigme
-    - Description : Pensée fonctionnelle, immuabilité et absence d'état partagé.
-  - **Jalon 4** : card
-    - badge-gray : 10 min
-    - Titre : Concepts & Code
-    - Description : Pattern matching, pipe operator `|>`, fonctions et processus.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Introduction de la partie :** Nous ouvrons cette première partie dédiée aux fondations d'Elixir, d'une durée de 21 minutes.
-  > - **Lien logique :** Avant de manipuler un framework comme Phoenix, il est indispensable de comprendre le moteur qui le propulse.
-  > - **Programme de la partie :** Nous débutons par la genèse du langage, avant que mes camarades ne détaillent ses caractéristiques, son paradigme fonctionnel et ses concepts clés avec du code.
-  > - **Transition :** Je commence donc par vous expliquer d'où vient Elixir et à quel problème matériel il répond.
-
----
-
-#### Slide 3 : Contexte / Problématique (Quand, Qui, Pourquoi)
-- **Type de slide** : slide
-- **Titre (title-slide)** : 2011-2012 : Le Mur de la Concurrence
-- **Sous-titre (subtitle-slide)** : Quand le modèle orienté objet traditionnel se heurte aux architectures multi-cœurs
+- **Durée estimée** : 4 min
+- **Titre (title-slide)** : Approches Traditionnelles vs Deck Engine
+- **Sous-titre (subtitle-slide)** : Comparatif direct des paradigmes et démonstration de la révélation par étapes (Fragments)
 - **Mise en page** : grid-2
-  - **Colonne Gauche (Le Problème)** : card
-    - badge-gray : Contexte matériel & web
-    - Titre : Les limites de l'Orienté Objet
-    - Liste (icon-bullet) :
-      - Hégémonie de Ruby on Rails : Référence absolue de productivité au début des années 2010.
-      - Rupture matérielle : Fin de la course aux GHz (Loi de Moore) au profit du multi-cœur.
-      - Goulot d'étranglement : États partagés mutables, deadlocks et verrous complexes (GIL).
-      - Essor du temps réel : WebSockets et connexions permanentes saturant les threads classiques.
-  - **Colonne Droite (Le Déclic)** : card-featured
-    - badge-solid : Le Déclic
-    - Titre : José Valim (Core Team Rails)
-    - Liste (icon-bullet) :
-      - Profil : Développeur brésilien, membre actif de Rails et cofondateur de Plataformatec.
-      - L'expérience (2011) : Tentative d'ajouter du multithreading natif dans Rails pour les fortes charges.
-      - Le constat sans appel : Le problème vient du paradigme objet mutable lui-même, pas du framework.
-      - L'ambition : Réconcilier productivité développeur et concurrence massive sur multi-cœurs.
-- **Pied de slide** : banner
-  - Problème clé : Les threads systèmes lourds et la mémoire partagée mutable ne peuvent pas absorber l'explosion du web temps réel.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Mise en contexte :** Se replacer en 2011-2012 : Rails domine le monde web, mais le hardware prend un virage avec le multi-cœur.
-  > - **L'enjeu technique :** Montée en puissance du web temps réel face à l'incapacité des objets mutables et des threads lourds à paralléliser proprement.
-  > - **L'action de José Valim :** Membre de la Core Team Rails, il essaie d'implémenter le multithreading dans Rails et constate les blocages inhérents au langage.
-  > - **Transition clé :** Ne pas chercher à bricoler un framework, mais changer les fondations du langage.
+- **Animation & Fragments** : Les 2 cartes comparatives ainsi que la boîte de synthèse apparaissent successivement au fil des clics (<kbd>&rarr;</kbd> ou <kbd>Espace</kbd>) grâce à la classe `fragment`.
+- **Contenu & Composants** :
+  - **Colonne Gauche (Le Modèle Traditionnel)** : `x-card` standard (classe `fragment`)
+    - Badge : `pill-tag.gray` ("Outils Lourds & Slides Manuelles")
+    - Titre : La Friction des Outils Classiques
+    - Liste à puces coches (`bullet-check`) :
+      - Mise en page chronophage : Des heures passées à aligner des blocs sur PowerPoint ou Keynote.
+      - Rupture avec le code : Impossible d'embarquer facilement du code syntaxé ou des diagrammes texte.
+      - Débordements d'écran imprévus : Mauvaise surprise selon la résolution du vidéoprojecteur de la salle.
+  - **Colonne Droite (L'Approche Deck Engine)** : `x-card.featured` (classe `fragment`)
+    - Badge : `pill-tag.solid` ("Paradigme Découplé & IA")
+    - Titre : Automatisation & Rendu Sans Faille
+    - Liste à puces coches (`bullet-check`) :
+      - Rdaction pure en Markdown : L'utilisateur n'écrit que son contenu, l'IA produit le HTML final.
+      - Auto-ajustement d'échelle adaptatif : Zéro débordement garanti sur n'importe quel moniteur.
+      - Console orateur dual-screen : Pacing tracker et notes synchronisées en temps réel via WebSockets/BroadcastChannel.
+  - **Pied de slide** : `summary-box` (classe `fragment`)
+    - Icône ⚡ + Synthèse : « La séparation stricte entre le fond (Markdown) et la forme (Dictionnaire HTML) libère 100% de votre temps d'ingénierie. »
+- **Notes d'orateur (data-notes)** :
+  > • Observez comment les fragments permettent d'orchestrer le rythme : au premier clic, la colonne de gauche s'affiche pour poser le constat.  
+  > • Au second clic, la colonne de droite apparaît pour apporter la solution avec sa bordure d'accent et sa lueur verte.  
+  > • Enfin, la boîte de synthèse se dévoile pour ancrer le message clé dans l'esprit du public avant de changer de slide.
 
 ---
 
-#### Slide 4 : Architecture / Solution (Comment & Piliers)
+#### Slide 3 : Frise Chronologique Horizontale & Processus (Stepper)
 - **Type de slide** : slide
-- **Titre (title-slide)** : L'Héritage d'Erlang & L'Émergence d'Elixir
-- **Sous-titre (subtitle-slide)** : L'alliance de la machine virtuelle BEAM et d'un outillage de nouvelle génération
-- **Mise en page** : grid-2
-  - **Colonne Gauche (Les Fondations)** : card
-    - badge-gray : Télécoms & Haute Disponibilité
-    - Titre : La Machine Virtuelle BEAM
-    - Liste (icon-bullet) :
-      - Origine Ericsson (1986) : Conçu pour les centraux télécoms (visée 99.9999999% uptime).
-      - Modèle d'Acteurs : Micro-processus ultra-légers isolés (quelques Ko de RAM, rien à voir avec un thread OS).
-      - Immuabilité stricte : Zéro état partagé, communication exclusive par passage de messages asynchrones.
-      - Résilience (Let it crash) : Arbres de supervision relançant automatiquement les processus défaillants.
-  - **Colonne Droite (La Solution)** : card-featured
-    - badge-solid : La Solution Moderne
-    - Titre : Elixir (José Valim, 2012)
-    - Liste (icon-bullet) :
-      - Syntaxe moderne : Expressive et ergonomique, grandement inspirée de Ruby.
-      - Méta-programmation : Système puissant de macros avec manipulation directe de l'AST.
-      - Outillage complet : Outil d'automatisation Mix et gestionnaire Hex.
-      - Validation industrielle : Adopté par Discord, WhatsApp ou Pinterest pour des millions d'utilisateurs connectés.
-- **Pied de slide** : banner
-  - Formule Elixir : Robustesse industrielle d'Erlang/BEAM + Productivité et élégance moderne.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **L'inspiration Erlang/BEAM :** Expliquer le modèle d'acteurs de la BEAM, la légèreté des processus (quelques Ko) et la philosophie "Let it crash".
-  > - **L'apport d'Elixir :** Corriger les faiblesses d'Erlang (syntaxe datée issue de Prolog, outillage pauvre) en apportant l'élégance de Ruby et l'outil Mix.
-  > - **Preuve par l'usage :** Citer rapidement Discord ou WhatsApp pour illustrer la fiabilité en production.
-  > - **Passage de relais :** Transition vers le camarade suivant qui prend la main sur les caractéristiques intrinsèques du langage Elixir.
-
-#### Slide 5 : Annonce de Partie (Intertitre / Transition)
-- **Type de slide** : slide
-- **Mise en page** : hero
-- **Badge section** : badge-solid : PARTIE 2
-- **Titre (title-slide)** : Le Framework Phoenix & Temps Réel
-- **Sous-titre (subtitle-slide)** : Bâtir des applications ultra-réactives sans compromis sur la complexité (Durée : 34 min)
-- **Organisation (Sous-parties abordées)** : grid-4
-  - **Jalon 1** : card
-    - badge-gray : 3 min (Mon passage)
-    - Titre : Pourquoi Phoenix ?
-    - Description : Réponse aux limites de scalabilité, temps réel et perfs réseau.
-  - **Jalon 2** : card
-    - badge-gray : 8 min (Mon passage)
-    - Titre : Fonctionnement & Comparaisons
-    - Description : Pipelines Plug, architecture et comparaison face à Thymeleaf/SSR.
-  - **Jalon 3** : card
-    - badge-gray : 10 min
-    - Titre : Fonctionnalités Clés
-    - Description : Routage, contrôleurs et la rupture Phoenix LiveView.
-  - **Jalon 4** : card
-    - badge-gray : 13 min
-    - Titre : Démo Live & Quizz
-    - Description : Application « Les bons comptes » en direct et quizz interactif.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Prise de parole / Transition :** Je reprends la parole pour ouvrir la deuxième grande partie de notre exposé, consacrée au framework Phoenix.
-  > - **Objectif de la partie :** Maintenant que nous connaissons la puissance d'Elixir et de la BEAM, voyons comment Phoenix exploite ce moteur pour révolutionner le développement web.
-  > - **Plan de la partie (34 min) :** J'introduis d'abord la raison d'être de Phoenix et son fonctionnement interne en le comparant aux solutions classiques, avant que mes camarades ne détaillent le code et vous fassent la démonstration.
-  > - **Lancement :** Première question essentielle : pourquoi un nouveau framework web, et à quels problèmes répond-il ?
+- **Durée estimée** : 4 min
+- **Titre (title-slide)** : Cycle de Production en 4 Jalons
+- **Sous-titre (subtitle-slide)** : De la prise de notes brute à la diffusion en direct devant votre auditoire
+- **Mise en page** : grid-1 avec stepper horizontal puis `grid-4`
+- **Contenu & Composants** :
+  - **Frise d'étapes (`stepper-horizontal`)** :
+    - Étape 1 (`step-node.active`) : Cercle "1", Titre "1. Idéation Markdown", Descriptif "Remplissage de CONSIGNES_TEMPLATE.md"
+    - Connecteur actif (`step-connector`)
+    - Étape 2 (`step-node.active`) : Cercle "2", Titre "2. Compilation IA", Descriptif "Assemblage via COMPOSANTS_DICTIONNAIRE.md"
+    - Connecteur actif (`step-connector`)
+    - Étape 3 (`step-node.active`) : Cercle "3", Titre "3. Contrôle & Ajustement", Descriptif "Relecture locale sur presentation.html"
+    - Connecteur (`step-connector`)
+    - Étape 4 (`step-node`) : Cercle "4", Titre "4. Projection Direct", Descriptif "Mode plein écran F & Speaker View S"
+  - **Grille de 4 piliers (`grid-4`)** :
+    - Carte 1 : Chiffre "01" géant en accent + Titre "Simplicité" + Texte "Un fichier Markdown unique, lisible par tout le monde."
+    - Carte 2 : Chiffre "02" géant en accent + Titre "Vitesse" + Texte "Génération complète d'un deck en moins de 60 secondes."
+    - Carte 3 : Chiffre "03" géant en accent (`featured`) + Titre "Autonomie" + Texte "Fichier HTML 100% autonome, zéro serveur requis."
+    - Carte 4 : Chiffre "04" géant en accent (`featured`) + Titre "Rythme" + Texte "Pacing tracker pour rester parfaitement dans les temps."
+  - **Pied de slide** : `summary-box` avec constat de productivité.
+- **Notes d'orateur (data-notes)** :
+  > • Le composant stepper-horizontal est idéal pour illustrer des cycles de déploiement, des frises historiques ou des méthodologies projet.  
+  > • Chaque jalon possède son état actif rétro-éclairé et son connecteur visuel.  
+  > • En dessous, la grille grid-4 permet de décliner immédiatement les vertus ou métriques associées à chaque étape.
 
 ---
 
-#### Slide 6 : Contexte / Problématique (Pourquoi Phoenix : Le Mur du Temps Réel)
+#### Slide 4 : Données Structurées, KPIs & Métriques (Data Table)
 - **Type de slide** : slide
-- **Titre (title-slide)** : Le Défi du Web Temps Réel
-- **Sous-titre (subtitle-slide)** : Quand les architectures HTTP classiques s'effondrent sous le poids de la persistance
+- **Durée estimée** : 3 min 30
+- **Titre (title-slide)** : Benchmarks d'Impact & Indicateurs Clés
+- **Sous-titre (subtitle-slide)** : Présentation de données quantitatives via tableaux zébrés et cartes de métriques géantes
 - **Mise en page** : grid-2
-  - **Colonne Gauche (Le Modèle Historique)** : card
-    - badge-gray : Web Traditionnel (Req/Resp)
-    - Titre : Le paradigme « Requête / Réponse »
-    - Liste (icon-bullet) :
-      - Modèle Stateless : Le client demande, le serveur répond, la connexion se ferme immédiatement.
-      - Approche 1 Thread = 1 Client : Valable pour des pages statiques ou du CRUD simple (Rails, Django, Spring MVC).
-      - Coût mémoire élevé : 1 thread OS consomme entre 1 et 8 Mo de RAM.
-      - Montée en charge limitée : À 10 000 requêtes concurrentes, les pools de threads saturent et la machine s'écroule.
-  - **Colonne Droite (La Rupture Temps Réel)** : card-featured
-    - badge-solid : L'Impasse Moderne
-    - Titre : L'explosion des WebSockets
-    - Liste (icon-bullet) :
-      - Nouveaux usages : Notifications push, chat, dashboards vivants, édition collaborative simultanée.
-      - Connexions permanentes : Le WebSocket reste ouvert pendant des heures par utilisateur.
-      - L'usine à gaz infrastructure : Obligation d'ajouter Redis Pub/Sub, des load-balancers complexes et des brokers de messages.
-      - Latence et instabilité : Des temps de réponse qui dérivent de quelques millisecondes à plusieurs secondes sous pic de charge.
-- **Pied de slide** : banner
-  - Problème fondamental : Les frameworks web nés dans les années 2000 ont été conçus pour fermer les connexions, pas pour en maintenir des millions ouvertes.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Rupture d'usage :** Les frameworks historiques (comme Rails ou Django) ont été pensés pour du HTTP court : requête -> réponse -> déconnexion.
-  > - **La réalité d'aujourd'hui :** Le web moderne exige de la persistance (WebSockets, streaming, collaboratif).
-  > - **Le coût caché :** Avec un modèle à base de threads OS, garder 50 000 connexions ouvertes demande une quantité astronomique de RAM et oblige à empiler du Redis, des workers et des files d'attente.
-  > - **La question :** Comment gérer massivement du temps réel sans faire exploser la facture serveur et la complexité technique ?
+- **Contenu & Composants** :
+  - **Colonne Gauche (Tableau comparatif `data-table`)** :
+    - Tableau avec colonnes : "Critère Technique", "Présentation Standard", "Deck Engine HTML"
+    - Ligne 1 : Poids moyen du fichier / 45 Mo (PPTX lourd) / `<span class="pill-tag solid">&lt; 350 Ko</span>`
+    - Ligne 2 : Temps d'assemblage / 4 à 6 heures / `<span class="pill-tag solid">3 minutes</span>`
+    - Ligne 3 : Compatibilité multi-écrans / Souvent altérée / `<span class="pill-tag">Auto-fit vectoriel</span>`
+    - Ligne 4 : Synchronisation orateur / Matériel additionnel / `<span class="pill-tag">WebSockets / Broadcast</span>`
+  - **Colonne Droite (Cartes KPI `x-card.metric`)** : Grille 2x2
+    - Carte Métrique 1 (`x-card.metric`) : `metric-value` ("x12"), Titre "Vitesse de Conception", Descriptif "Par rapport aux outils graphiques manuels"
+    - Carte Métrique 2 (`x-card.metric.featured`) : `metric-value` ("-90%"), Titre "Temps de Préparation", Descriptif "Grâce à l'automatisation IA"
+    - Carte Métrique 3 (`x-card.metric.featured` étendue 2 cols) : `metric-value` ("100%"), Titre "Fidélité Vectorielle & Zéro Débordement", Descriptif "Contrôlé par deck-fit.js sur chaque slide", Jauge visuelle `progress-track` avec `progress-fill` (largeur 100%)
+  - **Pied de slide** : `summary-box` avec synthèse chiffrée.
+- **Notes d'orateur (data-notes)** :
+  > • Cette slide démontre la complémentarité entre un tableau bien structuré et des cartes métriques géantes.  
+  > • Les badges pilules dans le tableau attirent l'œil sur les valeurs remarquables.  
+  > • À droite, les valeurs métriques en Montserrat 900 créent un point focal fort pour les chiffres percutants.
 
 ---
 
-#### Slide 7 : Architecture / Solution (La Réponse Phoenix & Performances)
+#### Slide 5 : Développement, Code & Terminaux (Split-Code)
 - **Type de slide** : slide
-- **Titre (title-slide)** : Phoenix : La Scalabilité Massive Sans Fardeau
-- **Sous-titre (subtitle-slide)** : Des performances brutes au service d'une architecture simplifiée
-- **Mise en page** : grid-2
-  - **Colonne Gauche (Le Benchmark Légendaire)** : card-featured
-    - badge-solid : Capacité Brute
-    - Titre : 2 Millions de Connexions
-    - metric : 2 000 000
-    - Liste (icon-bullet) :
-      - Sur 1 seul serveur : Test historique réalisé par l'équipe de Chris McCord (sur une instance 40 cœurs / 128 Go).
-      - Faible empreinte : ~2 Ko de RAM par connexion WebSocket (contre plusieurs Mo pour un thread Java ou Ruby).
-      - Latence sub-milliseconde : Réponse instantanée aux diffusions de messages même à 95% de charge processeur.
-      - Isolation absolue : Si la session d'un utilisateur crashe, aucun autre client n'est impacté.
-  - **Colonne Droite (L'Impact Architectural)** : card
-    - badge-gray : Architecture Épurée
-    - Titre : Moins de briques, plus de résilience
-    - Liste (icon-bullet) :
-      - Conçu par Chris McCord : Créé en 2014 pour offrir la productivité de Rails avec la puissance de la BEAM.
-      - Pub/Sub distribué intégré : Inutile de déployer un cluster Redis externe pour synchroniser les messages ; la BEAM le fait nativement.
-      - Adéquation « Think HUGE » : Taillé sur-mesure pour notre TP (« Les bons comptes ») où chaque dépense ou invitation doit être répercutée en direct.
-      - Économie d'infrastructure : Remplacement de parcs entiers de serveurs par une poignée de nœuds résilients.
-- **Pied de slide** : banner
-  - La promesse Phoenix : La réactivité du temps réel et la productivité d'un framework fullstack moderne, sans l'enfer d'infrastructure.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **L'auteur et la genèse :** Chris McCord conçoit Phoenix en 2014 pour exploiter la BEAM sur le web.
-  > - **Le chiffre marquant :** Les 2 millions de WebSockets simultanés sur un seul serveur. Chaque processus ne pesant que 2 Ko, la machine ne s'effondre jamais.
-  > - **Simplification de la stack :** Plus besoin de Redis externe pour diffuser des événements à tout le monde : le PubSub distribué est inclus dans la boîte.
-  > - **Lien direct avec le projet :** C'est ce qui répond parfaitement à la consigne « Think HUGE » de notre projet « Les bons comptes » : beaucoup d'utilisateurs, beaucoup de dépenses en direct sans jamais faiblir.
-
-  #### Slide 8 : Approfondissement Technique (Le Pipeline Plug & Traitement de Requête)
-- **Type de slide** : slide
-- **Titre (title-slide)** : L'Architecture Interne : Le Web est une Fonction
-- **Sous-titre (subtitle-slide)** : Comment Phoenix transforme une requête HTTP via le contrat Plug
+- **Durée estimée** : 4 min
+- **Titre (title-slide)** : Coloration Syntaxique & Terminaux Annotés
+- **Sous-titre (subtitle-slide)** : Blocs de code Prism.js avec coloration haute fidélité et console système avec copie en 1 clic
 - **Mise en page** : split-code
-  - **Colonne Gauche (Explication Conceptuelle)** : card
-    - badge-solid : Fondations
-    - Titre : Le Pipeline Unifié
-    - Liste (icon-bullet) :
-      - Philosophie : Une application web n'est qu'une série de transformations pures sur une structure de données unique.
-      - La structure Plug.Conn : Objet immuable représentant la connexion (headers, params, session, statut, réponse).
-      - Endpoint : Port d'entrée réseau (serveur Bandit ou Cowboy).
-      - Router & Pipelines : Aiguillage vers des suites de plugs (:browser avec CSRF/cookies, :api sans état).
-      - Controller : Fonction pure prenant (conn, params) et retournant une nouvelle version de conn.
-  - **Colonne Droite (Snippet & Flux)** : code-box
-    - code-header : Pipeline Phoenix (router.ex)
-    - Code (language-elixir) :
-      pipeline :browser do
-        plug :accepts, ["html"]
-        plug :fetch_session
-        plug :protect_from_forgery
-        plug :put_secure_browser_headers
-      end
-
-      scope "/", AppWeb do
-        pipe_through :browser
-        get "/wallets", WalletController, :index
-      end
-- **Pied de slide** : banner
-  - Principe directeur : connection |> endpoint |> router |> pipeline |> controller |> view
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Le concept clé :** Chez Phoenix, le web est pensé comme une simple fonction mathématique f(requête) = réponse.
-  > - **L'objet central Plug.Conn :** Pas de variables globales magiques. Tout transite dans une structure immuable appelée Conn.
-  > - **Le rôle des pipelines :** On compose des briques (Plugs) comme des tuyaux : vérification CSRF, parsing JSON, gestion des cookies.
-  > - **La simplicité :** C'est prévisible, ultra-performant et très facile à tester unitairement.
+- **Contenu & Composants** :
+  - **Colonne Gauche (Concept & Liens d'action)** : `x-card`
+    - Badge : `pill-tag.solid` ("Composant Développeur")
+    - Titre : Un Environnement Dédié au Code
+    - Liste `bullet-check` :
+      - Coloration Prism.js intégrée : Prise en charge de Python, JavaScript, Elixir, SQL, Shell, etc.
+      - Copie instantanée dans le presse-papiers avec toast de confirmation.
+      - Boutons d'action : Composants `.btn-action` et `.repo-link` cliquables.
+    - Rangée d'actions en bas de carte :
+      - Lien bouton `btn-action` : "Voir la documentation &rarr;"
+      - Lien dépôt `repo-link` : "📦 GitHub Template"
+  - **Colonne Droite (Code & Terminal)** :
+    - Bloc de code `code-box` contenant un extrait Python ou JavaScript élégant avec en-tête `code-header` et bouton copier.
+    - Terminal console `terminal-box` avec commande d'initialisation rapide : `git clone https://github.com/votre-orga/html-slides-template.git && open presentation.html`
+- **Notes d'orateur (data-notes)** :
+  > • La mise en page split-code est idéale pour les soutenances techniques et les cours de programmation.  
+  > • Le bloc de code à droite utilise le thème Tomorrow Dark de Prism.js avec un contraste optimal.  
+  > • Le terminal en dessous invite directement l'auditeur à tester la commande sur son propre ordinateur.
 
 ---
 
-#### Slide 9 : Architecture / Organisation (Les Contextes Phoenix)
+#### Slide 6 : Architecture & Grand Schéma Système (Split-Schema)
 - **Type de slide** : slide
-- **Titre (title-slide)** : Structuration du Code : Les Contextes
-- **Sous-titre (subtitle-slide)** : Isoler la logique métier des détails d'implémentation du web
+- **Durée estimée** : 3 min 30
+- **Titre (title-slide)** : Schémas d'Architecture & Flux de Données
+- **Sous-titre (subtitle-slide)** : Intégration de visuels vectoriels SVG avec calibrage strict et légende descriptive
+- **Mise en page** : split-schema
+- **Contenu & Composants** :
+  - **Colonne Gauche (Explication conceptuelle)** : `x-card.featured`
+    - Badge : `pill-tag.solid` ("Architecture Modulaire")
+    - Titre : Découplage Moteur & Présentation
+    - Liste `bullet-check` :
+      - Noyau autonome : Le script `deck.js` injecte automatiquement le bandeau supérieur, la barre de défilement et le tiroir de notes.
+      - Passerelle BroadcastChannel : Synchronisation bidirectionnelle entre l'écran public et la console privée du présentateur.
+      - Moteur d'auto-redimensionnement : Le fichier `deck-fit.js` mesure en continu la boîte englobante pour appliquer une échelle optimale.
+  - **Colonne Droite (Grand Schéma `schema-box`)** :
+    - Image d'architecture : `assets/schemas/architecture-demo.svg` avec classe `schema-img`
+    - Légende normalisée : `schema-caption` ("Figure 1 : Topologie de synchronisation temps réel entre fenêtre publique et console orateur")
+- **Notes d'orateur (data-notes)** :
+  > • Le composant split-schema garantit que le texte explicatif et le schéma graphique restent au même niveau sans se gêner.  
+  > • La classe schema-img contraint automatiquement la hauteur pour empêcher tout dépassement vertical.  
+  > • Vous pouvez remplacer cette image par n'importe quel fichier SVG ou PNG exporté depuis draw.io ou Excalidraw.
+
+---
+
+#### Slide 7 : Cycles Vertueux & Boucles Systémiques (Virtuous Circle)
+- **Type de slide** : slide
+- **Durée estimée** : 3 min 30
+- **Titre (title-slide)** : Modélisation Circulaire & Boucles d'Amélioration
+- **Sous-titre (subtitle-slide)** : Visualisation de processus continus grâce au composant virtuous-circle
 - **Mise en page** : grid-2
-  - **Colonne Gauche (Le Problème des Frameworks Objets)** : card
-    - badge-gray : L'Anti-Pattern Classique
-    - Titre : Les Modèles Obèses (Fat Models)
-    - Liste (icon-bullet) :
-      - Couplage fort : Logique métier mélangée avec les contrôleurs ou les modèles ORM (ActiveRecord).
-      - Effets de bord : Un changement dans une table de base casse la logique d'affichage web.
-      - Dette technique : Des classes géantes impossibles à découper et lentes à tester.
-  - **Colonne Droite (La Solution Phoenix)** : card-featured
-    - badge-solid : Conception Modulaire
-    - Titre : Phoenix Contexts (DDD-lite)
-    - Liste (icon-bullet) :
-      - Frontières explicites : Les contextes sont des modules Elixir purs agissant comme des API publiques internes.
-      - Découplage total : Le module Web (AppWeb) ne fait qu'appeler le module Métier (App.Accounts, App.Expenses).
-      - Persistance isolée : Ecto (gestionnaire de données) sépare la validation (Changesets) des requêtes en base (Repo).
-      - Application « Les bons comptes » : Un contexte `Expenses` gère les calculs de dettes indépendamment du protocole web (HTTP ou LiveView).
-- **Pied de slide** : banner
-  - Règle d'or : L'interface web n'est qu'un client parmi d'autres de votre logique métier.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Pourquoi les Contextes ?** Dans beaucoup de frameworks (Rails, Django), les modèles deviennent vite des "god objects" de 2000 lignes.
-  > - **L'approche Phoenix :** Les Contextes introduisent les principes du Domain-Driven Design (DDD).
-  > - **Exemple concret pour notre projet :** Dans "Les bons comptes", le calcul pour équilibrer les dépenses et minimiser les remboursements se trouve dans un contexte métier pur, testable sans jamais lancer de serveur web.
+- **Contenu & Composants** :
+  - **Colonne Gauche (Diagramme circulaire `virtuous-circle`)** :
+    - Piste vectorielle `cycle-track` : Cercle en pointillés avec 4 flèches orientées dans le sens des aiguilles d'une montre
+    - Noyau central `cycle-core` : "BOUCLE VERTUEUSE DU DECK"
+    - 4 nœuds périphériques `cycle-step` avec attributs de positionnement sans chevauchement :
+      - `data-pos="top"` : ✍️ 1. Rédaction Markdown
+      - `data-pos="right"` : 🤖 2. Assemblage IA
+      - `data-pos="bottom"` : ⚡ 3. Rendu HTML Pro
+      - `data-pos="left"` : 🎯 4. Présentation Direct
+  - **Colonne Droite (Détail des 4 phases)** : `x-card`
+    - Badge : `pill-tag.gray` ("Dynamique Vertueuse")
+    - Titre : Pourquoi une Boucle Fermée ?
+    - Liste `bullet-check` :
+      - Phase 1 : Concentrez-vous uniquement sur vos idées et vos arguments dans CONSIGNES_TEMPLATE.md.
+      - Phase 2 : L'agent IA sélectionne les composants visuels optimaux dans le dictionnaire.
+      - Phase 3 : Le navigateur projette instantanément sans temps de compilation ni outil lourd.
+      - Phase 4 : La console de rythme affine vos durées orales pour la prochaine itération.
+  - **Pied de slide** : `summary-box` synthétisant la boucle vertueuse.
+- **Notes d'orateur (data-notes)** :
+  > • Le composant virtuous-circle est une exclusivité de notre dictionnaire : il permet de schématiser des boucles de rétroaction sans outil de dessin externe.  
+  > • Les 4 nœuds périphériques s'articulent autour du noyau central grâce à des coordonnées absolues fluides.  
+  > • C'est un composant visuel très marquant pour expliquer des cycles Scrum, DevOps ou des boucles de rentabilité.
 
 ---
 
-#### Slide 10 : Comparaison Technologique (Phoenix vs Thymeleaf / SSR Traditionnel)
+#### Slide 8 : Jalons Historiques & Frise Verticale (Timeline)
 - **Type de slide** : slide
-- **Titre (title-slide)** : Phoenix face au SSR Classique (ex: Thymeleaf / Spring)
-- **Sous-titre (subtitle-slide)** : Du rechargement de page complet au rendu réactif bidirectionnel
+- **Durée estimée** : 3 min
+- **Titre (title-slide)** : Évolution & Jalons de Conception
+- **Sous-titre (subtitle-slide)** : Chronologie verticale structurée avec pastilles d'ancrage temporelles
 - **Mise en page** : grid-2
-  - **Colonne Gauche (Le Modèle Traditionnel)** : card
-    - badge-gray : SSR Classique (Java + Thymeleaf)
-    - Titre : Rendu HTML Statique par Requête
-    - Liste (icon-bullet) :
-      - Cycle lourd : Chaque clic ou action renvoie une requête HTTP complète et réévalue l'intégralité du template HTML.
-      - Latence perceptible : Rechargement complet de la page (effet de clignotement / flash blanc).
-      - Échappatoire complexe : Pour avoir du dynamisme, obligation d'ajouter une SPA lourde en JavaScript (React/Vue) + une API REST.
-      - Double maintenance : Modèles de données à maintenir deux fois (en Java côté backend, en TypeScript côté frontend).
-  - **Colonne Droite (L'Innovation LiveView)** : card-featured
-    - badge-solid : SSR Nouvelle Génération
-    - Titre : Phoenix LiveView & HEEx
-    - Liste (icon-bullet) :
-      - Rendu initial instantané : La première page arrive en HTML pur ultra-rapide (SEO et affichage immédiat).
-      - Escalade WebSocket : Établissement transparent d'un canal persistant en arrière-plan.
-      - Diffing chirurgical côté serveur : Lorsqu'une dépense est ajoutée, Phoenix recalcule la vue et n'envoie que les octets modifiés (quelques dizaines de bytes).
-      - Zéro JS à maintenir : État 100% géré côté serveur avec l'expérience utilisateur fluide d'une SPA native.
-- **Pied de slide** : banner
-  - Rupture : On garde la simplicité architecturale du rendu serveur (Thymeleaf) avec la réactivité d'une SPA (React).
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Comparaison avec ce qu'on connaît :** Beaucoup ont manipulé Java avec Thymeleaf ou PHP Blade : le serveur fabrique le HTML et le balance au navigateur.
-  > - **Le dilemme historique :** Si on voulait du temps réel, il fallait tout réécrire en React avec des API REST.
-  > - **La révolution Phoenix LiveView :** Phoenix prend le meilleur des deux mondes. Pas de rechargement de page, pas de framework JS lourd à configurer.
-  > - **L'optimisation du diff :** LiveView ne renvoie jamais de blocs HTML entiers après le chargement initial, seulement les quelques caractères qui changent sur le WebSocket.
+- **Contenu & Composants** :
+  - **Colonne Gauche (Timeline verticale `timeline-vertical`)** :
+    - Événement 1 (`timeline-card`) :
+      - Badge : `pill-tag.gray` ("V1 — Genèse")
+      - Titre : Slides HTML Statiques (2023)
+      - Texte : Premiers gabarits HTML/CSS bruts sans découplage ni console orateur.
+    - Événement 2 (`timeline-card`) :
+      - Badge : `pill-tag.gray` ("V2 — Modularité")
+      - Titre : Moteur d'Auto-Fit & Pacing Tracker (2024)
+      - Texte : Introduction de l'algorithme d'échelle vectorielle et de la console dual-screen synchronisée.
+    - Événement 3 (`timeline-card.featured`) :
+      - Badge : `pill-tag.solid` ("V3 — Maturité Actuelle")
+      - Titre : Découplage Intégral & Dictionnaire IA (Aujourd'hui)
+      - Texte : Génération 100% automatisée par IA, diagrammes Mermaid à chaud et 7 thèmes dynamiques.
+  - **Colonne Droite (Bénéfices constatés)** : `x-card.featured`
+    - Titre : Synthèse des Bénéfices
+    - Liste `bullet-check` :
+      - Rétrocompatibilité totale avec tous les navigateurs modernes.
+      - Aucune dépendance npm à installer pour démarrer.
+      - Export PDF vectoriel 16:9 sans coupure de page via raccourci <kbd>P</kbd>.
+  - **Pied de slide** : `summary-box` sur la maturité de la solution.
+- **Notes d'orateur (data-notes)** :
+  > • La timeline verticale est parfaite pour relater l'historique d'un produit, une trajectoire de carrière ou une feuille de route trimestrielle.  
+  > • Les puces lumineuses sur la ligne verticale guident naturellement la lecture de haut en bas.  
+  > • À droite, nous rappelons les bénéfices tangibles atteints avec la version actuelle du moteur.
 
 ---
 
-#### Slide 11 : Synthèse & Matrice Comparative (Tableau Récapitulatif)
+#### Slide 9 : Diagrammes Vectoriels Natifs Mermaid.js (Mermaid)
 - **Type de slide** : slide
-- **Titre (title-slide)** : Matrice Comparative des Paradigmes
-- **Sous-titre (subtitle-slide)** : Résumé des forces architecturales avant d'entrer dans les détails d'implémentation
-- **Mise en page** : grid-2 (ou table pleine largeur)
-  - **Tableau comparatif (table)** :
-    | Critère d'évaluation | Stack Traditionnelle (ex: Spring / Thymeleaf) | Stack Phoenix (Elixir + LiveView) |
-    | :--- | :--- | :--- |
-    | **Paradigme d'exécution** | Orienté Objet, mutable, threads OS | Fonctionnel pur, immuable, micro-processus BEAM |
-    | **Coût d'une connexion** | Élevé (1 thread = 1 à 8 Mo) | Infime (1 processus = ~2 Ko) |
-    | **Gestion de l'interactivité** | Rechargement page ou SPA JS externe | Rendu réactif natif via WebSocket |
-    | **Bande passante réseau** | HTML complet ou gros payloads JSON | Diffs binaires minimaux (quelques octets) |
-    | **Résilience sous charge** | Risque de saturation globale | Isolation stricte des pannes (*Let it crash*) |
-- **Pied de slide** : banner
-  - Synthèse : Phoenix apporte une solution élégante et unifiée, là où l'industrie empile généralement plusieurs technologies hétérogènes.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Bilan de la partie :** Ce tableau résume parfaitement pourquoi Phoenix s'impose quand on cherche la scalabilité et le temps réel sans exploser la complexité.
-  > - **Transition vers le camarade suivant :** Maintenant que nous avons compris le fonctionnement des pipelines, l'architecture des contextes et la rupture de LiveView face au SSR traditionnel, je passe la main à mon camarade qui va vous montrer le code concret : routeurs, contrôleurs et templates LiveView !
+- **Durée estimée** : 4 min
+- **Titre (title-slide)** : Diagrammes Vectoriels Interactifs à Chaud
+- **Sous-titre (subtitle-slide)** : Génération automatique de diagrammes de séquence ou de flux sans image externe
+- **Mise en page** : grid-1 avec conteneur Mermaid
+- **Contenu & Composants** :
+  - En-tête : Badges `pill-tag.solid` ("Mermaid.js Natif") et `pill-tag.gray` ("Rendu vectoriel adaptatif")
+  - Carte `x-card` englobant le diagramme Mermaid :
+    - Conteneur `<div class="mermaid">` avec syntaxe de séquence :
+      ```mermaid
+      sequenceDiagram
+          autonumber
+          actor Orateur as 🎙️ Orateur (Écran Privé)
+          participant Channel as 📡 BroadcastChannel
+          participant Public as 📺 Écran Public (Vidéoprojecteur)
+          participant Fit as 📐 deck-fit.js
+
+          Orateur->>Channel: Touche Flèche Droite (Next Slide)
+          Channel-->>Public: Événement SLIDE_CHANGE {slide: 9, frag: 0}
+          Public->>Fit: Mesure de la boîte englobante
+          Fit-->>Public: Ajustement d'échelle vectoriel (Zero Overflow)
+          Public-->>Orateur: Accusé de synchronisation et Pacing Tracker
+      ```
+  - **Pied de slide** : `summary-box` rappelant que le diagramme change de couleur instantanément quand on modifie la palette (<kbd>T</kbd> ou sélecteur de couleurs).
+- **Notes d'orateur (data-notes)** :
+  > • L'intégration de Mermaid.js transforme votre fichier HTML en outil de visualisation complet.  
+  > • Aucun outil de capture d'écran n'a été utilisé ici : le schéma est calculé dynamiquement par le navigateur.  
+  > • Si vous changez de thème (en appuyant sur T) ou de couleur d'accentuation, le diagramme se recolore automatiquement pour rester harmonieux !
+
+---
+
+#### Slide 10 : Évaluation & Quizz Interactif en Direct (Quiz)
+- **Type de slide** : slide
+- **Durée estimée** : 3 min 30
+- **Titre (title-slide)** : Quizz Interactif : Validez les Acquis
+- **Sous-titre (subtitle-slide)** : Module de test avec rétroaction visuelle immédiate et explication argumentée
+- **Mise en page** : grid-1 avec `quiz-container`
+- **Contenu & Composants** :
+  - **Module de Quizz (`quiz-container`)** :
+    - Question : « Comment le Deck Engine garantit-il qu'aucune slide ne déborde de l'écran lors d'une projection ? »
+    - Grille des 4 options (`grid-2`) :
+      - Option A : `quiz-opt-btn` (`data-correct="false"`, onclick : mauvaise réponse) : « En coupant brutalement le texte qui dépasse via overflow: hidden sans avertissement. »
+      - Option B : `quiz-opt-btn` (`data-correct="true"`, onclick : bonne réponse) : « En mesurant la hauteur du contenu et en appliquant un auto-fit vectoriel centré par transform: scale. »
+      - Option C : `quiz-opt-btn` (`data-correct="false"`, onclick : mauvaise réponse) : « En forçant obligatoirement l'utilisateur à installer un serveur Node.js lourd en local. »
+      - Option D : `quiz-opt-btn` (`data-correct="false"`, onclick : mauvaise réponse) : « En limitant chaque slide à 10 mots au maximum de manière arbitraire. »
+    - Zone d'explication révélée (`quiz-explanation-box`) :
+      - Message de succès vert émeraude avec explication détaillée de l'algorithme `deck-fit.js` et du respect des ratios 16:9.
+  - **Pied de slide** : `summary-box` sur l'intérêt pédagogique des quiz en réunion ou formation.
+- **Notes d'orateur (data-notes)** :
+  > • Cette slide est interactive : invitez l'auditoire à voter à main levée pour les options A, B, C ou D.  
+  > • Cliquez sur l'option B : la boîte passe instantanément en vert émeraude avec son badge contrasté et fait apparaître l'explication argumentée.  
+  > • Si quelqu'un clique sur une mauvaise option, celle-ci devient rouge bordeaux pour clarifier l'erreur.
+
+---
+
+#### Slide 11 : Conclusion & Ressources (Ressources & Mémento)
+- **Type de slide** : slide
+- **Durée estimée** : 4 min
+- **Titre (title-slide)** : À Vous de Jouer : Créez Vos Présentations !
+- **Sous-titre (subtitle-slide)** : Ressources de démarrage rapide, mémento de conception et prochaines étapes
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Les 3 Règles Clés)** : `x-card.featured`
+    - Badge : `pill-tag.solid` ("Mémento Conception")
+    - Titre : Les 3 Règles d'Or
+    - Liste `bullet-check` :
+      - 1. Ne touchez qu'au contenu Markdown dans CONSIGNES_TEMPLATE.md.
+      - 2. Spécifiez vos composants préférés en vous appuyant sur COMPOSANTS_DICTIONNAIRE.md.
+      - 3. Confiez la génération à l'IA pour obtenir presentation.html en un instant.
+  - **Colonne Droite (Cartes de Liens & Actions)** : 2 cartes `link-card` + bouton
+    - Carte de lien 1 (`link-card`) : Titre "Dictionnaire de Composants", Descriptif "Consulter toutes les classes dans COMPOSANTS_DICTIONNAIRE.md", Flèche &rarr;
+    - Carte de lien 2 (`link-card`) : Titre "Dépôt & Mises à Jour", Descriptif "Télécharger les dernières améliorations du moteur", Flèche &rarr;
+    - Bouton d'action principal : `btn-action` ("Recommencer la Démonstration &rarr;") pointant vers `#slide-1`.
+  - **Pied de slide** : `summary-box` de conclusion.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+  - `bottom-center logo-sm framed` : `assets/logos/python.svg`
+  - `bottom-right logo-sm` : `assets/logos/ruby.svg`
+- **Notes d'orateur (data-notes)** :
+  > • Nous voilà au terme de la démonstration du Deck Engine.  
+  > • Toutes les diapositives s'adaptent automatiquement à 100% au thème actif sélectionné par l'orateur (Touche T).  
+  > • Le public et l'orateur disposent maintenant de toutes les ressources et du dictionnaire pour créer leurs propres présentations sans coder.

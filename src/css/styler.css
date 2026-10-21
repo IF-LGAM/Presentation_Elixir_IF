@@ -1,0 +1,636 @@
+/* ==========================================================================
+   INSPECTEUR & STYLISEUR VISUEL DE COMPOSANTS (DECK COMPONENT STYLER)
+   ========================================================================== */
+
+/* Mode inspection actif sur le body */
+body.deck-styler-mode {
+  cursor: default;
+}
+
+/* Bannière d'indication du mode styliseur */
+.styler-banner {
+  position: fixed;
+  top: 38px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: var(--card-bg, #1F1F1F);
+  color: var(--text-main, #FFFFFF);
+  border: 1px solid var(--accent-primary, #E50914);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(229, 9, 20, 0.25);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10002;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+body.deck-styler-mode .styler-banner {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.styler-banner-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-primary, #E50914);
+  box-shadow: 0 0 8px var(--accent-primary, #E50914);
+  animation: stylerDotPulse 1.4s infinite ease-in-out;
+}
+
+@keyframes stylerDotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
+}
+
+.styler-banner-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.styler-banner-close:hover {
+  color: var(--text-main);
+}
+
+/* Survol de chaque élément de la slide lors du mode styliseur (Pur CSS 60 FPS sans mutation DOM) */
+body.deck-styler-mode .slide.active *:not(.slide-content) {
+  cursor: pointer !important;
+  transition: outline 0.08s ease, box-shadow 0.08s ease !important;
+}
+
+body.deck-styler-mode .slide.active *:not(.slide-content):hover {
+  outline: 2px dashed var(--accent-primary, #E50914) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 12px rgba(229, 9, 20, 0.25) !important;
+}
+
+/* Si un élément parent contient un sous-élément lui-même survolé, l'outline du parent est masqué
+   afin de cibler visuellement l'élément exact sous le pointeur */
+body.deck-styler-mode .slide.active *:not(.styler-selected-target):has(*:hover) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Élément actuellement sélectionné */
+.styler-selected-target {
+  outline: 2px solid var(--accent-primary, #E50914) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 16px rgba(229, 9, 20, 0.45) !important;
+}
+
+/* Popover Flottant du Styliseur */
+.styler-popover {
+  position: fixed;
+  box-sizing: border-box;
+  background: var(--header-bg, rgba(20, 20, 20, 0.96));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border-dark, #333333);
+  border-radius: 12px;
+  padding: 12px 14px;
+  width: 326px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  z-index: 10003;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main, #FFFFFF);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+.styler-popover * {
+  box-sizing: border-box;
+}
+
+body.theme-light .styler-popover,
+body[data-theme="light"] .styler-popover,
+.deck-container.theme-light ~ .styler-popover,
+[data-theme="light"] .styler-popover {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: #E2E8F0;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  color: #0F172A;
+}
+
+.styler-popover.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* En-tête du Popover */
+.styler-popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-dark, #333333);
+  padding-bottom: 8px;
+  gap: 6px;
+}
+
+.styler-tag-badge {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-primary, #E50914);
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.3);
+  padding: 2px 7px;
+  border-radius: 4px;
+  max-width: 230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.styler-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.styler-btn-icon {
+  background: var(--card-bg, #1F1F1F);
+  border: 1px solid var(--border-dark, #333333);
+  color: var(--text-muted);
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.styler-btn-icon:hover {
+  background: var(--card-hover, #2B2B2B);
+  color: var(--text-main);
+  border-color: var(--accent-primary);
+}
+
+/* Onglets Fond / Texte / Bordure */
+.styler-tabs {
+  display: flex;
+  background: var(--card-bg, #1F1F1F);
+  border-radius: 8px;
+  padding: 2px;
+  border: 1px solid var(--border-dark, #333333);
+  gap: 2px;
+}
+
+.styler-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 5px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.styler-tab-btn:hover {
+  color: var(--text-main);
+}
+
+.styler-tab-btn.active {
+  background: var(--accent-primary, #E50914);
+  color: #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Section Nuancier */
+.styler-section-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.styler-swatches-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.styler-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  position: relative;
+  background-color: var(--swatch-color);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.styler-swatch:hover {
+  transform: scale(1.18);
+  z-index: 2;
+  box-shadow: 0 0 8px var(--swatch-color);
+}
+
+.styler-swatch.active {
+  border-color: #FFFFFF;
+  box-shadow: 0 0 10px var(--swatch-color);
+  transform: scale(1.12);
+}
+
+.styler-swatch.is-transparent {
+  background-image: linear-gradient(45deg, #444 25%, transparent 25%), 
+                    linear-gradient(-45deg, #444 25%, transparent 25%), 
+                    linear-gradient(45deg, transparent 75%, #444 75%), 
+                    linear-gradient(-45deg, transparent 75%, #444 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+}
+
+/* Section Mes Couleurs Personnalisées */
+.styler-custom-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-top: 1px solid var(--border-dark, #333333);
+  padding-top: 6px;
+}
+
+.styler-clear-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 9.5px;
+  cursor: pointer;
+  padding: 0;
+  text-transform: none;
+  transition: color 0.15s ease;
+  font-family: inherit;
+}
+
+.styler-clear-btn:hover {
+  color: var(--accent-error, #EF4444);
+}
+
+.styler-custom-grid {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-height: 24px;
+}
+
+.styler-custom-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.styler-custom-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background-color: var(--swatch-color);
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.styler-custom-swatch:hover {
+  transform: scale(1.18);
+  box-shadow: 0 0 8px var(--swatch-color);
+}
+
+.styler-custom-swatch.active {
+  border-color: #FFFFFF;
+  box-shadow: 0 0 10px var(--swatch-color);
+  transform: scale(1.12);
+}
+
+.styler-custom-delete {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 13px;
+  height: 13px;
+  background: #EF4444;
+  color: #FFF;
+  border: none;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.styler-custom-item:hover .styler-custom-delete {
+  display: flex;
+}
+
+/* Section Forme & Arrondi de Bordure */
+.styler-border-shape-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--border-dark, #333333);
+  padding-top: 8px;
+}
+
+.styler-shape-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.styler-val-badge {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-primary, #E50914);
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.25);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.styler-radius-slider-wrap {
+  display: flex;
+  align-items: center;
+  padding: 2px 2px;
+}
+
+.styler-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border-dark, #333333);
+  outline: none;
+  cursor: pointer;
+}
+
+.styler-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-primary, #E50914);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s ease;
+}
+
+.styler-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.22);
+}
+
+.styler-radius-presets,
+.styler-border-types {
+  display: flex;
+  gap: 4px;
+}
+
+.styler-preset-btn,
+.styler-border-type-btn {
+  flex: 1;
+  background: var(--card-bg, #1F1F1F);
+  border: 1px solid var(--border-dark, #333333);
+  color: var(--text-main, #FFFFFF);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.styler-preset-btn:hover,
+.styler-border-type-btn:hover {
+  background: var(--card-hover, #2B2B2B);
+  border-color: var(--text-muted);
+}
+
+.styler-preset-btn.active,
+.styler-border-type-btn.active {
+  background: var(--accent-primary, #E50914);
+  border-color: var(--accent-primary, #E50914);
+  color: #FFFFFF;
+}
+
+/* Contrôles Pipette libre & Hexadécimal */
+.styler-custom-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid var(--border-dark, #333333);
+  padding-top: 8px;
+}
+
+.styler-hex-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--card-bg, #1F1F1F);
+  border: 1px solid var(--border-dark, #333333);
+  border-radius: 6px;
+  padding: 3px 6px 3px 4px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.styler-hex-input-wrap:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.styler-hex-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.styler-hex-actions .styler-action-btn {
+  flex: 1;
+  padding: 4px 6px;
+  font-size: 10.5px;
+}
+
+.styler-color-native {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.styler-color-native::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.styler-color-native::-webkit-color-swatch {
+  border: 1px solid var(--border-dark, #333);
+  border-radius: 4px;
+}
+
+.styler-hex-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-main, #FFFFFF);
+  font-family: 'Fira Code', monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  outline: none;
+  text-transform: uppercase;
+}
+
+/* Barre d'outils et actions finales */
+.styler-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid var(--border-dark, #333333);
+  padding-top: 8px;
+}
+
+.styler-action-btn {
+  flex: 1;
+  background: var(--card-bg, #1F1F1F);
+  border: 1px solid var(--border-dark, #333333);
+  color: var(--text-main, #FFFFFF);
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.styler-action-btn:hover {
+  background: var(--card-hover, #2B2B2B);
+  border-color: var(--text-muted);
+}
+
+.styler-action-btn.primary {
+  background: var(--accent-primary, #E50914);
+  border-color: var(--accent-primary, #E50914);
+  color: #FFFFFF;
+}
+
+.styler-action-btn.primary:hover {
+  background: var(--accent-hover, #FF2A2A);
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+}
+
+/* Toast de notification */
+.styler-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #10B981;
+  color: #FFFFFF;
+  padding: 7px 16px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  z-index: 10005;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.styler-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================================
+   SUPPORT VECTORIEL DU CYCLE VERTUEUX & SVG
+   ========================================================================== */
+body.deck-styler-mode .virtuous-circle .cycle-track {
+  pointer-events: none !important;
+}
+
+body.deck-styler-mode .virtuous-circle :is(.cycle-arrow-head, .cycle-track-line, g) {
+  pointer-events: all !important;
+  cursor: pointer !important;
+}
+
+.cycle-track-line {
+  fill: none !important;
+}
+
+body.deck-styler-mode .virtuous-circle .cycle-arrow-head {
+  stroke: transparent;
+  stroke-width: 14px;
+  paint-order: stroke fill;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+body.deck-styler-mode .virtuous-circle :is(.cycle-arrow-head, .cycle-track-line):hover {
+  filter: drop-shadow(0 0 10px var(--accent-primary, #E50914)) brightness(1.6) !important;
+}
+
+.styler-selected-target.cycle-arrow-head,
+path.styler-selected-target,
+circle.styler-selected-target {
+  filter: drop-shadow(0 0 12px var(--accent-primary, #E50914)) brightness(1.8) !important;
+  stroke: var(--accent-primary, #E50914) !important;
+  stroke-width: 3px !important;
+}

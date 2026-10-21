@@ -14,6 +14,7 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 | `grid-3` | `<div class="grid-3">` | Grille à 3 colonnes (triades, processus en 3 étapes). |
 | `grid-4` | `<div class="grid-4">` | Grille à 4 colonnes (piliers, métriques, KPIs). |
 | `split-code` | `<div class="split-code">` | Disposition 50/50 : explication conceptuelle à gauche, code à droite. |
+| `split-schema` | `<div class="split-schema">` | Disposition 50/50 : explications conceptuelles à gauche, grand schéma ou architecture à droite. |
 | `hero` | `<div class="slide-hero">` | Mise en page centrée avec espacements aérés pour slide de titre. |
 
 ---
@@ -54,10 +55,11 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 
 | Alias court | Classe / Balise HTML | Utilisation & Description |
 | :--- | :--- | :--- |
-| `cycle` / `loop` | `<div class="virtuous-circle">` | Diagramme circulaire représentant une boucle vertueuse à 3, 4 ou 5 nœuds. |
-| `cycle-node` | `<div class="cycle-step" data-pos="...">` | Nœud unitaire du cercle positionné avec son titre et son impact. |
-| `cycle-center` | `<div class="cycle-core">` | Noyau central du cycle (ex: « Sol Vivant », « Résilience »). |
-| `cycle-arrow` | `<div class="cycle-connector">` | Indicateur vectoriel ou SVG de rotation continue entre les étapes. |
+| `cycle` / `loop` | `<div class="virtuous-circle">` | Diagramme circulaire représentant une boucle vertueuse à 3 ou 4 nœuds. |
+| `cycle-track` | `<svg class="cycle-track">` | Piste vectorielle circulaire avec flèches directionnelles indiquant le sens de rotation (injectée automatiquement si omise). |
+| `cycle-node` | `<div class="cycle-step" data-pos="top\|right\|bottom\|left">` | Nœud unitaire du cercle positionné sans chevauchement avec son icône et son intitulé. |
+| `cycle-center` | `<div class="cycle-core">` | Noyau central du cycle (ex: « Boucle Vertueuse »). |
+| `cycle-arrow` | `<path class="cycle-arrow-head">` | Flèches vectorielles intégrées sur la circonférence pour clarifier le sens horaire. |
 
 ---
 
@@ -106,19 +108,62 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 
 ---
 
-## 10. Métadonnées d'Orateur & Système
+## 10. Schémas, Figures & Médias (Diagrams & Images)
+
+| Alias court | Classe / Balise HTML | Utilisation & Description |
+| :--- | :--- | :--- |
+| `schema` / `diagram` | `<div class="schema-box">` | Conteneur avec centrage, fond sombre/clair et bordure fine pour schémas d'architecture. |
+| `schema-framed` | `<div class="schema-box framed">` | Schéma avec fond blanc contrasté (recommandé pour les schémas exportés sur fond blanc). |
+| `schema-img` | `<img class="schema-img" src="...">` | Image calibrée en hauteur (`object-fit: contain;`) pour garantir zéro débordement 16:9. |
+| `caption` | `<div class="schema-caption">` | Légende descriptive sous le schéma ou la figure. |
+| `split-schema` | `<div class="split-schema">` | Mise en page 50/50 avec texte explicatif à gauche et grand schéma à droite. |
+| `mermaid` | `<div class="mermaid">` | Diagramme vectoriel interactif Mermaid.js à chaud (séquence, flux, architecture). Auto-adapté au thème (`dark`/`light`) et à la couleur d'accent. |
+
+---
+
+## 11. Logos de Pied de Slide (Positionnement & Redimensionnement Multi-Niveaux)
+
+Le moteur gère l'affichage, le redimensionnement précis et l'auto-calibrage de logos positionnés **en bas à gauche**, **au milieu** ou **en bas à droite**.
+> 🛡️ **Anti-chevauchement garanti** : la présence d'un logo applique automatiquement un dégagement de sécurité en bas de slide (`padding-bottom: clamp(48px, 7vh, 64px)`), et l'auto-fit adapte la hauteur du contenu pour que celui-ci s'arrête strictement **au-dessus** du logo sans jamais passer par-dessus.
+>
+> 📏 **Contrôle total de la taille** :
+> 1. **Style inline direct** : `<img src="..." style="height: 22px;">` ou `style="width: 40px;">`
+> 2. **Attribut de taille** : `<div class="slide-logo bottom-center" data-size="20px">`
+> 3. **Variable CSS** : `style="--logo-height: 20px;"`
+> 4. **Classes prêtes à l'emploi** : `.logo-xs` (16px), `.logo-sm` (22px), `.logo-md` (30px), `.logo-lg` (42px), `.logo-xl` (56px)
+
+| Alias court | Classe / Balise HTML | Utilisation & Description |
+| :--- | :--- | :--- |
+| `logo-left` / `bottom-left` | `<div class="slide-logo bottom-left"><img src="..."></div>` | Ancre un ou plusieurs logos **en bas à gauche** de la diapositive. |
+| `logo-center` / `bottom-center`| `<div class="slide-logo bottom-center"><img src="..."></div>` | Ancre un ou plusieurs logos **au milieu (centré)** en pied de slide. |
+| `logo-right` / `bottom-right` | `<div class="slide-logo bottom-right"><img src="..."></div>` | Ancre un ou plusieurs logos **en bas à droite** de la diapositive. |
+| `logo-bar` | `<div class="slide-bottom-logos">` | Barre de pied de slide complète avec 3 slots : `.logo-group.left`, `.logo-group.center`, `.logo-group.right`. |
+| `logo-direct` | `<img class="slide-logo bottom-left" src="...">` | Balise image directe portant les classes de positionnement. |
+| `logo-xs` | `<div class="slide-logo bottom-center logo-xs">` | Format miniature (`height: 16px`). |
+| `logo-sm` | `<div class="slide-logo bottom-center logo-sm">` | Format compact (`height: 22px`). |
+| `logo-md` | `<div class="slide-logo bottom-center logo-md">` | Format standard par défaut (`height: 30px`). |
+| `logo-lg` | `<div class="slide-logo bottom-center logo-lg">` | Format agrandi (`height: 42px`). |
+| `logo-xl` | `<div class="slide-logo bottom-center logo-xl">` | Format imposant (`height: 56px`). |
+| `data-size="..."` | Sur `.slide-logo` ou `img` | Règle directement la hauteur souhaitée (ex: `data-size="20px"`). |
+| `logo-framed` | `<div class="slide-logo bottom-center framed">` | Ajoute un cadre discret semi-transparent (glassmorphism) pour assurer le contraste de logos sombres sur fond sombre. |
+| `data-logo-left\|center\|right` | Sur `.deck-container` ou `<section class="slide">` | **Mode automatique (Zero-config)** : injecte automatiquement les logos spécifiés sans écrire de balises HTML manuelles. |
+| `data-no-logos="true"` | Sur `<section class="slide">` | Masque les logos globaux sur une slide spécifique (ex: slide de titre ou conclusion). |
+
+---
+
+## 12. Métadonnées d'Orateur & Système
  
 | Alias court | Attribut / Balise | Utilisation & Description |
 | :--- | :--- | :--- |
 | `notes` | `data-notes="..."` ou `<aside class="speaker-notes">` | Notes d'orateur lues par le Speaker Engine (`S` ou tiroir `N`). |
-| `theme-global` | `data-theme="dark\|light"` sur `.deck-container` | **Thème global du deck** (sombre par défaut ou clair). |
-| `theme-slide` | `data-theme="light\|dark"` sur `.slide` | **OPTIONNEL / EXCEPTIONNEL** : surcharge ponctuelle pour une slide isolée différente du deck. |
-| `title-slide` | `<h2 class="slide-title">` | Titre standardisé en Montserrat gras avec accent vert. |
+| `theme-global` | `data-theme="dark\|light\|nordic\|cyberpunk\|emerald\|navy\|sepia"` sur `.deck-container` | **Thème global du deck** (catalogue de 7 ambiances visuelles). Touche `T` pour alterner. Toutes les slides héritent automatiquement. |
+| `theme-slide` | ⛔ **INTERDIT** (ne pas utiliser sur `<section class="slide">`) | Les slides ne doivent jamais porter de `data-theme` local afin de garantir un contraste et une lisibilité parfaits lors du changement de thème par l'orateur. |
+| `title-slide` | `<h2 class="slide-title">` | Titre standardisé en Montserrat gras avec accent dynamique. |
 | `subtitle-slide`| `<p class="slide-subtitle">` | Sous-titre explicatif en Inter ardoise moyen (`#475569`). |
 
 ---
 
-## 11. Exemples Concrets d'Intégration HTML
+## 13. Exemples Concrets d'Intégration HTML
 
 ### Exemple A : Frise chronologique à étapes (`stepper`)
 ```html
@@ -141,3 +186,208 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
     <p class="step-desc">Couvert végétal & crédits C</p>
   </div>
 </div>
+```
+
+### Exemple B : Grand Schéma Centré avec Légende (`schema-box`)
+```html
+<div class="schema-box">
+  <img src="assets/schemas/cluster-nodes.svg" alt="Architecture Cluster" class="schema-img">
+  <div class="schema-caption"><strong>Figure 1 :</strong> Topologie maillée et isolation des processus BEAM</div>
+</div>
+```
+
+### Exemple C : Disposition 50/50 Texte & Schéma (`split-schema`)
+```html
+<div class="split-schema">
+  <div>
+    <div class="x-card featured">
+      <h3>Principes de l'Arbre de Supervision</h3>
+      <ul style="padding-left: 0; margin-top: 0.5rem;">
+        <li class="bullet-check"><strong>Stratégie One for One :</strong> Seul le processus défaillant est relancé.</li>
+        <li class="bullet-check"><strong>Stratégie One for All :</strong> Tout le groupe redémarre dans un état propre.</li>
+        <li class="bullet-check"><strong>Tolérance aux pannes :</strong> Zéro effet de bord sur le reste de la grappe.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="schema-box">
+    <img src="assets/schemas/supervision-tree.svg" alt="Arbre OTP" class="schema-img">
+    <div class="schema-caption">Arbre de supervision hiérarchique OTP</div>
+  </div>
+</div>
+```
+
+### Exemple D : Logos de Pied de Slide (Gauche, Milieu, Droite)
+
+#### Option 1 : Blocs unitaires dans la slide
+```html
+<section class="slide" data-slide="3">
+  <div class="slide-content">
+    <!-- Contenu principal de la diapositive -->
+  </div>
+
+  <!-- Logo en bas à gauche -->
+  <div class="slide-logo bottom-left">
+    <img src="assets/logos/elixir.svg" alt="Elixir">
+  </div>
+
+  <!-- Logo ou texte institutionnel au milieu -->
+  <div class="slide-logo bottom-center framed">
+    <img src="assets/logos/erlang.svg" alt="BEAM">
+  </div>
+
+  <!-- Logos partenaires/écoles en bas à droite -->
+  <div class="slide-logo bottom-right">
+    <a href="https://example.com" target="_blank">
+      <img src="assets/logos/ruby.svg" alt="Partner">
+    </a>
+  </div>
+</section>
+```
+
+#### Option 2 : Barre de logos unifiée (`slide-bottom-logos`)
+```html
+<div class="slide-bottom-logos">
+  <div class="logo-group left">
+    <img src="assets/logos/elixir.svg" alt="Logo">
+  </div>
+  <div class="logo-group center">
+    <img src="assets/logos/erlang.svg" alt="Erlang">
+  </div>
+  <div class="logo-group right">
+    <img src="assets/logos/ruby.svg" alt="Ruby">
+  </div>
+</div>
+```
+
+#### Option 3 : Zero-Configuration au niveau global ou slide
+```html
+<!-- Défini une fois sur le conteneur du diaporama : appliqué sur toutes les slides -->
+<div class="deck-container"
+     data-logo-left="assets/logos/elixir.svg"
+     data-logo-center="assets/logos/erlang.svg"
+     data-logo-right="assets/logos/ruby.svg">
+  ...
+</div>
+```
+
+#### Contrôle Total du Redimensionnement & Zéro Chevauchement
+Toutes les approches suivantes sont supportées nativement pour redimensionner les logos sans jamais risquer de chevaucher le contenu :
+
+1. **Classes utilitaires calibrées** : `.logo-xs` (16px), `.logo-sm` (22px), `.logo-md` (30px), `.logo-lg` (42px), `.logo-xl` (56px)
+   ```html
+   <div class="slide-logo bottom-center logo-sm">
+     <img src="assets/logos/elixir.svg" alt="Elixir">
+   </div>
+   ```
+
+2. **Style inline direct** (`height: ...` ou `width: ...`) :
+   ```html
+   <div class="slide-logo bottom-center" style="height: 24px;">
+     <img src="assets/logos/elixir.svg" alt="Elixir">
+   </div>
+   ```
+
+3. **Attribut `data-size="..."`** :
+   ```html
+   <div class="slide-logo bottom-center" data-size="24px">
+     <img src="assets/logos/elixir.svg" alt="Elixir">
+   </div>
+   ```
+
+4. **Variables CSS personnalisées** :
+   ```html
+   <div class="slide-logo bottom-center" style="--logo-height: 24px;">
+     <img src="assets/logos/elixir.svg" alt="Elixir">
+   </div>
+   ```
+
+> 🛡️ **Garantie Zéro Chevauchement** : Le moteur `deck-fit.js` et le layout CSS réservent automatiquement une zone de sécurité dynamique au bas de chaque diapositive dotée de logos (`logoReserve = maxLogoHeight + 44px`). Le contenu de la slide (`.slide-content`) est automatiquement mis à l'échelle pour s'arrêter strictement au-dessus du logo avec une marge respirante.
+
+---
+
+## 11. Révélation Progressive & Fragments (Animations & Rythme)
+
+Pour cadencer l'apparition des éléments à l'écran sans changer de slide (cartes, puces, jalons, blocs de code), il suffit d'ajouter la classe `.fragment` sur n'importe quel élément HTML :
+
+| Alias / Classe | Exemple HTML | Comportement & Rendu |
+| :--- | :--- | :--- |
+| `fragment` | `<div class="x-card fragment">` | Apparaît au clic suivant avec un fondu et glissement doux vers le haut. |
+| `fragment fade-only` | `<p class="fragment fade-only">` | Fondu simple d'opacité (sans translation verticale). |
+| `fragment zoom-in` | `<div class="metric-value fragment zoom-in">` | Apparition avec léger zoom (scale `0.88` &rarr; `1`). |
+| `fragment semi-fade` | `<li class="fragment semi-fade">` | Visible initialement à 22% d'opacité, puis devient 100% au focus. |
+| `fragment highlight-current`| `<div class="x-card fragment highlight-current">` | Met en exergue l'élément avec la couleur d'accent lorsqu'il est actif. |
+| `fragment fade-out` | `<div class="fragment fade-out">` | Visible au départ, s'estompe et disparaît à l'étape suivante. |
+
+### Ordonnancement sur-mesure (`data-fragment-index`)
+Par défaut, les fragments apparaissent dans l'ordre du DOM. Pour révéler plusieurs éléments en simultané ou dans un ordre précis :
+```html
+<div class="x-card fragment" data-fragment-index="1">Étape A</div>
+<div class="x-card fragment" data-fragment-index="1">Étape A (simultanée)</div>
+<div class="x-card fragment" data-fragment-index="2">Étape B</div>
+```
+
+> 💡 **Console Présentateur & PDF** :
+> - Dans la console orateur, les fragments non encore révélés apparaissent en filigrane (opacité atténuée 35%) pour anticiper la suite.
+> - Dans l'aperçu de la prochaine slide et dans l'export PDF (`@media print`), tous les fragments sont automatiquement 100% visibles.
+
+---
+
+## 12. Diagrammes Vectoriels Mermaid.js (À Chaud & Adaptatifs)
+
+Pour intégrer un schéma d'architecture, un diagramme de séquence ou un organigramme sans image externe, écrivez directement le code Mermaid dans une balise `<div class="mermaid">` :
+
+```html
+<div class="x-card">
+  <div class="mermaid">
+    sequenceDiagram
+      autonumber
+      Client->>Phoenix: WebSocket Handshake
+      Phoenix->>Channel: Join Topic "room:lobby"
+      Channel-->>Client: {:ok, %{status: "connected"}}
+      Client->>Channel: push("new_msg", payload)
+      Channel->>PubSub: broadcast(payload)
+      PubSub-->>Client: {:msg, payload}
+  </div>
+</div>
+```
+
+> 🎨 **Adaptation Automatique au Design System** :
+> - **Thèmes** : Le diagramme s'adapte automatiquement en mode sombre (`dark`) ou clair (`light`).
+> - **Couleur d'Accent** : Les bordures principales, flèches et nœuds actifs adoptent instantanément la couleur d'accent sélectionnée (`C` ou palette).
+> - **Chargement à la Demande** : Le moteur DeckEngine ne télécharge la bibliothèque Mermaid.js que si la page contient au moins un bloc `.mermaid`.
+
+---
+
+## 13. Zoom Interactif sur Schémas & Contenus (`zoomable` / *Click to zoom*)
+
+Pour permettre à l'orateur ou à l'auditoire d'agrandir un schéma technique, un diagramme Mermaid, une capture ou un bloc de code en plein écran :
+
+1. Ajoutez la classe `.zoomable` ou l'attribut `data-zoomable="true"` sur n'importe quelle carte, bloc ou image :
+   ```html
+   <div class="x-card zoomable">
+     <!-- Schéma complexe ou code détaillé -->
+   </div>
+   ```
+2. **Comportement automatique** :
+   - Les blocs `.schema-box` et `.mermaid` bénéficient automatiquement du zoom au survol et au clic.
+   - Une pastille discrète 🔍 apparaît en haut à droite au survol.
+   - Au clic : ouverture en plein écran épuré avec fond flouté (`backdrop-filter: blur(14px)`).
+   - Re-cliquer n'importe où ou presser <kbd>Échap</kbd> referme le zoom instantanément.
+
+---
+
+## 14. Inspecteur & Styliseur Visuel de Composants (Touche `I`)
+
+Pour personnaliser visuellement un composant en direct sans devoir éditer le code à l'aveugle :
+
+1. Cliquez sur le bouton **"Styliser (I)"** dans le header ou pressez la touche <kbd>I</kbd>.
+2. Une bannière de mode s'affiche et les composants du slide actif deviennent survolables avec contour pointillé.
+3. **Cliquez sur n'importe quel élément** (carte `.x-card`, badge, KPI, titre, boîte de schéma...) :
+   - Le popover de stylisation s'affiche immédiatement avec le badge du composant sélectionné.
+   - Vous pouvez naviguer vers le parent direct d'un clic (bouton `↑`).
+   - Choisissez l'onglet : **🎨 Fond**, **✏️ Texte** ou **🔲 Bordure**.
+   - Cliquez sur n'importe quelle nuance du Design System (thème, couleurs vives, transparent) ou utilisez la pipette hexadécimale.
+4. **Export immédiat** :
+   - Cliquez sur **"Copier style"** pour récupérer l'attribut `style="..."` et le coller dans votre HTML.
+   - Cliquez sur **"Copier HTML"** pour obtenir le composant complet prêt à l'emploi.
+   - Cliquez sur **"Reset"** pour rétablir les styles d'origine.
