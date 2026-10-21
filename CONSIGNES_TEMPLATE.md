@@ -210,7 +210,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Module Infrastructures & Frameworks — Master MIAGE
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Accroche & Cadre (2 min) :** Bienvenue à tous. Aujourd'hui, nous vous présentons le duo Elixir et Phoenix.
   > - **Objectif de la séance :** Comprendre comment ce langage fonctionnel et son framework phare apportent une réponse radicale aux enjeux modernes de scalabilité et de temps réel.
@@ -246,7 +246,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : 21 minutes pour asseoir les fondations conceptuelles d'Elixir avant d'aborder Phoenix et le web temps réel.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Prise de parole & Cadrage (1 min) :** Nous ouvrons cette première grande partie dédiée aux fondations d'Elixir, pour une durée totale de 21 minutes.
   > - **Pourquoi cette étape :** Avant d'aborder un framework comme Phoenix, il est indispensable de comprendre le moteur fonctionnel qui le propulse.
@@ -844,7 +844,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : 34 minutes pour maîtriser l'architecture du framework Phoenix et la révolution LiveView.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Prise de parole & Cadrage (1 min) :** Merci. Nous abordons maintenant la deuxième grande partie consacrée au framework Phoenix, pour une durée de 34 minutes.
   > - **Pourquoi Phoenix :** Nous avons vu les fondations exceptionnelles d'Elixir et de la BEAM. Phoenix est l'outil qui met toute cette puissance au service du web moderne.
@@ -1038,7 +1038,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Principe directeur : Un seul fichier pour gouverner tout le trafic : pages HTML, endpoints REST et applications LiveView.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Prise de parole (2 min 30) :** Regardons comment s'articule le routage dans notre application réelle « Les bons comptes ».
   > - **Les pipelines :** En haut, deux tuyaux distincts : `:browser` pour la navigation humaine avec gestion de session, et `:api` pour les échanges de données JSON.
@@ -1093,7 +1093,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Règle d'or : Zéro état persistant dans le contrôleur : f(conn, params) -> conn. Prévisible, testable et sans effets de bord.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Cas d'usage (2 min 30) :** Voici le contrôleur réel calculant les remboursements optimisés entre colocataires.
   > - **Le pattern matching imbriqué :** Admirez la lisibilité : on extrait l'identifiant, on tente de récupérer le wallet, et on calcule l'équilibrage.
@@ -1148,7 +1148,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Révolution : Alice supprime une dépense -> l'écran de Bob ajuste ses soldes en direct sans recharger la page et sans une ligne de JS.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Le joyau technique (3 min 30) :** Voici le code réel le plus représentatif de la force de Phoenix dans notre application.
   > - **L'abonnement PubSub :** Dans `mount`, chaque participant connecté au porte-monnaie s'abonne au topic `"wallet:#{id}"`.
@@ -1185,7 +1185,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Synthèse : Phoenix n'impose aucun dogme : il associe la robustesse du HTTP classique à la réactivité d'une SPA moderne.
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Conclusion de mon passage (1 min 30) :** Pour résumer cette partie technique, Phoenix offre le meilleur des deux mondes.
   > - **L'équilibre dans notre projet :** Nous conservons des contrôleurs classiques pour notre API REST de règlements et pour la gestion des cookies de session.
@@ -1217,7 +1217,60 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   - **Pied de slide** : banner
     - Formule clé : Place à la pratique : bascule sur l'écran pour la démonstration en direct !
 - **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
 - **Notes d'orateur (data-notes)** :
   > - **Bascule immédiate :** Quitter la présentation pour afficher le terminal et l'IDE sur l'écran principal.
   > - **Plan B (Secours) :** En cas d'aléa réseau ou machine, cliquer sur « Lancer la Vidéo de Secours » pour diffuser la vidéo de 7 minutes et continuer le commentaire en voix off.
+
+---
+
+#### Slide 28 : Cadrage de l'Atelier Pratique & TP (Clôture)
+- **Type de slide** : slide
+- **Durée estimée** : 5 min *(Partie 3 : Démo & TP Pratique)*
+- **Badge section** : badge-solid : PARTIE 3 : ATELIER PRATIQUE & TP
+- **Titre (title-slide)** : Atelier Pratique : Déployer et Étendre « Les Bons Comptes »
+- **Sous-titre (subtitle-slide)** : 2 heures en binôme : BDD Ecto, saisie réactive et synchronisation PubSub
+- **Mise en page** : grid-3
+- **Contenu & Composants** :
+  - **Colonne 1 (Missions Ciblées)** : card
+    - badge-solid : Missions Pédagogiques (2h)
+    - Titre : Focus sur la Réactivité
+    - Liste (icon-bullet) :
+      - Base fournie clé en main : Dépôt GitHub prêt à forker avec auth et BDD préconfigurées.
+      - Exploitation BDD (Ecto) : Requêter PostgreSQL et injecter les dépenses dans les templates HEEx.
+      - Ajout de données en direct : Valider à la frappe via Changeset et persister en base.
+      - Synchro collective PubSub : Diffuser l'ajout en direct sans rechargement de page.
+  - **Colonne 2 (L'Environnement Technique)** : card-featured
+    - badge-solid : Zéro Friction
+    - Titre : Stack & Outils Intégrés
+    - Liste (icon-bullet) :
+      - Pile 100% Dockerisée : Phoenix 1.8 + PostgreSQL 16. Aucun runtime Elixir local requis.
+      - Dataset « Think HUGE » : 130+ porte-monnaies et 440+ dépenses pré-générées pour les tests.
+      - Phoenix LiveDashboard : Métriques machine et introspection des processus sur `/dev/dashboard`.
+      - Identifiants prêts : `admin@exemple.com` / `admin123`.
+  - **Colonne 3 (Procédure de Démarrage)** : card
+    - badge-gray : Terminal Rapide
+    - Titre : Fork & Boot en 3 Commandes
+    - Code (terminal-box) :
+      ```bash
+      # 1. Forker sur GitHub puis cloner
+      git clone git@github.com:VOTRE-PSEUDO/les_bons_comptes.git
+      cd les_bons_comptes && docker compose up -d
+
+      # 2. Initialiser la BDD PostgreSQL et les seeds
+      docker compose exec web mix ecto.setup
+
+      # 3. Ouvrir dans le navigateur :
+      # Web app       : http://localhost:4000
+      # LiveDashboard : http://localhost:4000/dev/dashboard
+      ```
+  - **Pied de slide** : banner
+    - Consigne générale : Forkez le dépôt GitHub (`IF-LGAM/les_bons_comptes`) et travaillez en binôme. L'équipe passe dans les rangs pour vous accompagner.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **0:00 - 0:45 (Lancement & Cadrage) :** « Merci. Pour clore cette soutenance et passer de la théorie à la pratique, nous vous proposons un atelier de 2 heures en binôme autour de notre application « Les Bons Comptes ». »
+  > - **0:45 - 1:45 (Pas de code from scratch & Fork) :** « Rassurez-vous : nous ne vous demandons pas de réinventer la roue. Le projet est hébergé sur GitHub sous l'organisation IF-LGAM. La première consigne est simple : forkez le dépôt sur votre propre compte GitHub et clonez votre copie en local. »
+  > - **1:45 - 2:45 (Environnement Zéro Friction) :** « Côté environnement, nous avons éliminé toute friction : aucun besoin d'installer Elixir, Erlang ou PostgreSQL sur votre machine. Tout tourne dans deux conteneurs Docker Compose légers. Une commande `docker compose up -d`, un `mix ecto.setup` pour charger la base, et vous êtes prêts sur `localhost:4000`. »
+  > - **2:45 - 4:00 (Le Cœur Pédagogique du TP) :** « Vos missions se concentrent sur ce qui fait la force unique de Phoenix : d'abord requêter et afficher les données avec Ecto, ensuite ajouter un formulaire de saisie avec validation instantanée, et enfin brancher PubSub pour que la dépense créée sur votre machine apparaisse instantanément sur celle de votre binôme. »
+  > - **4:00 - 5:00 (Top Départ & Accompagnement) :** « La base de données embarque déjà plus de 130 porte-monnaies pour éprouver la scalabilité de l'application. Les dépôts sont ouverts, les commandes sont affichées à l'écran. Bon TP à tous, nous restons disponibles dans les rangs pour vous guider ! »
