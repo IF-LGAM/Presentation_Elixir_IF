@@ -81,10 +81,23 @@ window.DeckEngine.Styler = (function () {
   // Assure un padding natif suffisant pour que les lettres ne touchent jamais la bordure
   function ensureNativePadding(el) {
     if (!el) return;
-    const isTextElement = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'SPAN', 'CODE', 'PRE', 'A'].includes(el.tagName);
-    if (isTextElement && (!el.style.padding || el.style.padding === '0px' || el.style.padding === '0')) {
-      el.style.padding = '8px 24px';
-      el.style.display = 'inline-block';
+    const isTextOrInline = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'SPAN', 'CODE', 'PRE', 'A', 'KBD', 'STRONG', 'EM', 'B', 'I'].includes(el.tagName);
+    const isTextLikeDiv = el.tagName === 'DIV' && (
+      el.classList.contains('slide-subtitle-hero') ||
+      el.classList.contains('step-desc') ||
+      el.classList.contains('step-title') ||
+      el.classList.contains('schema-caption') ||
+      el.classList.contains('metric-label') ||
+      (!el.querySelector('div, p, h1, h2, h3, h4, section, table, ul, ol') && el.textContent.trim().length > 0)
+    );
+
+    if (isTextOrInline || isTextLikeDiv) {
+      if (!el.style.padding || el.style.padding === '0px' || el.style.padding === '0') {
+        el.style.padding = '8px 24px';
+        if (window.getComputedStyle(el).display === 'inline' || el.tagName === 'DIV' || isTextOrInline) {
+          el.style.display = 'inline-block';
+        }
+      }
     }
   }
 
@@ -883,11 +896,21 @@ window.DeckEngine.Styler = (function () {
 
     // Mettre à jour l'état du bouton parent
     const parentBtn = popoverEl.querySelector('#stylerParentBtn');
-    const parentCandidate = selectedElement.parentElement?.closest('.slide.active ' + CANDIDATE_SELECTOR) ||
-                            (selectedElement.parentElement?.classList.contains('slide') ? null : selectedElement.parentElement);
+    const activeSlide = selectedElement.closest('.slide');
+    const parentCandidate = selectedElement.parentElement &&
+                            selectedElement !== activeSlide &&
+                            selectedElement.parentElement !== document.body &&
+                            !selectedElement.parentElement.classList.contains('slides-viewport') &&
+                            !selectedElement.parentElement.classList.contains('deck-container');
     if (parentBtn) {
       parentBtn.disabled = !parentCandidate;
       parentBtn.style.opacity = parentCandidate ? '1' : '0.4';
+      parentBtn.style.cursor = parentCandidate ? 'pointer' : 'default';
+      if (parentCandidate) {
+        parentBtn.title = `Sélectionner le conteneur parent (${getElementBadgeLabel(selectedElement.parentElement)})`;
+      } else {
+        parentBtn.title = 'Aucun conteneur parent';
+      }
     }
 
     // Re-rendre les nuances personnalisées
@@ -904,8 +927,13 @@ window.DeckEngine.Styler = (function () {
 
   function selectParent() {
     if (!selectedElement) return;
+    const activeSlide = selectedElement.closest('.slide');
     const parent = selectedElement.parentElement;
-    if (parent && !parent.classList.contains('slide') && !parent.classList.contains('slides-viewport')) {
+    if (parent &&
+        selectedElement !== activeSlide &&
+        parent !== document.body &&
+        !parent.classList.contains('slides-viewport') &&
+        !parent.classList.contains('deck-container')) {
       selectElement(parent);
     }
   }
@@ -960,23 +988,45 @@ window.DeckEngine.Styler = (function () {
       if (e.target.closest('#stylerPopover') || 
           e.target.closest('#stylerBanner') || 
           e.target.closest('#elementStylerBtn') ||
-          e.target.closest('.deck-header')) {
+          e.target.closest('.deck-header') ||
+          e.target.closest('.deck-footer') ||
+          e.target.closest('.deck-modal') ||
+          e.target.closest('#notesDrawer')) {
         return;
       }
 
       const activeSlide = document.querySelector('.slide.active');
       if (!activeSlide) return;
 
-      // Cherche l'élément candidat le plus proche du clic dans le slide actif
-      const target = e.target.closest(CANDIDATE_SELECTOR);
-      if (target && activeSlide.contains(target)) {
-        e.preventDefault();
-        e.stopPropagation();
-        selectElement(target);
-      } else {
-        // Clic dans le vide du slide -> ferme le popover
-        closePopover();
+      // Détection de l'élément cliqué dans la slide active
+      let target = e.target;
+      if (target.nodeType === 3) target = target.parentElement;
+      if (target.closest('svg') && !target.classList.contains('slide-content')) {
+        target = target.closest('svg') || target;
       }
+
+      // Si le clic est hors du slide actif
+      if (!activeSlide.contains(target)) {
+        closePopover();
+        return;
+      }
+
+      // Si l'utilisateur clique sur le fond vide du conteneur slide
+      if (target === activeSlide || target === activeSlide.querySelector('.slide-content')) {
+        if (popoverEl?.classList.contains('open')) {
+          closePopover();
+        } else {
+          e.preventDefault();
+          e.stopPropagation();
+          selectElement(target);
+        }
+        return;
+      }
+
+      // N'importe quel élément de la slide est sélectionnable et personnalisable !
+      e.preventDefault();
+      e.stopPropagation();
+      selectElement(target);
     }, true); // Use capture to intercept before slide navigation!
 
     // Écoute des changements de slide pour refermer le popover si ouvert
