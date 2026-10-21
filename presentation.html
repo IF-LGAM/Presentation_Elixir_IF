@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elixir &amp; Phoenix : Le Web Haute Performance et Temps Réel</title>
+
+  <!-- Favicon / Logo d'onglet du navigateur -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+  <!-- Google Fonts : Montserrat, Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Prism.js Syntax Highlighting (Dark Tomorrow) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+  <!-- Design System & Deck Engine Styles -->
+  <link rel="stylesheet" href="src/css/deck.css">
+
+  <style>
+    /* Préservation du formatage multi-lignes dans le tiroir de notes rapide */
+    #notesContent {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================================
+       CONTENEUR DU DIAPORAMA
+       Thème global défini une seule fois sur le conteneur racine.
+       Header, Footer, Modales, Drawer de Notes et Pacing Tracker sont injectés
+       automatiquement par le moteur src/js/deck.js.
+       ===================================================================== -->
+  <div class="deck-container" id="deckContainer" data-brand="ELIXIR &amp; PHOENIX"
+    data-logo="assets/favicon.svg"
+    data-title="Elixir &amp; Phoenix : Le Web Haute Performance et Temps Réel" data-theme="dark">
+
+    <main class="slides-viewport" id="viewport">
+
+      <!-- ==========================================
+           SLIDE 1 : COUVERTURE & SOMMAIRE GÉNÉRAL
+           ========================================== -->
+      <section class="slide active" data-slide="1" data-title="Couverture &amp; Sommaire Général"
+        data-notes="• Bienvenue à tous. Aujourd'hui, nous vous présentons le duo Elixir et Phoenix.&#10;• Objectif de la séance : Comprendre comment ce langage fonctionnel et son framework phare apportent une réponse radicale aux enjeux modernes de scalabilité et de temps réel.&#10;• Organisation (60 min) : Présentation découpée en 3 grandes parties, avant d'enchaîner sur l'atelier pratique.&#10;• Lancement : Entrons tout de suite dans la première partie consacrée au langage Elixir.">
+        <div class="slide-content">
+          <div class="slide-hero">
+            <div style="margin-bottom: 0.85rem;">
+              <span class="pill-tag solid">Master MIAGE</span>
+              <span class="pill-tag gray" style="margin-left: 0.6rem;">⏱ Séance : ~60 min &bull; 18 Slides</span>
+            </div>
+
+            <h1 class="slide-title-hero">Elixir &amp; Phoenix Framework</h1>
+            <div class="slide-subtitle-hero">Scalabilité massive, résilience et paradigme fonctionnel au service du web moderne</div>
+
+            <div class="grid-3" style="margin-top: 1.5rem; margin-bottom: 1.25rem; width: 100%; text-align: left;">
+              <div class="x-card featured">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                  <span class="pill-tag solid">Partie 1</span>
+                  <span class="pill-tag gray">21 min</span>
+                </div>
+                <h3>Fondations &amp; Langage Elixir</h3>
+                <p style="color: var(--text-muted);">Genèse, paradigme fonctionnel, typage, concurrence BEAM et code en action.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                  <span class="pill-tag solid">Partie 2</span>
+                  <span class="pill-tag gray">34 min</span>
+                </div>
+                <h3>Framework Phoenix &amp; Temps Réel</h3>
+                <p style="color: var(--text-muted);">Architecture Plug, LiveView réactif sans JS lourd et WebSockets massifs.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                  <span class="pill-tag solid">Partie 3</span>
+                  <span class="pill-tag gray">5 min</span>
+                </div>
+                <h3>Démo &amp; TP Pratique</h3>
+                <p style="color: var(--text-muted);">Mise en œuvre live de l'application « Les bons comptes » et questions.</p>
+              </div>
+            </div>
+
+            <div class="summary-box">
+              <span>🎯</span>
+              <span><strong>Module Infrastructures &amp; Frameworks</strong> — Université Paris Dauphine-PSL / MIAGE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/elixir.svg" alt="Elixir">
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 2 : ANNONCE PARTIE 1
+           ========================================== -->
+      <section class="slide" data-slide="2" data-title="Partie 1 : Fondations &amp; Langage Elixir"
+        data-notes="• Prise de parole &amp; Cadrage (1 min) : Nous ouvrons cette première grande partie dédiée aux fondations d'Elixir, pour une durée totale de 21 minutes.&#10;• Pourquoi cette étape : Avant d'aborder un framework comme Phoenix, il est indispensable de comprendre le moteur fonctionnel qui le propulse.&#10;• Le programme en 4 jalons :&#10;  1. Genèse &amp; Histoire (3 min) : D'où vient Elixir et à quelle rupture matérielle il répond.&#10;  2. Caractéristiques techniques (4 min) : Typage, compilation bytecode et fonctionnement de la machine virtuelle BEAM.&#10;  3. Paradigme fonctionnel (4 min) : Pourquoi abandonner la programmation objet et les mutations en mémoire.&#10;  4. Concepts &amp; Code concret (10 min) : Démonstrations de code, pattern matching, structs et pipe operator |>.&#10;• Transition : Je commence donc par le premier jalon : retour en 2011 avec la genèse du langage et le mur du multi-cœur.">
+        <div class="slide-content">
+          <div class="slide-hero">
+            <div style="margin-bottom: 0.85rem;">
+              <span class="pill-tag solid">PARTIE 1</span>
+              <span class="pill-tag gray" style="margin-left: 0.6rem;">⏱ Durée estimée : 21 min</span>
+            </div>
+
+            <h1 class="slide-title-hero">Fondations &amp; Langage Elixir</h1>
+            <div class="slide-subtitle-hero">Pourquoi réinventer un langage pour le web moderne ?</div>
+
+            <div class="grid-4" style="margin-top: 1.5rem; margin-bottom: 1.25rem; width: 100%; text-align: left;">
+              <div class="x-card featured">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                  <span class="pill-tag solid">Jalon 1</span>
+                  <span class="pill-tag gray">3 min</span>
+                </div>
+                <h3>Genèse &amp; Histoire</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">José Valim (2012), les limites de la POO face aux multi-cœurs et l'héritage robuste d'Erlang/BEAM (1986).</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                  <span class="pill-tag gray">Jalon 2</span>
+                  <span class="pill-tag gray">4 min</span>
+                </div>
+                <h3>Caractéristiques &amp; BEAM</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Langage de haut niveau, entièrement compilé en bytecode (<code>.beam</code>), typage fort et mémoire isolée.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                  <span class="pill-tag gray">Jalon 3</span>
+                  <span class="pill-tag gray">4 min</span>
+                </div>
+                <h3>Paradigme Fonctionnel</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Penser déclaratif plutôt qu'impératif, immuabilité stricte des données et absence d'état partagé.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+                  <span class="pill-tag gray">Jalon 4</span>
+                  <span class="pill-tag gray">10 min</span>
+                </div>
+                <h3>Concepts &amp; Code</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Pattern matching, fonctions pures, structs, flux avec pipe <code>|&gt;</code> et les pièges classiques.</p>
+              </div>
+            </div>
+
+            <div class="summary-box">
+              <span>💡</span>
+              <span><strong>Objectif de la partie :</strong> 21 minutes pour asseoir les fondations conceptuelles d'Elixir avant d'aborder Phoenix et le web temps réel.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/elixir.svg" alt="Elixir">
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 3 : FRISE HISTORIQUE
+           ========================================== -->
+      <section class="slide" data-slide="3" data-title="Frise Historique &amp; Rupture Technologique"
+        data-notes="• Objectif de la slide (3 min) : Poser les bases historiques d'Elixir sans aborder le web applicatif pour l'instant.&#10;• Les fondations Erlang (1986) : Rappeler qu'Erlang a été inventé par Ericsson pour faire tourner les commutateurs téléphoniques avec une disponibilité record, grâce à ses processus isolés et sa tolérance aux pannes.&#10;• Le blocage matériel (2005-2011) : Expliquer qu'avec la multiplication des cœurs processeurs, les langages objets classiques (Ruby, Python, Java) peinaient à paralléliser efficacement à cause de la mémoire mutable partagée et des verrous.&#10;• La vision de José Valim (2012) : Venu du monde Ruby on Rails, José Valim a voulu résoudre ce problème de concurrence non pas en bricolant une bibliothèque, mais en s'appuyant sur la BEAM avec un nouveau langage expressif, fonctionnel et productif : Elixir.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">De l'Impasse Monocœur à la Naissance d'Elixir</h2>
+            <div class="slide-subtitle">Chronologie d'une transition : des verrous de la POO à la concurrence massive sur la BEAM</div>
+          </header>
+
+          <!-- Stepper horizontal -->
+          <div class="stepper-horizontal" style="margin-bottom: 1.5rem;">
+            <div class="step-node">
+              <span class="step-badge">1986</span>
+              <div class="step-title">Erlang &amp; BEAM</div>
+              <div class="step-desc">Ericsson télécoms, 99.9999999% uptime, acteurs isolés et résilience native.</div>
+            </div>
+
+            <div class="step-node">
+              <span class="step-badge">1995-2005</span>
+              <div class="step-title">L'Âge d'Or POO</div>
+              <div class="step-desc">Rails, Django, Java. Modèle séquentiel taillé pour les CPU monocœur.</div>
+            </div>
+
+            <div class="step-node">
+              <span class="step-badge alert">2005-2011</span>
+              <div class="step-title">Le Mur Matériel</div>
+              <div class="step-desc">Fin de la course aux GHz (Loi de Moore). Multi-cœurs, verrous GIL et deadlocks.</div>
+            </div>
+
+            <div class="step-node active">
+              <span class="step-badge">2012</span>
+              <div class="step-title">Naissance d'Elixir</div>
+              <div class="step-desc">José Valim marie l'élégance moderne et la robustesse de la BEAM multi-cœur.</div>
+            </div>
+          </div>
+
+          <!-- Comparatif 2 colonnes -->
+          <div class="grid-2">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Avant Elixir (POO &amp; Threads lourds)</span>
+              </div>
+              <h3 style="color: var(--accent-danger, #ef4444);">Le Mur de la Concurrence</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Mémoire partagée mutable :</strong> Corruption d'état fréquente et interblocages (deadlocks).</li>
+                <li><strong>Coût élevé des threads OS :</strong> Saturation mémoire dès quelques milliers de calculs concurrents.</li>
+                <li><strong>Fragilité systémique :</strong> Une exception non interceptée peut faire chuter le processus serveur complet.</li>
+              </ul>
+            </div>
+
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">La Solution Elixir (Fonctionnel &amp; BEAM)</span>
+              </div>
+              <h3 style="color: var(--accent-primary);">Productivité Moderne + Concurrence</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Immuabilité des données :</strong> Zéro effet de bord indésirable ni verrou mémoire.</li>
+                <li><strong>Micro-processus BEAM :</strong> Légèreté extrême (~2 Ko par processus), des millions en parallèle.</li>
+                <li><strong>Philosophie « Let it crash » :</strong> Arbres de supervision réinitialisant automatiquement les pannes.</li>
+                <li><strong>Outillage de pointe :</strong> Gestionnaire Hex, outil unifié <code>mix</code> et macros métaprogrammation.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1rem;">
+            <span>⚡</span>
+            <span><strong>Synthèse :</strong> Robustesse industrielle d'Erlang/BEAM (1986) + Ergonomie et productivité d'Elixir (2012) = Le langage taillé pour les architectures multi-cœurs.</span>
+          </div>
+        </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/erlang.svg" alt="Erlang">
+        </div>
+        <div class="slide-logo bottom-center logo-sm">
+          <img src="assets/logos/ruby.svg" alt="Ruby">
+        </div>
+        <div class="slide-logo bottom-right logo-sm">
+          <img src="assets/logos/elixir.svg" alt="Elixir">
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 4 : PARADIGME DE PROGRAMMATION
+           ========================================== -->
+      <section class="slide" data-slide="4" data-title="Le Paradigme de Programmation"
+        data-notes="• Le choc culturel : Expliquer qu'on oublie les boucles for classiques et les mutations d'objets (compte.retirer(50)).&#10;• L'immutabilité : En maths, x = 5 ne devient jamais x = 6 une ligne plus bas. Modifier une donnée produit une nouvelle valeur propre.&#10;• Avantage concret : Élimine 90% des bugs d'effets de bord et rend le code naturellement parallélisable.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Le Paradigme de Programmation</h2>
+            <div class="slide-subtitle">Penser déclaratif et fonctionnel : exprimer l'intention plutôt que la mutation</div>
+          </header>
+
+          <div class="grid-2">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">L'Intention (« Quoi »)</span>
+              </div>
+              <h3>Déclaratif vs Impératif</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Ce que l'on veut obtenir :</strong> On décrit le résultat souhaité plutôt que la suite mécanique d'instructions d'allocation.</li>
+                <li><strong>Zéro boucle impérative :</strong> Absence de structures <code>for</code> ou <code>while</code> avec compteurs d'état mutables.</li>
+                <li><strong>Fonctions d'ordre supérieur :</strong> Utilisation naturelle de <code>Enum.map</code>, <code>Enum.filter</code>, <code>Enum.reduce</code> ou de la récursion.</li>
+              </ul>
+            </div>
+
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Pureté des Données</span>
+              </div>
+              <h3>Données Immuables &amp; Fonctions Pures</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Immutabilité stricte :</strong> Les variables ne sont jamais modifiées sur place (aucun effet de bord caché en mémoire).</li>
+                <li><strong>Fonctions pures (f(x) = y) :</strong> Même entrée = toujours même sortie, sans dépendre d'un état extérieur invisible.</li>
+                <li><strong>Zéro classe, zéro objet :</strong> Pas de <code>this</code>, <code>self</code> ou <code>new</code>. Séparation nette entre données et modules de fonctions.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1.5rem;">
+            <span>💡</span>
+            <span><strong>Règle d'or :</strong> « En impératif, on commande à la machine comment modifier la mémoire. En déclaratif, on transforme des données immuables. »</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 5 : SYSTÈME DE TYPAGE
+           ========================================== -->
+      <section class="slide" data-slide="5" data-title="Le Système de Typage"
+        data-notes="• Démystifier le dynamique : Dynamique ne veut pas dire laxiste. Contrairement à JavaScript ('5' + 5 = '55'), Elixir stoppe net toute incohérence.&#10;• Les atomes : Ce sont les symboles d'Elixir (comme des enums légers et universels).&#10;• Lien vers la suite : Ces types structurés (tuples, maps, atomes) sont la base du filtrage de données.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Le Système de Typage</h2>
+            <div class="slide-subtitle">Dynamique à l'écriture, fort et rigoureux à l'exécution (Durée : 1 min 30)</div>
+          </header>
+
+          <div class="grid-2">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Typage &amp; Rigueur</span>
+              </div>
+              <h3>Dynamique mais Strict</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Typage dynamique :</strong> Les types sont portés par les valeurs, pas par les déclarations de variables (<code>x = 42</code> puis <code>x = "texte"</code>).</li>
+                <li><strong>Typage fort :</strong> Zéro conversion implicite (l'opération <code>"5" + 5</code> déclenche une <code>ArithmeticError</code> immédiate).</li>
+                <li><strong>Spécifications formelles (<code>@spec</code>) :</strong> Contrats de types optionnels pour documenter et fiabiliser les API sans alourdir le code.</li>
+              </ul>
+            </div>
+
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Primitives Clés</span>
+              </div>
+              <h3>Des Types Primitifs Riches</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Atomes (<code>:ok</code>, <code>:error</code>) :</strong> Constantes symboliques légères (simples entiers en mémoire), idéales pour exprimer les statuts.</li>
+                <li><strong>Tuples (<code>{:ok, resultat}</code>) :</strong> Collections ordonnées de taille fixe, parfaites pour les retours de fonctions structurés.</li>
+                <li><strong>Maps (<code>%&#123;nom: "Alice", solde: 100&#125;</code>) :</strong> Paires clé-valeur ultra-rapides pour modéliser les données métier.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1.5rem;">
+            <span>⚡</span>
+            <span><strong>Règle d'or :</strong> « La flexibilité d'un langage dynamique alliée à la rigueur d'un typage fort sans conversions cachées. »</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6 : MODÈLE D'EXÉCUTION
+           ========================================== -->
+      <section class="slide" data-slide="6" data-title="Le Modèle d'Exécution"
+        data-notes="• Casser l'idée reçue : Beaucoup d'étudiants croient qu'Elixir est interprété. C'est faux : il est compilé en bytecode.&#10;• La BEAM : C'est le moteur le plus éprouvé au monde pour le temps réel et la concurrence (WhatsApp, Discord).&#10;• Parallélisme natif : Tous les cœurs CPU travaillent simultanément sans se bloquer.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Le Modèle d'Exécution</h2>
+            <div class="slide-subtitle">Du code source au bytecode optimisé sur la machine virtuelle BEAM</div>
+          </header>
+
+          <div class="grid-2">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Du Source au Bytecode</span>
+              </div>
+              <h3>Compilé, Pas Interprété !</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Compilateur <code>elixirc</code> :</strong> Convertit le code source (<code>.ex</code>) en bytecode binaire optimisé (<code>.beam</code>).</li>
+                <li><strong>Vitesse d'exécution :</strong> Bien que sa syntaxe soit aussi fluide que celle de Python ou Ruby, Elixir est 100% compilé.</li>
+                <li><strong>Compilateur JIT intégré :</strong> La machine virtuelle convertit le bytecode en instructions machine natives (x86, ARM) à l'exécution.</li>
+              </ul>
+            </div>
+
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Le Runtime</span>
+              </div>
+              <h3>La Machine Virtuelle BEAM</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Héritage industriel Erlang :</strong> Plus de 30 ans d'optimisation destiné aux télécoms et à la disponibilité continue.</li>
+                <li><strong>1 Scheduler par cœur CPU :</strong> Exploite pleinement le matériel multi-cœur sans aucun verrou global (adieu le GIL de Python ou Ruby).</li>
+                <li><strong>Soft Real-Time :</strong> Conçu pour garantir des latences prévisibles et bornées même sous forte saturation réseau.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1.5rem;">
+            <span>⚙️</span>
+            <span><strong>Règle d'or :</strong> « La BEAM est à Elixir ce que la JVM est à Java : un moteur d'exécution compilé taillé pour la vitesse et la haute disponibilité. »</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 7 : GESTION DE LA MÉMOIRE
+           ========================================== -->
+      <section class="slide" data-slide="7" data-title="La Gestion de la Mémoire"
+        data-notes="• Le point fort d'Elixir : En Java, le GC balaye des gigas de RAM et met en pause l'application entière (Stop-the-World).&#10;• Sur la BEAM : Chaque processus nettoie ses 2 Ko tout seul dans son coin. Zéro impact sur les autres utilisateurs.&#10;• Cycle de vie court : Pour une requête web, le processus naît, répond, et sa mémoire est relâchée instantanément à sa mort.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">La Gestion de la Mémoire</h2>
+            <div class="slide-subtitle">Des tas isolés et un Garbage Collector unitaire par micro-processus</div>
+          </header>
+
+          <div class="grid-2">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Isolation Totale</span>
+              </div>
+              <h3>Des Tas Mémoire (Heaps) Privés</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Pas de grand tas partagé :</strong> Contrairement à Java ou Go, il n'existe aucun tas mémoire global unique saturable.</li>
+                <li><strong>Micro-tas par processus :</strong> Chaque processus possède et gère son propre petit espace mémoire hermétique (~2 Ko).</li>
+                <li><strong>Partage structurel :</strong> L'immutabilité permet de réutiliser les sous-structures en RAM sans duplication inutile.</li>
+              </ul>
+            </div>
+
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Ramasse-Miettes Isolé</span>
+              </div>
+              <h3>Un Garbage Collector par Processus</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Zéro « Stop-The-World » global :</strong> Le Garbage Collector d'un processus ne fige JAMAIS le reste de l'application.</li>
+                <li><strong>Nettoyage en microsecondes :</strong> Le GC s'exécute sur des volumes minuscules, sans pics de latence perceptibles.</li>
+                <li><strong>Nettoyage gratuit à la mort :</strong> Quand un processus court termine sa tâche, toute sa mémoire est libérée d'un bloc sans solliciter le GC.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1.5rem;">
+            <span>🧹</span>
+            <span><strong>Règle d'or :</strong> « Cloisonner la mémoire par processus élimine le gel applicatif du Garbage Collector et garantit une latence ultra-stable. »</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 8 : CONCURRENCE & PARALLÉLISME
+           ========================================== -->
+      <section class="slide" data-slide="8" data-title="La Concurrence &amp; le Parallélisme"
+        data-notes="• Précision clé : Un processus BEAM n'est PAS un processus OS Linux, c'est un micro-thread virtuel ultra-léger.&#10;• La métaphore des SMS : Deux personnes qui s'échangent des SMS : chacune a son téléphone, personne ne peut altérer la mémoire de l'autre.&#10;• Transition vers la démo : 'Nous avons posé les 5 piliers théoriques (8 min). Passons maintenant à l'écran pour la démonstration en direct !'">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">La Concurrence &amp; le Parallélisme</h2>
+            <div class="slide-subtitle">Le modèle d'acteurs : des micro-processus légers sans mémoire partagée</div>
+          </header>
+
+          <div class="grid-2">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Poids Plume</span>
+              </div>
+              <h3>Micro-Processus vs Threads OS</h3>
+              <div class="metric-value" style="font-size: 2.2rem; color: var(--accent-primary); margin: 0.5rem 0;">~2 Ko <span style="font-size: 1rem; color: var(--text-muted);">/ processus</span></div>
+              <ul class="bullet-check" style="margin-top: 0.5rem;">
+                <li><strong>Légèreté extrême :</strong> Rien à voir avec un thread système lourd (1 à 2 Mo en Java). Des millions de processus simultanés par machine.</li>
+                <li><strong>Ordonnancement préemptif :</strong> L'ordonnanceur alloue un quota d'opérations équitable : une boucle infinie ne bloque jamais le système.</li>
+                <li><strong>Tolérance aux pannes :</strong> Un crash est strictement confiné à son micro-processus (<em>philosophie « Let it crash »</em>).</li>
+              </ul>
+            </div>
+
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Modèle d'Acteurs</span>
+              </div>
+              <h3>Zéro Mémoire Partagée</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Zéro variable partagée :</strong> Deux processus ne partagent aucune adresse en mémoire vive.</li>
+                <li><strong>Adieu verrous et deadlocks :</strong> Sans mémoire partagée, les <code>mutex</code> et les accès concurrents conflictuels disparaissent.</li>
+                <li><strong>Communication par messages :</strong> Échanges asynchrones exclusifs par copie de données dans la boîte aux lettres du destinataire.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1.5rem;">
+            <span>💬</span>
+            <span><strong>Règle d'or :</strong> « Ne pas communiquer en partageant de la mémoire, mais partager de la mémoire en communiquant. »</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9 : DÉMO LIVECODING
+           ========================================== -->
+      <section class="slide" data-slide="9" data-title="Démo Livecoding"
+        data-notes="• Bascule immédiate : Quitter la présentation pour afficher le terminal et l'IDE sur l'écran principal.&#10;• Plan B (Secours) : En cas d'aléa réseau ou machine, cliquer sur « Lancer la Vidéo de Secours » pour diffuser la vidéo de 7 minutes et continuer le commentaire en voix off.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Démo Livecoding</h2>
+            <div class="slide-subtitle">Démonstration sur écran avec backup vidéo (Durée : 7 min)</div>
+          </header>
+
+          <div class="grid-2">
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">En Direct</span>
+              </div>
+              <h3>Démonstration sur l'Écran</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Bascule immédiate :</strong> Tout se déroule en direct dans l'éditeur (VS Code) et le terminal interactif <code>iex</code>.</li>
+                <li><strong>Session interactive :</strong> Observation des micro-processus, de l'immutabilité et des benchmarks en direct.</li>
+                <li><strong>Validation concrète :</strong> Mise à l'épreuve des concepts théoriques abordés lors des 8 premières minutes.</li>
+              </ul>
+            </div>
+
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Backup Vidéo</span>
+              </div>
+              <h3>Vidéo de Secours (7 min)</h3>
+              <p style="color: var(--text-muted); margin-bottom: 1rem;">Enregistrement complet chapitré, prêt à être lancé immédiatement en cas d'imprévu technique.</p>
+              <div style="text-align: center; margin-top: 1.25rem;">
+                <a href="#slide-9" class="btn-action" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                  <span>▶</span> Lancer la Vidéo de Secours (backup_demo.mp4)
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1.5rem;">
+            <span>💻</span>
+            <span><strong>Place à la pratique :</strong> Bascule sur l'écran pour la démonstration en direct !</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10 : ANNONCE JALON 4 (CONCEPTS & CODE)
+           ========================================== -->
+      <section class="slide" data-slide="10" data-title="Partie 1 — Jalon 4 : Concepts &amp; Code en Action"
+        data-notes="• Prise de parole &amp; Transition : Merci. Je prends maintenant le relais pour vous plonger concrètement dans le code et les mécanismes essentiels du langage Elixir.&#10;• Objectif (10 min) : Parcourir les fondations syntaxiques et conceptuelles qui font d'Elixir un langage si singulier et productif.&#10;• Au programme : Le pattern matching, les structures de données, l'absence de classes objet remplacée par les Structs, le célèbre pipe operator, et enfin 4 pièges majeurs à éviter absolument quand on vient de Java ou Python.&#10;• Lancement : Commençons immédiatement par la base de tout en Elixir : l'opérateur = et le pattern matching.">
+        <div class="slide-content">
+          <div class="slide-hero">
+            <div style="margin-bottom: 0.85rem;">
+              <span class="pill-tag solid">PARTIE 1 — JALON 4</span>
+              <span class="pill-tag gray" style="margin-left: 0.6rem;">⏱ Durée : 10 min</span>
+            </div>
+
+            <h1 class="slide-title-hero">Concepts Fondamentaux &amp; Code en Action</h1>
+            <div class="slide-subtitle-hero">Variables, filtrage par motif, types, fonctions, objets et flux</div>
+
+            <div class="grid-3" style="margin-top: 1.5rem; margin-bottom: 1.25rem; width: 100%; text-align: left;">
+              <div class="x-card featured">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag solid">Variables &amp; Match</span>
+                  <span class="pill-tag gray">2.5 min</span>
+                </div>
+                <h3>L'Opérateur = &amp; Pin (^)</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Déstructuration instantanée, validation de forme et gestion native des erreurs.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">Types de Base</span>
+                  <span class="pill-tag gray">2 min</span>
+                </div>
+                <h3>Atoms, Tuples, Listes &amp; Maps</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Symboles constants, retours de fonctions, décomposition <code>[t|q]</code> et dictionnaires.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">Fonctions &amp; Arité</span>
+                  <span class="pill-tag gray">1 min</span>
+                </div>
+                <h3>Citoyennes de 1er Rang</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Fonctions anonymes, modules et identification stricte par nom et nombre d'arguments.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">Alternative Objets</span>
+                  <span class="pill-tag gray">1.5 min</span>
+                </div>
+                <h3>Structs &amp; Modules</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Séparation nette entre données (Structs) et comportements (Modules immuables).</p>
+              </div>
+
+              <div class="x-card featured">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag solid">Flux &amp; Pipeline</span>
+                  <span class="pill-tag gray">1 min</span>
+                </div>
+                <h3>Le Pipe Operator (|&gt;)</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Chaînage élégant et transformation de données de haut en bas sans parenthèses imbriquées.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">Pièges Impératifs</span>
+                  <span class="pill-tag gray">2 min</span>
+                </div>
+                <h3>Les 4 Réflexes à Changer</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Immuabilité, « Let it crash », guillemets simples/doubles et fin des boucles.</p>
+              </div>
+            </div>
+
+            <div class="summary-box">
+              <span>🚀</span>
+              <span><strong>Programme :</strong> 10 minutes d'immersion directe dans la syntaxe et la philosophie de code d'Elixir.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 11 : VARIABLES & PATTERN MATCHING
+           ========================================== -->
+      <section class="slide" data-slide="11" data-title="Variables &amp; Pattern Matching"
+        data-notes="• Idée fondamentale : Oubliez le = de Java ou C++. En Elixir, = s'appelle l'opérateur de match.&#10;• Exemple simple : x = 1 ressemble à une assignation, mais en réalité on lie 1 à x.&#10;• La déstructuration : Avec {status, message} = {:ok, 'Connecté'}, on dépaquette directement le tuple. Pas besoin de getters ou d'index.&#10;• La gestion d'erreur : Ligne suivante, si on attend {:ok, resultat} mais qu'on reçoit {:error, ...}, Elixir lève immédiatement une MatchError. C'est la base de la programmation défensive et robuste en Elixir sans empiler des if/else.&#10;• Transition : Mais que se passe-t-il si x a déjà une valeur et qu'on veut comparer sans réassigner ? C'est là qu'intervient l'opérateur Pin.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Variables &amp; Pattern Matching : Le Signe = Réinventé</h2>
+            <div class="slide-subtitle">En Elixir, le signe = n'est pas une simple assignation, c'est un opérateur de filtrage par motif</div>
+          </header>
+
+          <div class="split-code">
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Filtrage par Motif</span>
+              </div>
+              <h3>L'Équivalence &amp; la Déstructuration</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Pas d'assignation classique :</strong> Le signe <code>=</code> agit comme une équation mathématique cherchant à faire correspondre gauche et droite.</li>
+                <li><strong>Liaison (binding) :</strong> Si une variable nue est à gauche (<code>x = 1</code>), Elixir lie la valeur à cette variable.</li>
+                <li><strong>Déstructuration directe :</strong> Extraction instantanée des sous-valeurs depuis des tuples ou structures (<code>{status, message}</code>).</li>
+                <li><strong>Gestion d'erreur native :</strong> Si le motif ne concorde pas, l'exécution s'interrompt avec une <code>MatchError</code>.</li>
+              </ul>
+            </div>
+
+            <div class="code-box">
+              <div class="code-header">pattern_matching.ex</div>
+              <pre><code class="language-elixir"># "Assignation" classique (en réalité, on lie 1 à x)
+x = 1
+
+# Pattern matching puissant : on extrait les valeurs
+# et on continue l'exécution si le motif correspond
+{status, message} = {:ok, "Connecté"}
+# status vaut :ok, message vaut "Connecté"
+
+# Provoque une erreur si le motif ne correspond pas !
+{:ok, resultat} = {:error, "Fichier introuvable"}
+# => ** (MatchError) no match of right hand side value:
+#       {:error, "Fichier introuvable"}</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1rem;">
+            <span>🎯</span>
+            <span><strong>Règle d'or :</strong> Le signe <code>=</code> valide la forme des données et extrait les valeurs en une seule et unique opération.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 12 : L'OPÉRATEUR PIN (^)
+           ========================================== -->
+      <section class="slide" data-slide="12" data-title="L'Opérateur Pin (^)"
+        data-notes="• Problématique : Comme Elixir autorise la réassignation de variable (rebinding), comment vérifier qu'une valeur reçue correspond bien à une variable calculée précédemment ?&#10;• Le symbole Pin : C'est le rôle de l'accent circonflexe ^. Il 'épingle' la variable à sa valeur actuelle.&#10;• Lecture du code : ^x = 1 réussit car x vaut bien 1. En revanche, ^x = 2 fait échouer le match avec une MatchError.&#10;• Cas d'usage : Essentiel dans les clauses case ou dans les paramètres de fonctions pour matcher sur un identifiant précis sans créer de variable locale.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">L'Opérateur Pin (^) : Forcer le Test d'Égalité</h2>
+            <div class="slide-subtitle">Empêcher la réassignation d'une variable existante lors du filtrage par motif</div>
+          </header>
+
+          <div class="split-code">
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Contrôle du Motif</span>
+              </div>
+              <h3>Le Verrouillage par Pin (^)</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Rebinding par défaut :</strong> Si une variable existante apparaît à gauche d'un <code>=</code>, elle est réassignée par défaut.</li>
+                <li><strong>Rôle de l'opérateur Pin (<code>^</code>) :</strong> Préfixer une variable avec <code>^</code> force le test avec sa valeur existante.</li>
+                <li><strong>Refus d'assignation :</strong> L'opérateur interdit toute nouvelle liaison et bascule en mode comparaison pure.</li>
+                <li><strong>Assertion stricte :</strong> Si la valeur de droite ne coïncide pas exactement avec la valeur épinglée, Elixir lève une <code>MatchError</code>.</li>
+              </ul>
+            </div>
+
+            <div class="code-box">
+              <div class="code-header">pin_operator.ex</div>
+              <pre><code class="language-elixir">x = 1
+
+# L'opérateur Pin (^) : force le test avec la valeur
+# existante de x (qui est 1) au lieu de réassigner.
+^x = 1
+# => OK, car x vaut bien 1
+
+^x = 2
+# => ** (MatchError) no match of right hand side value: 2
+# (on refuse d'assigner 2 à x, on vérifie si 2 égale 1)</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1rem;">
+            <span>📌</span>
+            <span><strong>Principe :</strong> Sans <code>^</code>, <code>x = 2</code> écrase la liaison ; avec <code>^x = 2</code>, on teste si la variable vaut bien 2.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 13 : TYPES DE BASE (1/2)
+           ========================================== -->
+      <section class="slide" data-slide="13" data-title="Types de Base : Atoms &amp; Tuples"
+        data-notes="• Typage en Elixir : Typage dynamique, mais fort : pas de casting magique silencieux.&#10;• L'Atom : Préfixé par :, son nom est sa valeur. Deux atoms :ok pointent vers la même adresse en mémoire.&#10;• Le Tuple : Conçu pour des groupes de taille connue à l'avance. Remarquez comment la déstructuration par motif extrait nom et age sans aucun code superflu.&#10;• elem/2 : Fonction utilitaire pour accéder par index (commence à 0), mais la convention préfère toujours le pattern matching.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Types Fondamentaux : Atoms &amp; Tuples</h2>
+            <div class="slide-subtitle">Typage dynamique fort, constantes symboliques et conteneurs à taille fixe</div>
+          </header>
+
+          <div class="split-code">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Fondations &amp; Retours</span>
+              </div>
+              <h3>Symboles &amp; Paires</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Typage dynamique fort :</strong> Vérifié au runtime sans conversion implicite inattendue.</li>
+                <li><strong>Les Atoms (<code>:ok</code>, <code>:error</code>) :</strong> Constantes dont le nom est leur propre valeur, ultra-légères en mémoire.</li>
+                <li><strong>Les Tuples (<code>{...}</code>) :</strong> Structures contiguës à taille fixe, idéales pour regrouper les retours de fonctions.</li>
+                <li><strong>Extraction propre :</strong> Principalement lue via Pattern Matching, ou ponctuellement via <code>elem(tuple, index)</code>.</li>
+              </ul>
+            </div>
+
+            <div class="code-box">
+              <div class="code-header">atoms_and_tuples.ex</div>
+              <pre><code class="language-elixir"># 1. Les Atoms (leur nom est leur propre valeur)
+:ok
+:error
+
+# 2. Les Tuples (taille fixe, retours de fonctions)
+utilisateur = {:user, "Jean", 25}
+
+# -> Accès recommandé : Pattern Matching direct !
+{:user, nom, age} = utilisateur
+# nom vaut "Jean", age vaut 25
+
+# (Accès direct par index si besoin ponctuel)
+nom_direct = elem(utilisateur, 1) # => "Jean"</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1rem;">
+            <span>💡</span>
+            <span><strong>Convention universelle :</strong> Le standard Elixir retourne presque toujours <code>{:ok, resultat}</code> en cas de succès et <code>{:error, raison}</code> en cas d'échec.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 14 : TYPES DE BASE (2/2)
+           ========================================== -->
+      <section class="slide" data-slide="14" data-title="Collections : Listes Chaînées &amp; Maps"
+        data-notes="• Attention piège : Une liste Elixir n'est pas un tableau ArrayList. Accéder au 1000ème élément oblige à parcourir les 999 précédents.&#10;• L'opérateur pipe | dans les listes : Il sépare la tête (1er élément) de la queue (le reste). L'ajout au début [0 | liste] est instantané en O(1).&#10;• Les Maps : Dictionnaires très puissants. Si les clés sont des atoms, on accède via le point map.age. Et notez qu'on peut filtrer par pattern matching pour extraire seulement les clés qui nous intéressent.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Collections : Listes Chaînées &amp; Maps</h2>
+            <div class="slide-subtitle">Décomposition Tête/Queue et dictionnaires associatifs clé/valeur</div>
+          </header>
+
+          <div class="split-code">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Structures de Données</span>
+              </div>
+              <h3>Listes vs Dictionnaires</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Listes chaînées (<code>[...]</code>) :</strong> Ce ne sont PAS des tableaux indexés, mais des listes récursives Tête / Queue.</li>
+                <li><strong>Décomposition <code>[tete | queue]</code> :</strong> Isole le premier élément pour des traitements récursifs très rapides.</li>
+                <li><strong>Ajout en tête O(1) :</strong> L'ajout <code>[0 | liste]</code> est instantané grâce au partage structurel.</li>
+                <li><strong>Maps (<code>%{...}</code>) :</strong> Recherche rapide, accès par point <code>map.cle</code> et pattern matching.</li>
+              </ul>
+            </div>
+
+            <div class="code-box">
+              <div class="code-header">lists_and_maps.ex</div>
+              <pre><code class="language-elixir"># 3. Listes Chaînées (pas des tableaux contigus !)
+liste = [1, 2, 3]
+
+# Décomposition Tête (Head) / Queue (Tail)
+[tete | queue] = liste
+# tete = 1, queue = [2, 3]
+
+# Ajout instantané en tête O(1)
+nouvelle_liste = [0 | liste] # => [0, 1, 2, 3]
+
+# 4. Maps (Dictionnaires Clé/Valeur)
+map = %{"role" => "admin", :age => 30}
+
+Map.get(map, "role") # => "admin"
+map.age              # => 30 (si la clé est un atom)
+
+# Pattern matching sur les clés d'une Map
+%{age: age_recup} = map # => age_recup vaut 30</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1rem;">
+            <span>📦</span>
+            <span><strong>À retenir :</strong> Les listes chaînées s'alimentent toujours par la tête ; les maps fournissent la flexibilité clé/valeur.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 15 : LES FONCTIONS & L'ARITÉ
+           ========================================== -->
+      <section class="slide" data-slide="15" data-title="Les Fonctions &amp; la Notion d'Arité"
+        data-notes="• Citoyennes de 1er rang : On manipule les fonctions comme des valeurs classiques.&#10;• L'appel anonyme : Notez le point addition.(2, 3). C'est une distinction syntaxique voulue pour ne pas confondre fonction anonyme et fonction nommée d'un module.&#10;• L'arité : Retenez bien cette notation slash / (add/2), vous la retrouverez dans toute la documentation officielle et les messages d'erreur.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Les Fonctions : Citoyennes de Premier Rang</h2>
+            <div class="slide-subtitle">Fonctions anonymes, fonctions nommées et identification stricte par nom et arité</div>
+          </header>
+
+          <div class="split-code">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Fonctions Pures</span>
+              </div>
+              <h3>Définition &amp; Identification</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Citoyennes de 1er rang :</strong> Stockables dans des variables, transmissibles comme arguments ou retours.</li>
+                <li><strong>Notion d'arité (<code>nom/arité</code>) :</strong> Une fonction est strictement caractérisée par son nom ET son nombre d'arguments (<code>add/2</code> ≠ <code>add/3</code>).</li>
+                <li><strong>Fonctions anonymes :</strong> Définies avec <code>fn -&gt; ... end</code> et appelées impérativement avec un point <code>.(args)</code>.</li>
+                <li><strong>Fonctions nommées :</strong> Résident au sein d'un <code>defmodule</code> (syntaxe <code>do...end</code> ou <code>do: ...</code>).</li>
+              </ul>
+            </div>
+
+            <div class="code-box">
+              <div class="code-header">functions.ex</div>
+              <pre><code class="language-elixir"># Fonction anonyme (appelée avec un point .)
+addition = fn a, b -> a + b end
+addition.(2, 3) # => 5
+
+# Fonction nommée (dans un module)
+defmodule Math do
+  def add(a, b) do
+    a + b
+  end
+
+  # Syntaxe raccourcie en une ligne
+  def sub(a, b), do: a - b
+end
+
+Math.add(10, 5) # => 15
+Math.sub(10, 5) # => 5</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1rem;">
+            <span>⚡</span>
+            <span><strong>Convention :</strong> En Elixir, on ne parle jamais de la fonction <code>add</code>, mais toujours de <code>Math.add/2</code>.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 16 : STRUCTS ET MODULES
+           ========================================== -->
+      <section class="slide" data-slide="16" data-title="Structs &amp; Modules : Alternative aux Objets"
+        data-notes="• Le choc de l'OO vers le fonctionnel : En Java, on écrirait jean.grandir(), modifiant l'état interne de l'objet.&#10;• L'approche Elixir : On sépare strictement le conteneur de données (User avec son defstruct) des fonctions qui le manipulent.&#10;• L'immuabilité en action : User.grandir(jean) ne touche pas à la variable jean (qui a toujours 30 ans). Elle renvoie une nouvelle structure avec age: 31.&#10;• Élimination des bugs : Fini les effets de bord où une méthode tierce mute subrepticement votre objet sans que vous le sachiez.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Structs &amp; Modules : Séparer Données et Comportement</h2>
+            <div class="slide-subtitle">En l'absence de classes objet, découpler l'état (Structs) des transformations (Modules)</div>
+          </header>
+
+          <div class="split-code">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Paradigme Fonctionnel</span>
+              </div>
+              <h3>Pas d'Encapsulation Mutable</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Rupture avec la POO :</strong> En Elixir, on ne regroupe pas données et méthodes au sein d'une même classe.</li>
+                <li><strong>Les Structs (<code>defstruct</code>) :</strong> Maps typées et nommées définissant la structure de données avec des valeurs par défaut.</li>
+                <li><strong>Les Modules (<code>defmodule</code>) :</strong> Fonctions métier pures qui reçoivent les données et retournent une nouvelle copie.</li>
+                <li><strong>Immuabilité stricte :</strong> <code>%&#123;user | age: age + 1&#125;</code> renvoie une nouvelle version clonée sans altérer l'original.</li>
+              </ul>
+            </div>
+
+            <div class="code-box">
+              <div class="code-header">user_struct.ex</div>
+              <pre><code class="language-elixir">defmodule User do
+  # 1. Structure de données pure
+  defstruct name: "Anonyme", age: 0
+
+  # 2. Fonctions de transformation
+  def grandir(%User{age: age} = user) do
+    # Retourne un NOUVEL utilisateur,
+    # ne modifie pas l'ancien en mémoire !
+    %{user | age: age + 1}
+  end
+end
+
+jean = %User{name: "Jean", age: 30}
+jean_plus_vieux = User.grandir(jean)
+# jean.age vaut toujours 30 !
+# jean_plus_vieux.age vaut 31</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1rem;">
+            <span>🧩</span>
+            <span><strong>Formule clé :</strong> Données pures (<code>Struct</code>) + Fonctions de transformation (<code>Module</code>) = Code prévisible et sans effets de bord.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 17 : LE PIPE OPERATOR (|>)
+           ========================================== -->
+      <section class="slide" data-slide="17" data-title="Le Pipe Operator (|&gt;)"
+        data-notes="• Le pipe operator : C'est la fonctionnalité préférée des développeurs Elixir.&#10;• Comparaison visuelle : En haut, pour comprendre ce que fait le code, il faut commencer par lire au milieu 1..10, puis reculer vers Enum.filter, puis encore vers Enum.sum.&#10;• Avec le pipe : C'est limpide : je prends les nombres de 1 à 10, je garde les pairs, je calcule la somme.&#10;• Lien vers Phoenix : Retenez bien cette syntaxe, car Phoenix repose à 100% là-dessus pour traiter les connexions web d'étape en étape.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Le Pipe Operator (|&gt;) : L'Élégance des Flux</h2>
+            <div class="slide-subtitle">Transformer les imbrications de parenthèses en un pipeline limpide et naturel</div>
+          </header>
+
+          <div class="split-code">
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Fonctionnalité Favorite</span>
+              </div>
+              <h3>Lisibilité &amp; Composition de Flux</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Mécanisme :</strong> L'opérateur <code>|&gt;</code> injecte le résultat de gauche comme <strong>premier argument</strong> de la fonction de droite.</li>
+                <li><strong>Fin des poupées russes :</strong> Supprime les imbrications illisibles de l'intérieur vers l'extérieur <code>f(g(h(x)))</code>.</li>
+                <li><strong>Sens de lecture naturel :</strong> Le flux se lit de haut en bas, comme une véritable chaîne de transformation industrielle.</li>
+                <li><strong>Fondement de Phoenix :</strong> C'est ce mécanisme exact qui orchestre le passage des requêtes HTTP à travers les Plugs.</li>
+              </ul>
+            </div>
+
+            <div class="code-box">
+              <div class="code-header">pipe_operator.ex</div>
+              <pre><code class="language-elixir"># 1. SANS le pipe (lecture difficile, de l'intérieur vers l'extérieur)
+Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
+
+# 2. AVEC le pipe operator (lecture naturelle de haut en bas)
+1..10
+|> Enum.filter(fn x -> rem(x, 2) == 0 end)
+|> Enum.sum()
+# => 30
+
+# Dans Phoenix, le web est un pipeline :
+# conn |> endpoint() |> router() |> controller()</code></pre>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1rem;">
+            <span>💧</span>
+            <span><strong>Équation de lisibilité :</strong> <code>donnée |&gt; étape_1() |&gt; étape_2() |&gt; résultat_final</code></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 18 : LES 4 PIÈGES CLÉS
+           ========================================== -->
+      <section class="slide" data-slide="18" data-title="Les 4 Pièges &amp; Changements de Paradigme"
+        data-notes="• Synthèse des pièges : Pour conclure ma partie, voici les 4 points où les nouveaux venus trébuchent le plus :&#10;• 1. L'immuabilité : Si vous faites un List.delete(l, 1) sans écrire l = List.delete(l, 1), votre liste d'origine n'a pas bougé !&#10;• 2. Let it crash : Ne cherchez pas à blinder votre code avec des try/catch partout. En Elixir, on laisse planter les micro-processus car l'arbre de supervision les relance instantanément.&#10;• 3. Les guillemets : Attention : 'texte' (String binaire) n'est pas 'texte' (Charlist / liste d'entiers Erlang). Les libs Erlang demandent souvent des simples guillemets.&#10;• 4. Fin des boucles : Pas de while ni de for mutable. On utilise Enum.map ou la récursion. On transforme la donnée.&#10;• Transition vers la Partie 2 : Vous avez maintenant en main tous les concepts fondamentaux d'Elixir. Je passe la parole à mon camarade pour découvrir comment le framework Phoenix exploite toute cette puissance pour révolutionner le web temps réel !">
+        <div class="slide-content">
+          <header class="slide-header">
+            <h2 class="slide-title">Les 4 Pièges &amp; Changements de Paradigme</h2>
+            <div class="slide-subtitle">Les réflexes impératifs à désapprendre pour maîtriser l'esprit d'Elixir</div>
+          </header>
+
+          <div class="grid-4">
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Piège #1</span>
+              </div>
+              <h3>Immuabilité Oubliée</h3>
+              <ul class="bullet-check" style="margin-top: 0.5rem; font-size: 0.9rem;">
+                <li><strong>Perte du résultat :</strong> Modifier une liste sans réassigner la valeur entraîne la perte immédiate du calcul.</li>
+                <li><strong>Zéro mutation :</strong> Aucune méthode ne modifie l'objet en mémoire sur place.</li>
+              </ul>
+            </div>
+
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">Philosophie BEAM</span>
+              </div>
+              <h3>« Let it crash »</h3>
+              <ul class="bullet-check" style="margin-top: 0.5rem; font-size: 0.9rem;">
+                <li><strong>Pas de try/catch :</strong> On n'encapsule pas tout dans des blocs d'exception lourds.</li>
+                <li><strong>Superviseur :</strong> On laisse le processus planter ; il est réinitialisé dans un état propre en microsecondes.</li>
+              </ul>
+            </div>
+
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Piège #2</span>
+              </div>
+              <h3>Guillemets Doubles vs Simples</h3>
+              <ul class="bullet-check" style="margin-top: 0.5rem; font-size: 0.9rem;">
+                <li><strong><code>"texte"</code> :</strong> String binaire UTF-8 classique (standard Elixir).</li>
+                <li><strong><code>'texte'</code> :</strong> Charlist Erlang (liste d'entiers ASCII <code>[104, 101, ...]</code>).</li>
+              </ul>
+            </div>
+
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Piège #3</span>
+              </div>
+              <h3>Adieu while &amp; for</h3>
+              <ul class="bullet-check" style="margin-top: 0.5rem; font-size: 0.9rem;">
+                <li><strong>Pas de compteurs mutables :</strong> Les boucles traditionnelles avec variables incrémentées sont impossibles.</li>
+                <li><strong>Transformations pures :</strong> Tout se gère par <code>Enum.map</code>, <code>Enum.reduce</code> ou récursion.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1.5rem;">
+            <span>🧠</span>
+            <span><strong>Mindset Elixir :</strong> L'immuabilité et la supervision changent radicalement la façon d'écrire, de paralléliser et de fiabiliser un logiciel.</span>
+          </div>
+        </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/elixir.svg" alt="Elixir">
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts du Deck Engine (Injectent automatiquement le header, footer, modales & contrôles) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-elixir.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="src/js/deck-dom.js"></script>
+  <script src="src/js/deck-palette.js"></script>
+  <script src="src/js/deck-theme.js"></script>
+  <script src="src/js/deck-fit.js"></script>
+  <script src="src/js/deck-overview.js"></script>
+  <script src="src/js/deck-print.js"></script>
+  <script src="src/js/deck-navigation.js"></script>
+  <script src="src/js/deck-styler.js"></script>
+  <script src="src/js/deck.js"></script>
+  <script src="src/js/speaker.js"></script>
+  <script src="src/js/interactive.js"></script>
+</body>
+
+</html>

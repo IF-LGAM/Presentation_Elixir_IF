@@ -143,10 +143,10 @@ Avant de rédiger ou de générer les diapositives, vous **DEVEZ définir le niv
 ---
 
 ### 3.2 Métadonnées Générales :
-- **Titre de la présentation** : ⚡ Démonstrateur Deck Engine : Guide Visuel des Composants & Capacités
-- **Sous-titre / Thème** : Catalogue Interactif des Modèles & Objets Prêts à l'Emploi
-- **Durée totale estimée** : 40 min *(Alimente l'objectif de séance du Pacing Tracker)*
-- **Public visé** : Présentateurs, Développeurs, Designers & Formateurs
+- **Titre de la présentation** : Elixir & Phoenix : Le Web Haute Performance et Temps Réel
+- **Sous-titre / Thème** : Module Infrastructures & Frameworks — Master MIAGE
+- **Durée totale estimée** : 60 min *(Alimente l'objectif de séance du Pacing Tracker)*
+- **Public visé** : Étudiants MIAGE, Développeurs & Architectes Web
 - **Thème visuel global** : dark *(choix parmi : dark | light | nordic | cyberpunk | emerald | navy | sepia)*
 - **Densité de contenu** : balanced *(choix parmi : `pur-support` | `balanced` | `dense`)*
 
@@ -184,310 +184,665 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ### 3.4 Plan Détaillé des Slides de Démonstration :
 
-#### Slide 1 : Couverture & Sommaire Exécutif (Hero)
+#### Slide 1 : Couverture & Sommaire Général
 - **Type de slide** : hero
-- **Durée estimée** : 3 min
-- **Titre (title-slide)** : ⚡ Deck Engine Showcase
-- **Sous-titre (subtitle-slide)** : Le Moteur de Présentation HTML Augmenté par l'IA — Zéro Dépendance, Zéro Débordement
+- **Durée estimée** : 2 min
+- **Titre (title-slide)** : Elixir & Phoenix Framework
+- **Sous-titre (subtitle-slide)** : Scalabilité massive, résilience et paradigme fonctionnel au service du web moderne
 - **Mise en page** : hero
 - **Contenu & Composants** :
-  - En-tête : Badges `pill-tag.solid` ("Démonstrateur Officiel") et `pill-tag.gray` ("⏱ Durée globale : ~40 min • 11 Slides")
-  - Grille centrale (`grid-3`) : 3 cartes `x-card.featured` présentant les grands axes du moteur :
-    - Carte 1 : Badge "01" accentué + Titre "Mises en Page & Cartes" + Descriptif (Grilles 2 à 4 colonnes, comparatifs et blocs de synthèse)
-    - Carte 2 : Badge "02" accentué + Titre "Données, Code & Schémas" + Descriptif (Tableaux de données, métriques KPI géantes, blocs Prism.js et SVG)
-    - Carte 3 : Badge "03" accentué + Titre "Interactivité & Vecteurs" + Descriptif (Quizz cliquables, diagrammes Mermaid.js et console orateur)
-  - Pied de hero : `summary-box` avec guide rapide des touches (<kbd>&larr;</kbd>/<kbd>&rarr;</kbd> naviguer, <kbd>S</kbd> console orateur, <kbd>O</kbd> aperçu grille, <kbd>T</kbd> thème, <kbd>P</kbd> export PDF).
-- **Logos de pied de slide** :
-  - `bottom-left logo-sm` : `assets/logos/elixir.svg` (Icône moteur)
-  - `bottom-right logo-sm` : `assets/logos/erlang.svg` (Icône robustesse)
-- **Notes d'orateur (data-notes)** :
-  > • Bienvenue à cette démonstration complète du Slide Deck Engine.  
-  > • Ce diaporama a un double objectif : vous montrer le rendu esthétique haut de gamme du moteur, et servir de banc d'essai exhaustif pour tous les composants décrits dans COMPOSANTS_DICTIONNAIRE.md.  
-  > • Vous allez découvrir 11 diapositives calibrées, toutes animées et conçues pour être projetées sans aucun outil externe.  
-  > • Appuyez sur Espace ou Flèche droite pour lancer le parcours !
-
----
-
-#### Slide 2 : Comparatif & Révélation Progressive (Fragments)
-- **Type de slide** : slide
-- **Durée estimée** : 4 min
-- **Titre (title-slide)** : Approches Traditionnelles vs Deck Engine
-- **Sous-titre (subtitle-slide)** : Comparatif direct des paradigmes et démonstration de la révélation par étapes (Fragments)
-- **Mise en page** : grid-2
-- **Animation & Fragments** : Les 2 cartes comparatives ainsi que la boîte de synthèse apparaissent successivement au fil des clics (<kbd>&rarr;</kbd> ou <kbd>Espace</kbd>) grâce à la classe `fragment`.
-- **Contenu & Composants** :
-  - **Colonne Gauche (Le Modèle Traditionnel)** : `x-card` standard (classe `fragment`)
-    - Badge : `pill-tag.gray` ("Outils Lourds & Slides Manuelles")
-    - Titre : La Friction des Outils Classiques
-    - Liste à puces coches (`bullet-check`) :
-      - Mise en page chronophage : Des heures passées à aligner des blocs sur PowerPoint ou Keynote.
-      - Rupture avec le code : Impossible d'embarquer facilement du code syntaxé ou des diagrammes texte.
-      - Débordements d'écran imprévus : Mauvaise surprise selon la résolution du vidéoprojecteur de la salle.
-  - **Colonne Droite (L'Approche Deck Engine)** : `x-card.featured` (classe `fragment`)
-    - Badge : `pill-tag.solid` ("Paradigme Découplé & IA")
-    - Titre : Automatisation & Rendu Sans Faille
-    - Liste à puces coches (`bullet-check`) :
-      - Rdaction pure en Markdown : L'utilisateur n'écrit que son contenu, l'IA produit le HTML final.
-      - Auto-ajustement d'échelle adaptatif : Zéro débordement garanti sur n'importe quel moniteur.
-      - Console orateur dual-screen : Pacing tracker et notes synchronisées en temps réel via WebSockets/BroadcastChannel.
-  - **Pied de slide** : `summary-box` (classe `fragment`)
-    - Icône ⚡ + Synthèse : « La séparation stricte entre le fond (Markdown) et la forme (Dictionnaire HTML) libère 100% de votre temps d'ingénierie. »
-- **Notes d'orateur (data-notes)** :
-  > • Observez comment les fragments permettent d'orchestrer le rythme : au premier clic, la colonne de gauche s'affiche pour poser le constat.  
-  > • Au second clic, la colonne de droite apparaît pour apporter la solution avec sa bordure d'accent et sa lueur verte.  
-  > • Enfin, la boîte de synthèse se dévoile pour ancrer le message clé dans l'esprit du public avant de changer de slide.
-
----
-
-#### Slide 3 : Frise Chronologique Horizontale & Processus (Stepper)
-- **Type de slide** : slide
-- **Durée estimée** : 4 min
-- **Titre (title-slide)** : Cycle de Production en 4 Jalons
-- **Sous-titre (subtitle-slide)** : De la prise de notes brute à la diffusion en direct devant votre auditoire
-- **Mise en page** : grid-1 avec stepper horizontal puis `grid-4`
-- **Contenu & Composants** :
-  - **Frise d'étapes (`stepper-horizontal`)** :
-    - Étape 1 (`step-node.active`) : Cercle "1", Titre "1. Idéation Markdown", Descriptif "Remplissage de CONSIGNES_TEMPLATE.md"
-    - Connecteur actif (`step-connector`)
-    - Étape 2 (`step-node.active`) : Cercle "2", Titre "2. Compilation IA", Descriptif "Assemblage via COMPOSANTS_DICTIONNAIRE.md"
-    - Connecteur actif (`step-connector`)
-    - Étape 3 (`step-node.active`) : Cercle "3", Titre "3. Contrôle & Ajustement", Descriptif "Relecture locale sur presentation.html"
-    - Connecteur (`step-connector`)
-    - Étape 4 (`step-node`) : Cercle "4", Titre "4. Projection Direct", Descriptif "Mode plein écran F & Speaker View S"
-  - **Grille de 4 piliers (`grid-4`)** :
-    - Carte 1 : Chiffre "01" géant en accent + Titre "Simplicité" + Texte "Un fichier Markdown unique, lisible par tout le monde."
-    - Carte 2 : Chiffre "02" géant en accent + Titre "Vitesse" + Texte "Génération complète d'un deck en moins de 60 secondes."
-    - Carte 3 : Chiffre "03" géant en accent (`featured`) + Titre "Autonomie" + Texte "Fichier HTML 100% autonome, zéro serveur requis."
-    - Carte 4 : Chiffre "04" géant en accent (`featured`) + Titre "Rythme" + Texte "Pacing tracker pour rester parfaitement dans les temps."
-  - **Pied de slide** : `summary-box` avec constat de productivité.
-- **Notes d'orateur (data-notes)** :
-  > • Le composant stepper-horizontal est idéal pour illustrer des cycles de déploiement, des frises historiques ou des méthodologies projet.  
-  > • Chaque jalon possède son état actif rétro-éclairé et son connecteur visuel.  
-  > • En dessous, la grille grid-4 permet de décliner immédiatement les vertus ou métriques associées à chaque étape.
-
----
-
-#### Slide 4 : Données Structurées, KPIs & Métriques (Data Table)
-- **Type de slide** : slide
-- **Durée estimée** : 3 min 30
-- **Titre (title-slide)** : Benchmarks d'Impact & Indicateurs Clés
-- **Sous-titre (subtitle-slide)** : Présentation de données quantitatives via tableaux zébrés et cartes de métriques géantes
-- **Mise en page** : grid-2
-- **Contenu & Composants** :
-  - **Colonne Gauche (Tableau comparatif `data-table`)** :
-    - Tableau avec colonnes : "Critère Technique", "Présentation Standard", "Deck Engine HTML"
-    - Ligne 1 : Poids moyen du fichier / 45 Mo (PPTX lourd) / `<span class="pill-tag solid">&lt; 350 Ko</span>`
-    - Ligne 2 : Temps d'assemblage / 4 à 6 heures / `<span class="pill-tag solid">3 minutes</span>`
-    - Ligne 3 : Compatibilité multi-écrans / Souvent altérée / `<span class="pill-tag">Auto-fit vectoriel</span>`
-    - Ligne 4 : Synchronisation orateur / Matériel additionnel / `<span class="pill-tag">WebSockets / Broadcast</span>`
-  - **Colonne Droite (Cartes KPI `x-card.metric`)** : Grille 2x2
-    - Carte Métrique 1 (`x-card.metric`) : `metric-value` ("x12"), Titre "Vitesse de Conception", Descriptif "Par rapport aux outils graphiques manuels"
-    - Carte Métrique 2 (`x-card.metric.featured`) : `metric-value` ("-90%"), Titre "Temps de Préparation", Descriptif "Grâce à l'automatisation IA"
-    - Carte Métrique 3 (`x-card.metric.featured` étendue 2 cols) : `metric-value` ("100%"), Titre "Fidélité Vectorielle & Zéro Débordement", Descriptif "Contrôlé par deck-fit.js sur chaque slide", Jauge visuelle `progress-track` avec `progress-fill` (largeur 100%)
-  - **Pied de slide** : `summary-box` avec synthèse chiffrée.
-- **Notes d'orateur (data-notes)** :
-  > • Cette slide démontre la complémentarité entre un tableau bien structuré et des cartes métriques géantes.  
-  > • Les badges pilules dans le tableau attirent l'œil sur les valeurs remarquables.  
-  > • À droite, les valeurs métriques en Montserrat 900 créent un point focal fort pour les chiffres percutants.
-
----
-
-#### Slide 5 : Développement, Code & Terminaux (Split-Code)
-- **Type de slide** : slide
-- **Durée estimée** : 4 min
-- **Titre (title-slide)** : Coloration Syntaxique & Terminaux Annotés
-- **Sous-titre (subtitle-slide)** : Blocs de code Prism.js avec coloration haute fidélité et console système avec copie en 1 clic
-- **Mise en page** : split-code
-- **Contenu & Composants** :
-  - **Colonne Gauche (Concept & Liens d'action)** : `x-card`
-    - Badge : `pill-tag.solid` ("Composant Développeur")
-    - Titre : Un Environnement Dédié au Code
-    - Liste `bullet-check` :
-      - Coloration Prism.js intégrée : Prise en charge de Python, JavaScript, Elixir, SQL, Shell, etc.
-      - Copie instantanée dans le presse-papiers avec toast de confirmation.
-      - Boutons d'action : Composants `.btn-action` et `.repo-link` cliquables.
-    - Rangée d'actions en bas de carte :
-      - Lien bouton `btn-action` : "Voir la documentation &rarr;"
-      - Lien dépôt `repo-link` : "📦 GitHub Template"
-  - **Colonne Droite (Code & Terminal)** :
-    - Bloc de code `code-box` contenant un extrait Python ou JavaScript élégant avec en-tête `code-header` et bouton copier.
-    - Terminal console `terminal-box` avec commande d'initialisation rapide : `git clone https://github.com/votre-orga/html-slides-template.git && open presentation.html`
-- **Notes d'orateur (data-notes)** :
-  > • La mise en page split-code est idéale pour les soutenances techniques et les cours de programmation.  
-  > • Le bloc de code à droite utilise le thème Tomorrow Dark de Prism.js avec un contraste optimal.  
-  > • Le terminal en dessous invite directement l'auditeur à tester la commande sur son propre ordinateur.
-
----
-
-#### Slide 6 : Architecture & Grand Schéma Système (Split-Schema)
-- **Type de slide** : slide
-- **Durée estimée** : 3 min 30
-- **Titre (title-slide)** : Schémas d'Architecture & Flux de Données
-- **Sous-titre (subtitle-slide)** : Intégration de visuels vectoriels SVG avec calibrage strict et légende descriptive
-- **Mise en page** : split-schema
-- **Contenu & Composants** :
-  - **Colonne Gauche (Explication conceptuelle)** : `x-card.featured`
-    - Badge : `pill-tag.solid` ("Architecture Modulaire")
-    - Titre : Découplage Moteur & Présentation
-    - Liste `bullet-check` :
-      - Noyau autonome : Le script `deck.js` injecte automatiquement le bandeau supérieur, la barre de défilement et le tiroir de notes.
-      - Passerelle BroadcastChannel : Synchronisation bidirectionnelle entre l'écran public et la console privée du présentateur.
-      - Moteur d'auto-redimensionnement : Le fichier `deck-fit.js` mesure en continu la boîte englobante pour appliquer une échelle optimale.
-  - **Colonne Droite (Grand Schéma `schema-box`)** :
-    - Image d'architecture : `assets/schemas/architecture-demo.svg` avec classe `schema-img`
-    - Légende normalisée : `schema-caption` ("Figure 1 : Topologie de synchronisation temps réel entre fenêtre publique et console orateur")
-- **Notes d'orateur (data-notes)** :
-  > • Le composant split-schema garantit que le texte explicatif et le schéma graphique restent au même niveau sans se gêner.  
-  > • La classe schema-img contraint automatiquement la hauteur pour empêcher tout dépassement vertical.  
-  > • Vous pouvez remplacer cette image par n'importe quel fichier SVG ou PNG exporté depuis draw.io ou Excalidraw.
-
----
-
-#### Slide 7 : Cycles Vertueux & Boucles Systémiques (Virtuous Circle)
-- **Type de slide** : slide
-- **Durée estimée** : 3 min 30
-- **Titre (title-slide)** : Modélisation Circulaire & Boucles d'Amélioration
-- **Sous-titre (subtitle-slide)** : Visualisation de processus continus grâce au composant virtuous-circle
-- **Mise en page** : grid-2
-- **Contenu & Composants** :
-  - **Colonne Gauche (Diagramme circulaire `virtuous-circle`)** :
-    - Piste vectorielle `cycle-track` : Cercle en pointillés avec 4 flèches orientées dans le sens des aiguilles d'une montre
-    - Noyau central `cycle-core` : "BOUCLE VERTUEUSE DU DECK"
-    - 4 nœuds périphériques `cycle-step` avec attributs de positionnement sans chevauchement :
-      - `data-pos="top"` : ✍️ 1. Rédaction Markdown
-      - `data-pos="right"` : 🤖 2. Assemblage IA
-      - `data-pos="bottom"` : ⚡ 3. Rendu HTML Pro
-      - `data-pos="left"` : 🎯 4. Présentation Direct
-  - **Colonne Droite (Détail des 4 phases)** : `x-card`
-    - Badge : `pill-tag.gray` ("Dynamique Vertueuse")
-    - Titre : Pourquoi une Boucle Fermée ?
-    - Liste `bullet-check` :
-      - Phase 1 : Concentrez-vous uniquement sur vos idées et vos arguments dans CONSIGNES_TEMPLATE.md.
-      - Phase 2 : L'agent IA sélectionne les composants visuels optimaux dans le dictionnaire.
-      - Phase 3 : Le navigateur projette instantanément sans temps de compilation ni outil lourd.
-      - Phase 4 : La console de rythme affine vos durées orales pour la prochaine itération.
-  - **Pied de slide** : `summary-box` synthétisant la boucle vertueuse.
-- **Notes d'orateur (data-notes)** :
-  > • Le composant virtuous-circle est une exclusivité de notre dictionnaire : il permet de schématiser des boucles de rétroaction sans outil de dessin externe.  
-  > • Les 4 nœuds périphériques s'articulent autour du noyau central grâce à des coordonnées absolues fluides.  
-  > • C'est un composant visuel très marquant pour expliquer des cycles Scrum, DevOps ou des boucles de rentabilité.
-
----
-
-#### Slide 8 : Jalons Historiques & Frise Verticale (Timeline)
-- **Type de slide** : slide
-- **Durée estimée** : 3 min
-- **Titre (title-slide)** : Évolution & Jalons de Conception
-- **Sous-titre (subtitle-slide)** : Chronologie verticale structurée avec pastilles d'ancrage temporelles
-- **Mise en page** : grid-2
-- **Contenu & Composants** :
-  - **Colonne Gauche (Timeline verticale `timeline-vertical`)** :
-    - Événement 1 (`timeline-card`) :
-      - Badge : `pill-tag.gray` ("V1 — Genèse")
-      - Titre : Slides HTML Statiques (2023)
-      - Texte : Premiers gabarits HTML/CSS bruts sans découplage ni console orateur.
-    - Événement 2 (`timeline-card`) :
-      - Badge : `pill-tag.gray` ("V2 — Modularité")
-      - Titre : Moteur d'Auto-Fit & Pacing Tracker (2024)
-      - Texte : Introduction de l'algorithme d'échelle vectorielle et de la console dual-screen synchronisée.
-    - Événement 3 (`timeline-card.featured`) :
-      - Badge : `pill-tag.solid` ("V3 — Maturité Actuelle")
-      - Titre : Découplage Intégral & Dictionnaire IA (Aujourd'hui)
-      - Texte : Génération 100% automatisée par IA, diagrammes Mermaid à chaud et 7 thèmes dynamiques.
-  - **Colonne Droite (Bénéfices constatés)** : `x-card.featured`
-    - Titre : Synthèse des Bénéfices
-    - Liste `bullet-check` :
-      - Rétrocompatibilité totale avec tous les navigateurs modernes.
-      - Aucune dépendance npm à installer pour démarrer.
-      - Export PDF vectoriel 16:9 sans coupure de page via raccourci <kbd>P</kbd>.
-  - **Pied de slide** : `summary-box` sur la maturité de la solution.
-- **Notes d'orateur (data-notes)** :
-  > • La timeline verticale est parfaite pour relater l'historique d'un produit, une trajectoire de carrière ou une feuille de route trimestrielle.  
-  > • Les puces lumineuses sur la ligne verticale guident naturellement la lecture de haut en bas.  
-  > • À droite, nous rappelons les bénéfices tangibles atteints avec la version actuelle du moteur.
-
----
-
-#### Slide 9 : Diagrammes Vectoriels Natifs Mermaid.js (Mermaid)
-- **Type de slide** : slide
-- **Durée estimée** : 4 min
-- **Titre (title-slide)** : Diagrammes Vectoriels Interactifs à Chaud
-- **Sous-titre (subtitle-slide)** : Génération automatique de diagrammes de séquence ou de flux sans image externe
-- **Mise en page** : grid-1 avec conteneur Mermaid
-- **Contenu & Composants** :
-  - En-tête : Badges `pill-tag.solid` ("Mermaid.js Natif") et `pill-tag.gray` ("Rendu vectoriel adaptatif")
-  - Carte `x-card` englobant le diagramme Mermaid :
-    - Conteneur `<div class="mermaid">` avec syntaxe de séquence :
-      ```mermaid
-      sequenceDiagram
-          autonumber
-          actor Orateur as 🎙️ Orateur (Écran Privé)
-          participant Channel as 📡 BroadcastChannel
-          participant Public as 📺 Écran Public (Vidéoprojecteur)
-          participant Fit as 📐 deck-fit.js
-
-          Orateur->>Channel: Touche Flèche Droite (Next Slide)
-          Channel-->>Public: Événement SLIDE_CHANGE {slide: 9, frag: 0}
-          Public->>Fit: Mesure de la boîte englobante
-          Fit-->>Public: Ajustement d'échelle vectoriel (Zero Overflow)
-          Public-->>Orateur: Accusé de synchronisation et Pacing Tracker
-      ```
-  - **Pied de slide** : `summary-box` rappelant que le diagramme change de couleur instantanément quand on modifie la palette (<kbd>T</kbd> ou sélecteur de couleurs).
-- **Notes d'orateur (data-notes)** :
-  > • L'intégration de Mermaid.js transforme votre fichier HTML en outil de visualisation complet.  
-  > • Aucun outil de capture d'écran n'a été utilisé ici : le schéma est calculé dynamiquement par le navigateur.  
-  > • Si vous changez de thème (en appuyant sur T) ou de couleur d'accentuation, le diagramme se recolore automatiquement pour rester harmonieux !
-
----
-
-#### Slide 10 : Évaluation & Quizz Interactif en Direct (Quiz)
-- **Type de slide** : slide
-- **Durée estimée** : 3 min 30
-- **Titre (title-slide)** : Quizz Interactif : Validez les Acquis
-- **Sous-titre (subtitle-slide)** : Module de test avec rétroaction visuelle immédiate et explication argumentée
-- **Mise en page** : grid-1 avec `quiz-container`
-- **Contenu & Composants** :
-  - **Module de Quizz (`quiz-container`)** :
-    - Question : « Comment le Deck Engine garantit-il qu'aucune slide ne déborde de l'écran lors d'une projection ? »
-    - Grille des 4 options (`grid-2`) :
-      - Option A : `quiz-opt-btn` (`data-correct="false"`, onclick : mauvaise réponse) : « En coupant brutalement le texte qui dépasse via overflow: hidden sans avertissement. »
-      - Option B : `quiz-opt-btn` (`data-correct="true"`, onclick : bonne réponse) : « En mesurant la hauteur du contenu et en appliquant un auto-fit vectoriel centré par transform: scale. »
-      - Option C : `quiz-opt-btn` (`data-correct="false"`, onclick : mauvaise réponse) : « En forçant obligatoirement l'utilisateur à installer un serveur Node.js lourd en local. »
-      - Option D : `quiz-opt-btn` (`data-correct="false"`, onclick : mauvaise réponse) : « En limitant chaque slide à 10 mots au maximum de manière arbitraire. »
-    - Zone d'explication révélée (`quiz-explanation-box`) :
-      - Message de succès vert émeraude avec explication détaillée de l'algorithme `deck-fit.js` et du respect des ratios 16:9.
-  - **Pied de slide** : `summary-box` sur l'intérêt pédagogique des quiz en réunion ou formation.
-- **Notes d'orateur (data-notes)** :
-  > • Cette slide est interactive : invitez l'auditoire à voter à main levée pour les options A, B, C ou D.  
-  > • Cliquez sur l'option B : la boîte passe instantanément en vert émeraude avec son badge contrasté et fait apparaître l'explication argumentée.  
-  > • Si quelqu'un clique sur une mauvaise option, celle-ci devient rouge bordeaux pour clarifier l'erreur.
-
----
-
-#### Slide 11 : Conclusion & Ressources (Ressources & Mémento)
-- **Type de slide** : slide
-- **Durée estimée** : 4 min
-- **Titre (title-slide)** : À Vous de Jouer : Créez Vos Présentations !
-- **Sous-titre (subtitle-slide)** : Ressources de démarrage rapide, mémento de conception et prochaines étapes
-- **Mise en page** : grid-2
-- **Contenu & Composants** :
-  - **Colonne Gauche (Les 3 Règles Clés)** : `x-card.featured`
-    - Badge : `pill-tag.solid` ("Mémento Conception")
-    - Titre : Les 3 Règles d'Or
-    - Liste `bullet-check` :
-      - 1. Ne touchez qu'au contenu Markdown dans CONSIGNES_TEMPLATE.md.
-      - 2. Spécifiez vos composants préférés en vous appuyant sur COMPOSANTS_DICTIONNAIRE.md.
-      - 3. Confiez la génération à l'IA pour obtenir presentation.html en un instant.
-  - **Colonne Droite (Cartes de Liens & Actions)** : 2 cartes `link-card` + bouton
-    - Carte de lien 1 (`link-card`) : Titre "Dictionnaire de Composants", Descriptif "Consulter toutes les classes dans COMPOSANTS_DICTIONNAIRE.md", Flèche &rarr;
-    - Carte de lien 2 (`link-card`) : Titre "Dépôt & Mises à Jour", Descriptif "Télécharger les dernières améliorations du moteur", Flèche &rarr;
-    - Bouton d'action principal : `btn-action` ("Recommencer la Démonstration &rarr;") pointant vers `#slide-1`.
-  - **Pied de slide** : `summary-box` de conclusion.
+  - **Grille Sommaire** : grid-3
+    - **Colonne 1** : card-featured
+      - badge-solid : Partie 1
+      - Titre : Fondations & Langage Elixir
+      - Description : Genèse, paradigme fonctionnel, typage, concurrence BEAM et code en action.
+      - badge-gray : 21 min
+    - **Colonne 2** : card
+      - badge-solid : Partie 2
+      - Titre : Framework Phoenix & Temps Réel
+      - Description : Architecture Plug, LiveView réactif sans JS lourd et WebSockets massifs.
+      - badge-gray : 34 min
+    - **Colonne 3** : card
+      - badge-solid : Partie 3
+      - Titre : Démonstration & TP Pratique
+      - Description : Mise en œuvre live de l'application « Les bons comptes » et questions.
+      - badge-gray : 5 min
+  - **Pied de slide** : banner
+    - Formule clé : Module Infrastructures & Frameworks — Master MIAGE
 - **Logos de pied de slide** :
   - `bottom-left logo-sm` : `assets/logos/elixir.svg`
-  - `bottom-center logo-sm framed` : `assets/logos/python.svg`
-  - `bottom-right logo-sm` : `assets/logos/ruby.svg`
 - **Notes d'orateur (data-notes)** :
-  > • Nous voilà au terme de la démonstration du Deck Engine.  
-  > • Toutes les diapositives s'adaptent automatiquement à 100% au thème actif sélectionné par l'orateur (Touche T).  
-  > • Le public et l'orateur disposent maintenant de toutes les ressources et du dictionnaire pour créer leurs propres présentations sans coder.
+  > - **Accroche & Cadre (2 min) :** Bienvenue à tous. Aujourd'hui, nous vous présentons le duo Elixir et Phoenix.
+  > - **Objectif de la séance :** Comprendre comment ce langage fonctionnel et son framework phare apportent une réponse radicale aux enjeux modernes de scalabilité et de temps réel.
+  > - **Organisation (60 min) :** Présentation découpée en 3 grandes parties, avant d'enchaîner sur l'atelier pratique.
+  > - **Lancement :** Entrons tout de suite dans la première partie consacrée au langage Elixir.
+
+---
+
+#### Slide 2 : Annonce de Partie — Fondations & Langage Elixir
+- **Type de slide** : hero
+- **Durée estimée** : 1 min *(Introduction de la Partie 1, durée totale : 21 min)*
+- **Titre (title-slide)** : PARTIE 1 : Fondations & Langage Elixir
+- **Sous-titre (subtitle-slide)** : Pourquoi réinventer un langage pour le web moderne ? (Durée totale : 21 min)
+- **Mise en page** : hero
+- **Contenu & Composants** :
+  - **Organisation (Sous-parties abordées)** : grid-4
+    - **Jalon 1 (3 min)** : card
+      - badge-solid : 3 min
+      - Titre : Genèse & Histoire
+      - Description : José Valim (2012), les limites de la POO face à l'essor des processeurs multi-cœurs et l'héritage robuste d'Erlang/BEAM (1986).
+    - **Jalon 2 (4 min)** : card
+      - badge-gray : 4 min
+      - Titre : Caractéristiques & Exécution
+      - Description : Langage de haut niveau, entièrement compilé en bytecode (`.beam`), typage fort, mémoire isolée par processus et VM BEAM.
+    - **Jalon 3 (4 min)** : card
+      - badge-gray : 4 min
+      - Titre : Paradigme Fonctionnel
+      - Description : Penser déclaratif plutôt qu'impératif, immuabilité stricte des données et absence d'état partagé.
+    - **Jalon 4 (10 min)** : card
+      - badge-gray : 10 min
+      - Titre : Concepts Clés & Code en Action
+      - Description : Filtrage par motif (Pattern Matching), fonctions pures, structs, chaînage par pipe operator `|>` et pièges classiques.
+  - **Pied de slide** : banner
+    - Formule clé : 21 minutes pour asseoir les fondations conceptuelles d'Elixir avant d'aborder Phoenix et le web temps réel.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Prise de parole & Cadrage (1 min) :** Nous ouvrons cette première grande partie dédiée aux fondations d'Elixir, pour une durée totale de 21 minutes.
+  > - **Pourquoi cette étape :** Avant d'aborder un framework comme Phoenix, il est indispensable de comprendre le moteur fonctionnel qui le propulse.
+  > - **Le programme en 4 jalons :**
+  >   1. **Genèse & Histoire (3 min) :** D'où vient Elixir et à quelle rupture matérielle il répond.
+  >   2. **Caractéristiques techniques (4 min) :** Typage, compilation bytecode et fonctionnement de la machine virtuelle BEAM.
+  >   3. **Paradigme fonctionnel (4 min) :** Pourquoi abandonner la programmation objet et les mutations en mémoire.
+  >   4. **Concepts & Code concret (10 min) :** Démonstrations de code, pattern matching, structs et pipe operator `|>`.
+  > - **Transition :** Je commence donc par le premier jalon : retour en 2011 avec la genèse du langage et le mur du multi-cœur.
+
+---
+
+#### Slide 3 : Frise Historique & Rupture Technologique
+- **Type de slide** : slide
+- **Durée estimée** : 3 min
+- **Titre (title-slide)** : De l'Impasse Monocœur à la Naissance d'Elixir
+- **Sous-titre (subtitle-slide)** : Chronologie d'une transition : des verrous de la POO à la concurrence massive sur la BEAM
+- **Mise en page** : grid-1
+- **Contenu & Composants** :
+  - **Frise chronologique (stepper-horizontal)** :
+    - **Jalon 1 (1986 - Les Fondations Télécoms)** : step-node
+      - badge-gray : 1986
+      - Titre : Erlang & la Machine Virtuelle BEAM
+      - Logo / Icône : `assets/logos/erlang.svg`
+      - Contexte : Conçu par Ericsson pour les commutateurs téléphoniques. Architecture pensée pour la haute disponibilité (99.9999999%), le modèle d'acteurs isolés et la tolérance aux pannes native (*Let it crash*).
+    - **Jalon 2 (1995-2005 - L'Âge d'or du Web Objet)** : step-node
+      - badge-gray : 1995 - 2005
+      - Titre : Essor de la POO (Ruby, Python, Java)
+      - Logo / Icône : `assets/logos/ruby.svg`, `assets/logos/python.svg`
+      - Contexte : Domination de frameworks productifs (Ruby on Rails, Django, Spring). Approche orientée objet synchrone et exécution séquentielle taillée pour des architectures mono-cœur.
+    - **Jalon 3 (2005-2011 - La Limite Matérielle)** : step-node
+      - badge-solid : 2005 - 2011 (Le Mur)
+      - Titre : Stagnation des GHz & Multi-cœurs
+      - Contexte : Fin de la course à la fréquence brute (Loi de Moore) au profit de la multiplication des cœurs processeurs.
+      - Blocages POO : États partagés mutables, verrous complexes (locks, GIL), *race conditions* et consommation mémoire excessive des threads systèmes classiques.
+    - **Jalon 4 (2012 - L'Émergence d'Elixir)** : step-node active
+      - badge-solid : 2012 (Création)
+      - Titre : Naissance du Langage Elixir
+      - Logo / Icône : `assets/logos/elixir.svg`
+      - Auteur : José Valim (membre actif du Core Team Ruby on Rails).
+      - La Réponse : Apporter une syntaxe moderne, expressive, un outillage complet (`mix`) et la métaprogrammation sur la machine virtuelle Erlang (BEAM) pour exploiter nativement les processeurs multi-cœurs.
+
+  - **Détails & Comparatif d'impact** : grid-2
+    - **Colonne Gauche (Les Limites de la POO Traditionnelle)** : card
+      - badge-gray : Avant Elixir (POO & Threads lourds)
+      - Titre : Le Mur de la Concurrence
+      - Liste (icon-bullet) :
+        - Mémoire partagée mutable : source fréquente de corruption d'état et d'interblocages (*deadlocks*).
+        - Coût élevé des threads OS : saturation de la RAM et goulots d'étranglement dès quelques milliers de calculs concurrents.
+        - Fragilité systémique : une exception non interceptée dans un thread peut faire chuter le processus principal complet.
+    - **Colonne Droite (L'Apport Fondateur d'Elixir)** : card-featured
+      - badge-solid : La Solution Elixir (Fonctionnel & BEAM)
+      - Titre : Productivité Moderne + Concurrence Massive
+      - Liste (icon-bullet) :
+        - Immuabilité des données : aucun effet de bord indésirable ni partage de mémoire.
+        - Micro-processus BEAM : légèreté extrême (~2 Ko de RAM par processus), permettant d'exécuter des millions d'acteurs isolés en parallèle.
+        - Philosophie *« Let it crash »* : résilience garantie par des superviseurs qui réinitialisent les processus en échec.
+        - Outillage moderne : compilation rapide, gestionnaire de dépendances Hex et système de build unifié Mix.
+
+  - **Pied de slide** : banner
+    - Synthèse : Robustesse industrielle d'Erlang/BEAM (1986) + Ergonomie et productivité d'Elixir (2012) = Un langage taillé pour les architectures multi-cœurs modernes.
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **Objectif de la slide (3 min) :** Poser les bases historiques d'Elixir sans aborder le web applicatif pour l'instant.
+  > - **Les fondations Erlang (1986) :** Rappeler qu'Erlang a été inventé par Ericsson pour faire tourner les commutateurs téléphoniques avec une disponibilité record, grâce à ses processus isolés et sa tolérance aux pannes.
+  > - **Le blocage matériel (2005-2011) :** Expliquer qu'avec la multiplication des cœurs processeurs, les langages objets classiques (Ruby, Python, Java) peinaient à paralléliser efficacement à cause de la mémoire mutable partagée et des verrous.
+  > - **La vision de José Valim (2012) :** Venu du monde Ruby on Rails, José Valim a voulu résoudre ce problème de concurrence non pas en bricolant une bibliothèque, mais en s'appuyant sur la BEAM avec un nouveau langage expressif, fonctionnel et productif : Elixir.
+
+---
+
+#### Slide 4 : Le Paradigme de Programmation
+- **Type de slide** : slide
+- **Durée estimée** : 
+- **Titre (title-slide)** : Le Paradigme de Programmation
+- **Sous-titre (subtitle-slide)** : Penser déclaratif et fonctionnel : exprimer l'intention plutôt que la mutation
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Déclaratif vs Impératif)** : card
+    - badge-gray : L'Intention (« Quoi »)
+    - Titre : Déclaratif vs Impératif
+    - Liste (icon-bullet) :
+      - Ce que l'on veut obtenir : On décrit le résultat souhaité plutôt que la suite mécanique d'instructions.
+      - Zéro boucle impérative : Absence de structures `for` ou `while` avec compteurs d'état mutables.
+      - Fonctions d'ordre supérieur : Utilisation naturelle de `Enum.map`, `Enum.filter`, `Enum.reduce` ou de la récursion.
+  - **Colonne Droite (Immutabilité & Pureté)** : card-featured
+    - badge-solid : Pureté des Données
+    - Titre : Données Immuables & Fonctions Pures
+    - Liste (icon-bullet) :
+      - Immutabilité stricte : Les variables ne sont jamais modifiées sur place (zéro effet de bord caché).
+      - Fonctions pures ($f(x) = y$) : Même entrée = toujours même sortie, sans dépendre d'un état extérieur.
+      - Zéro classe, zéro objet : Pas de `this`, `self` ou `new`. Séparation nette entre données et modules de fonctions.
+  - **Pied de slide** : banner
+    - Règle d'or : "En impératif, on commande à la machine comment modifier la mémoire. En déclaratif, on transforme des données immuables."
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **Le choc culturel :** Expliquer qu'on oublie les boucles `for` classiques et les mutations d'objets (`compte.retirer(50)`).
+  > - **L'immutabilité :** En maths, $x = 5$ ne devient jamais $x = 6$ une ligne plus bas. Modifier une donnée produit une nouvelle valeur propre.
+  > - **Avantage concret :** Élimine 90% des bugs d'effets de bord et rend le code naturellement parallélisable.
+
+---
+
+#### Slide 5 : Le Système de Typage
+- **Type de slide** : slide
+- **Durée estimée** : 1 min 30
+- **Titre (title-slide)** : Le Système de Typage
+- **Sous-titre (subtitle-slide)** : Dynamique à l'écriture, fort et rigoureux à l'exécution (Durée : 1 min 30)
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Dynamique & Fort)** : card
+    - badge-gray : Typage & Rigueur
+    - Titre : Dynamique mais Strict
+    - Liste (icon-bullet) :
+      - Typage dynamique : Les types sont portés par les valeurs, pas par les variables (`x = 42` puis `x = "texte"`).
+      - Typage fort : Zéro conversion implicite (`"5" + 5` déclenche une `ArithmeticError`, pas de conversion arbitraire comme en JS).
+      - Spécifications formelles (`@spec`) : Contrats de types optionnels pour documenter et fiabiliser les API sans lourdeur.
+  - **Colonne Droite (Primitives Expressives)** : card-featured
+    - badge-solid : Primitives Clés
+    - Titre : Des Types Primitifs Riches
+    - Liste (icon-bullet) :
+      - Atomes (`:ok`, `:error`) : Constantes symboliques légères (simples entiers en mémoire), idéales pour les statuts.
+      - Tuples (`{:ok, resultat}`) : Collections ordonnées de taille fixe, parfaites pour les retours de fonctions.
+      - Maps (`%{nom: "Alice", solde: 100}`) : Paires clé-valeur ultra-rapides pour structurer les données métier.
+  - **Pied de slide** : banner
+    - Règle d'or : "La flexibilité d'un langage dynamique alliée à la rigueur d'un typage fort sans conversions cachées."
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **Démystifier le dynamique :** Dynamique ne veut pas dire laxiste. Contrairement à JavaScript (`"5" + 5 = "55"`), Elixir stoppe net toute incohérence.
+  > - **Les atomes :** Ce DB symboles d'Elixir (comme des enums légers et universels).
+  > - **Lien vers la suite :** Ces types structurés (tuples, maps, atomes) sont la base du filtrage de données.
+
+---
+
+#### Slide 6 : Le Modèle d'Exécution
+- **Type de slide** : slide
+- **Durée estimée** : 
+- **Titre (title-slide)** : Le Modèle d'Exécution
+- **Sous-titre (subtitle-slide)** : Du code source au bytecode optimisé sur la machine virtuelle BEAM
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (La Compilation)** : card
+    - badge-gray : Du Source au Bytecode
+    - Titre : Compilé, Pas Interprété !
+    - Liste (icon-bullet) :
+      - Compilateur `elixirc` : Convertit le code source (`.ex`) en bytecode binaire optimisé (`.beam`).
+      - Vitesse d'exécution : Bien que sa syntaxe soit aussi fluide que celle de Python ou Ruby, Elixir est 100% compilé.
+      - Compilateur JIT intégré : La machine virtuelle convertit le bytecode en instructions machine natives (x86, ARM) à l'exécution.
+  - **Colonne Droite (La VM BEAM)** : card-featured
+    - badge-solid : Le Runtime
+    - Titre : La Machine Virtuelle BEAM
+    - Liste (icon-bullet) :
+      - Héritage industriel Erlang : Plus de 30 ans d'optimisation destiné aux télécoms et la disponibilité continue.
+      - 1 Scheduler par cœur CPU : Exploite pleinement le matériel multi-cœur sans aucun verrou global.
+      - Soft Real-Time : Conçu pour garantir des latences prévisibles et bornées même sous forte saturation.
+  - **Pied de slide** : banner
+    - Règle d'or : "La BEAM est à Elixir ce que la JVM est à Java : un moteur d'exécution compilé taillé pour la vitesse et la haute disponibilité."
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **Casser l'idée reçue :** Beaucoup d'étudiants croient qu'Elixir est interprété. C'est faux : il est compilé en bytecode.
+  > - **La BEAM :** C'est le moteur le plus éprouvé au monde pour le temps réel et la concurrence (WhatsApp, Discord).
+  > - **Parallélisme natif :** Tous les cœurs CPU travaillent simultanément sans se bloquer.
+
+---
+
+#### Slide 7 : La Gestion de la Mémoire
+- **Type de slide** : slide
+- **Durée estimée** : 
+- **Titre (title-slide)** : La Gestion de la Mémoire
+- **Sous-titre (subtitle-slide)** : Des tas isolés et un Garbage Collector
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Architecture Mémoire)** : card
+    - badge-gray : Isolation Totale
+    - Titre : Des Tas Mémoire (Heaps) Privés
+    - Liste (icon-bullet) :
+      - Pas de grand tas partagé : Contrairement à Java ou Go, il n'existe aucun tas mémoire global unique.
+      - Micro-tas par processus : Chaque processus possède et gère son propre petit espace mémoire hermétique.
+      - Partage structurel : L'immutabilité permet de réutiliser les sous-structures en RAM sans duplication inutile.
+  - **Colonne Droite (Le Garbage Collector)** : card-featured
+    - badge-solid : Ramasse-Miettes Isolé
+    - Titre : Un Garbage Collector par Processus
+    - Liste (icon-bullet) :
+      - Zéro « Stop-The-World » global : Le Garbage Collector d'un processus ne fige JAMAIS le reste de l'application.
+      - Nettoyage en microsecondes : Le GC s'exécute sur des volumes minuscules (quelques Ko), sans pics de latence.
+      - Nettoyage gratuit à la mort : Quand un processus court termine sa tâche, toute sa mémoire est libérée d'un bloc sans solliciter le GC.
+  - **Pied de slide** : banner
+    - Règle d'or : "Cloisonner la mémoire par processus élimine le gel applicatif du Garbage Collector et garantit une latence ultra-stable."
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **Le point fort d'Elixir :** En Java, le GC balaye des gigas de RAM et met en pause l'application entière (Stop-the-World).
+  > - **Sur la BEAM :** Chaque processus nettoie ses 2 Ko tout seul dans son coin. Zéro impact sur les autres utilisateurs.
+  > - **Cycle de vie court :** Pour une requête web, le processus naît, répond, et sa mémoire est relâchée instantanément à sa mort.
+
+---
+
+#### Slide 8 : La Concurrence et le Parallélisme
+- **Type de slide** : slide
+- **Durée estimée** : 
+- **Titre (title-slide)** : La Concurrence & le Parallélisme
+- **Sous-titre (subtitle-slide)** : Le modèle d'acteurs : des micro-processus légers sans mémoire partagée
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Les Micro-Processus)** : card
+    - badge-gray : Poids Plume
+    - Titre : Micro-Processus vs Threads OS
+    - metric : ~2 Ko / processus
+    - Liste (icon-bullet) :
+      - Légèreté extrême (~2 Ko) : Rien à voir avec un thread système lourd (1 à 2 Mo en Java). Des centaines de milliers de processus simultanés par machine.
+      - Ordonnancement préemptif : L'ordonnanceur alloue un quota d'opérations équitable : une boucle infinie ne bloque jamais le système.
+      - Tolérance aux pannes : Un crash est strictement confiné à son micro-processus (*philosophie « Let it crash »*).
+  - **Colonne Droite (Le Modèle d'Acteurs)** : card-featured
+    - badge-solid : Modèle d'Acteurs
+    - Titre : Zéro Mémoire Partagée
+    - Liste (icon-bullet) :
+      - Zéro mémoire partagée : Deux processus ne partagent aucune variable en mémoire vive.
+      - Adieu verrous et deadlocks : Sans mémoire partagée, les `mutex` et les accès concurrents conflictuels n'existent pas.
+      - Communication par messages : Échanges asynchrones exclusifs par copie de données dans la boîte aux lettres du destinataire.
+  - **Pied de slide** : banner
+    - Règle d'or : "Ne pas communiquer en partageant de la mémoire, mais partager de la mémoire en communiquant."
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **Précision clé :** Un processus BEAM n'est PAS un processus OS Linux, c'est un micro-thread virtuel ultra-léger.
+  > - **La métaphore des SMS :** Deux personnes qui s'échangent des SMS : chacune a son téléphone, personne ne peut altérer la mémoire de l'autre.
+  > - **Transition vers la démo :** "Nous avons posé les 5 piliers théoriques (8 min). Passons maintenant à l'écran pour la démonstration en direct !"
+
+---
+
+#### Slide 9 : Démo Livecoding
+- **Type de slide** : slide
+- **Durée estimée** : 7 min
+- **Titre (title-slide)** : Démo Livecoding
+- **Sous-titre (subtitle-slide)** : Démonstration sur écran avec backup vidéo
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Session Live)** : card-featured
+    - badge-solid : En Direct
+    - Titre : Démonstration sur l'Écran
+    - Liste (icon-bullet) :
+      - Bascule immédiate sur l'écran partagé : Tout se déroule en direct dans l'éditeur et le terminal.
+      - Session interactive : Démonstration pratique et observation en temps réel.
+  - **Colonne Droite (Filet de Sécurité)** : card
+    - badge-gray : Backup Vidéo
+    - Titre : Vidéo de Secours (7 min)
+    - Description : Enregistrement complet chapitré, prêt à être lancé immédiatement si besoin.
+    - Lecteur / Bouton d'action :
+      - link-btn : `▶ Lancer la Vidéo de Secours (backup_demo.mp4)`
+  - **Pied de slide** : banner
+    - Formule clé : Place à la pratique : bascule sur l'écran pour la démonstration en direct !
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
+  > - **Bascule immédiate :** Quitter la présentation pour afficher le terminal et l'IDE sur l'écran principal.
+  > - **Plan B (Secours) :** En cas d'aléa réseau ou machine, cliquer sur « Lancer la Vidéo de Secours » pour diffuser la vidéo de 7 minutes et continuer le commentaire en voix off.
+
+#### Slide 10 : Annonce de Section / Sommaire (Intertitre)
+- **Type de slide** : slide
+- **Mise en page** : hero
+- **Badge section** : badge-solid : PARTIE 1 — JALON 4
+- **Titre (title-slide)** : Concepts Fondamentaux & Code en Action
+- **Sous-titre (subtitle-slide)** : Variables, filtrage par motif, types, fonctions, objets et flux (Durée : 10 min)
+- **Organisation (Sous-parties abordées)** : grid-3
+  - **Jalon 1** : card
+    - badge-gray : 2.5 min
+    - Titre : Variables & Pattern Matching
+    - Description : L'opérateur `=`, déstructuration instantanée, gestion d'erreurs et opérateur Pin `^`.
+  - **Jalon 2** : card
+    - badge-gray : 2 min
+    - Titre : Les Types de Base
+    - Description : Atoms, Tuples, Listes chaînées `[t|q]` et Maps associatives.
+  - **Jalon 3** : card
+    - badge-gray : 1 min
+    - Titre : Les Fonctions
+    - Description : Citoyennes de premier rang, fonctions anonymes, modules et notion d'arité.
+  - **Jalon 4** : card
+    - badge-gray : 1.5 min
+    - Titre : Alternative aux Objets
+    - Description : Séparation stricte données/méthodes avec Structs et Modules immuables.
+  - **Jalon 5** : card
+    - badge-gray : 1 min
+    - Titre : Flux & Pipe Operator `|>`
+    - Description : Chaînage limpide et transformation de données de haut en bas.
+  - **Jalon 6** : card
+    - badge-gray : 2 min
+    - Titre : Pièges & Philosophies
+    - Description : Immuabilité, « Let it crash », guillemets et disparition des boucles `for`/`while`.
+- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  > - **Prise de parole & Transition :** Merci. Je prends maintenant le relais pour vous plonger concrètement dans le code et les mécanismes essentiels du langage Elixir.
+  > - **Objectif (10 min) :** Parcourir les fondations syntaxiques et conceptuelles qui font d'Elixir un langage si singulier et productif.
+  > - **Au programme :** Le pattern matching, les structures de données, l'absence de classes objet remplacée par les Structs, le célèbre pipe operator, et enfin 4 pièges majeurs à éviter absolument quand on vient de Java ou Python.
+  > - **Lancement :** Commençons immédiatement par la base de tout en Elixir : l'opérateur `=` et le pattern matching.
+
+---
+
+#### Slide 11 : Variables et l'opérateur de Pattern Matching
+- **Type de slide** : slide
+- **Titre (title-slide)** : Variables & Pattern Matching : Le Signe = Réinventé
+- **Sous-titre (subtitle-slide)** : En Elixir, le signe = n'est pas une simple assignation, c'est un opérateur de filtrage par motif
+- **Mise en page** : split-code
+  - **Colonne Gauche (Explication Conceptuelle)** : card
+    - badge-solid : Filtrage par Motif
+    - Titre : L'Équivalence & la Déstructuration
+    - Liste (icon-bullet) :
+      - Pas d'assignation classique : Le signe `=` agit comme une équation mathématique cherchant à faire correspondre le côté gauche et le côté droit.
+      - Liaison (binding) : Si une variable nue est à gauche (`x = 1`), Elixir lie la valeur à cette variable.
+      - Déstructuration directe : Extraction instantanée des sous-valeurs depuis des tuples ou des structures (`{status, message}`).
+      - Gestion d'erreur native : Si le motif ne concorde pas, l'exécution s'interrompt immédiatement avec une `MatchError`.
+      - Données immuables : Les structures liées ne sont jamais mutées en mémoire.
+  - **Colonne Droite (Snippet de Code)** : code-box
+    - code-header : pattern_matching.ex
+    - Code (language-elixir) :
+      # "Assignation" classique (en réalité, on lie la valeur 1 à x)
+      x = 1
+
+      # Pattern matching puissant : on extrait les valeurs directement
+      # et on continue l'execution si le motif correspond
+      {status, message} = {:ok, "Connecté"}
+
+      # Provoque une erreur si le motif ne correspond pas (très utile pour la gestion d'erreur)
+      {:ok, resultat} = {:error, "Fichier introuvable"}
+      # => ** (MatchError) no match of right hand side value: {:error, "Fichier introuvable"}
+  - **Pied de slide** : banner
+    - Règle d'or : Le signe `=` valide la forme des données et extrait les valeurs en une seule et unique opération.
+- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  > - **Idée fondamentale :** Oubliez le `=` de Java ou C++. En Elixir, `=` s'appelle l'opérateur de match.
+  > - **Exemple simple :** `x = 1` ressemble à une assignation, mais en réalité on lie 1 à x.
+  > - **La déstructuration :** Avec `{status, message} = {:ok, "Connecté"}`, on dépaquette directement le tuple. Pas besoin de getters ou d'index.
+  > - **La gestion d'erreur :** Ligne suivante, si on attend `{:ok, resultat}` mais qu'on reçoit `{:error, ...}`, Elixir lève immédiatement une `MatchError`. C'est la base de la programmation défensive et robuste en Elixir sans empiler des `if/else`.
+  > - **Transition :** Mais que se passe-t-il si x a déjà une valeur et qu'on veut comparer sans réassigner ? C'est là qu'intervient l'opérateur Pin.
+
+---
+
+#### Slide 12 : L'Opérateur Pin (^)
+- **Type de slide** : slide
+- **Titre (title-slide)** : L'Opérateur Pin (^) : Forcer le Test d'Égalité
+- **Sous-titre (subtitle-slide)** : Empêcher la réassignation d'une variable existante lors du filtrage par motif
+- **Mise en page** : split-code
+  - **Colonne Gauche (Explication Conceptuelle)** : card-featured
+    - badge-solid : Contrôle du Motif
+    - Titre : Le Verrouillage par Pin (^)
+    - Liste (icon-bullet) :
+      - Rebinding par défaut : En Elixir, si une variable déjà existante apparaît à gauche d'un `=`, elle est réassignée par défaut à la nouvelle valeur.
+      - Rôle de l'opérateur Pin (`^`) : Préfixer une variable avec `^` force le test avec la valeur existante de cette variable.
+      - Refus d'assignation : L'opérateur interdit toute nouvelle liaison de valeur et bascule en mode comparaison pure.
+      - Assertion stricte : Si la valeur de droite ne coïncide pas exactement avec la valeur existante "épinglée", Elixir lève une `MatchError`.
+  - **Colonne Droite (Snippet de Code)** : code-box
+    - code-header : pin_operator.ex
+    - Code (language-elixir) :
+      x = 1
+
+      # L'opérateur Pin (^) : force le test avec la valeur existante de x (qui est 1)
+      # au lieu d'assigner une nouvelle valeur.
+      ^x = 1
+      # => OK, car x vaut bien 1
+
+      ^x = 2
+      # => MatchError !
+      # (on refuse d'assigner 2 à x, on vérifie juste si 2 égale 1)
+  - **Pied de slide** : banner
+    - Principe : Sans `^`, `x = 2` écrase la liaison ; avec `^x = 2`, on teste si la variable vaut bien 2.
+- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  > - **Problématique :** Comme Elixir autorise la réassignation de variable (rebinding), comment vérifier qu'une valeur reçue correspond bien à une variable calculée précédemment ?
+  > - **Le symbole Pin :** C'est le rôle de l'accent circonflexe `^`. Il "épingle" la variable à sa valeur actuelle.
+  > - **Lecture du code :** `^x = 1` réussit car x vaut bien 1. En revanche, `^x = 2` fait échouer le match avec une `MatchError`.
+  > - **Cas d'usage :** Essentiel dans les clauses `case` ou dans les paramètres de fonctions pour matcher sur un identifiant précis sans créer de variable locale.
+
+---
+
+#### Slide 13 : Les Types de Base (1/2) : Atoms & Tuples
+- **Type de slide** : slide
+- **Titre (title-slide)** : Types Fondamentaux : Atoms & Tuples
+- **Sous-titre (subtitle-slide)** : Typage dynamique fort, constantes symboliques et conteneurs à taille fixe
+- **Mise en page** : split-code
+  - **Colonne Gauche (Explication Conceptuelle)** : card
+    - badge-solid : Fondations & Retours
+    - Titre : Symboles & Paires
+    - Liste (icon-bullet) :
+      - Typage dynamique fort : Les types sont vérifiés au runtime sans conversion implicite inattendue.
+      - Les Atoms (`:ok`, `:error`) : Des constantes dont le nom est leur propre valeur, extrêmement légères en mémoire (comparables aux symboles Ruby).
+      - Les Tuples (`{...}`) : Structures contiguës à taille fixe, idéales pour regrouper les valeurs de retour de fonctions.
+      - Extraction de données : Principalement lue via Pattern Matching, ou ponctuellement via `elem(tuple, index)`.
+  - **Colonne Droite (Snippet de Code)** : code-box
+    - code-header : atoms_and_tuples.ex
+    - Code (language-elixir) :
+      # 1. Les Atoms (des constantes dont le nom est la propre valeur)
+      :ok
+      :error
+
+      # 2. Les Tuples (taille fixe, très utilisés pour grouper des retours de fonction)
+      utilisateur = {:user, "Jean", 25}
+
+      # -> Comment y accéder ? Principalement via Pattern Matching :
+      {:user, nom, age} = utilisateur
+      # nom vaut "Jean", age vaut 25
+
+      # (Ou via la fonction elem/2 si besoin précis : elem(utilisateur, 1) => "Jean")
+      nom_direct = elem(utilisateur, 1) # => "Jean"
+  - **Pied de slide** : banner
+    - Convention universelle : Le standard Elixir retourne presque toujours `{:ok, resultat}` en cas de succès et `{:error, raison}` en cas d'échec.
+- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  > - **Typage en Elixir :** Typage dynamique, mais fort : pas de casting magique silencieux.
+  > - **L'Atom :** Préfixé par `:`, son nom est sa valeur. Deux atoms `:ok` pointent vers la même adresse en mémoire.
+  > - **Le Tuple :** Conçu pour des groupes de taille connue à l'avance. Remarquez comment la déstructuration par motif extrait `nom` et `age` sans aucun code superflu.
+  > - **elem/2 :** Fonction utilitaire pour accéder par index (commence à 0), mais la convention préfère toujours le pattern matching.
+
+---
+
+#### Slide 14 : Les Types de Base (2/2) : Listes Chaînées & Maps
+- **Type de slide** : slide
+- **Titre (title-slide)** : Collections : Listes Chaînées & Maps
+- **Sous-titre (subtitle-slide)** : Décomposition Tête/Queue et dictionnaires associatifs clé/valeur
+- **Mise en page** : split-code
+  - **Colonne Gauche (Explication Conceptuelle)** : card
+    - badge-solid : Structures de Données
+    - Titre : Listes vs Dictionnaires
+    - Liste (icon-bullet) :
+      - Listes chaînées (`[...]`) : Ce ne sont PAS des tableaux indexés contigus, mais des listes récursives Tête (*Head*) / Queue (*Tail*).
+      - Décomposition `[tete | queue]` : Permet d'isoler le premier élément du reste pour des traitements récursifs très rapides.
+      - Ajout en tête O(1) : Ajouter au début avec `[0 | liste]` est instantané et préserve la mémoire existante (partage structurel).
+      - Maps (`%{...}`) : Dictionnaires clé/valeur avec recherche rapide, accès par `Map.get/2`, syntaxe `map.cle` (si clé atom) et pattern matching.
+  - **Colonne Droite (Snippet de Code)** : code-box
+    - code-header : lists_and_maps.ex
+    - Code (language-elixir) :
+      # 3. Les Listes (Ce sont des listes chaînées, pas des tableaux fixes !)
+      liste = [1, 2, 3]
+
+      # -> Comment travailler avec ? On sépare souvent la "Tête" (1er élément) de la "Queue" (le reste)
+      [tete | queue] = liste 
+      # tete vaut 1, queue vaut [2, 3]
+
+      # -> Ajouter un élément ? On l'ajoute toujours au DÉBUT (très rapide en liste chaînée)
+      nouvelle_liste = [0 | liste] # => [0, 1, 2, 3]
+
+      # 4. Les Maps (Dictionnaires Clé/Valeur)
+      map = %{"role" => "admin", :age => 30}
+
+      # -> Comment accéder aux valeurs ? 
+      Map.get(map, "role") # => "admin"
+
+      # -> LE raccourci très utilisé : si la clé est un Atom, on peut utiliser le point (.)
+      map.age # => 30
+
+      # -> Le Pattern Matching marche aussi sur les Maps (pour vérifier la présence d'une clé)
+      %{age: age_recupere} = map # => age_recupere vaut 30
+  - **Pied de slide** : banner
+    - À retenir : Les listes chaînées s'alimentent toujours par la tête ; les maps fournissent la flexibilité clé/valeur.
+- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  > - **Attention piège :** Une liste Elixir n'est pas un tableau `ArrayList`. Accéder au 1000ème élément oblige à parcourir les 999 précédents.
+  > - **L'opérateur pipe `|` dans les listes :** Il sépare la tête (1er élément) de la queue (le reste). L'ajout au début `[0 | liste]` est instantané en O(1).
+  > - **Les Maps :** Dictionnaires très puissants. Si les clés sont des atoms, on accède via le point `map.age`. Et notez qu'on peut filtrer par pattern matching pour extraire seulement les clés qui nous intéressent.
+
+---
+
+#### Slide 15 : Les Fonctions & la Notion d'Arité
+- **Type de slide** : slide
+- **Titre (title-slide)** : Les Fonctions : Citoyennes de Premier Rang
+- **Sous-titre (subtitle-slide)** : Fonctions anonymes, fonctions nommées et identification stricte par nom et arité
+- **Mise en page** : split-code
+  - **Colonne Gauche (Explication Conceptuelle)** : card
+    - badge-solid : Fonctions Pures
+    - Titre : Définition & Identification
+    - Liste (icon-bullet) :
+      - Citoyennes de 1er rang : Les fonctions peuvent être stockées dans des variables, transmises comme arguments ou retournées.
+      - Notion d'arité (`nom/arité`) : Une fonction est strictement caractérisée par son nom ET son nombre d'arguments (ex: `add/2` est distincte de `add/3`).
+      - Fonctions anonymes : Définies avec `fn -> ... end` et appelées impérativement avec un point `.(args)`.
+      - Fonctions nommées : Résident obligatoirement au sein d'un `defmodule` avec syntaxe standard `do...end` ou syntaxe courte en une ligne `do: ...`.
+  - **Colonne Droite (Snippet de Code)** : code-box
+    - code-header : functions.ex
+    - Code (language-elixir) :
+      # Fonction anonyme
+      addition = fn a, b -> a + b end
+      addition.(2, 3) # => 5
+
+      # Fonction nommée (doit vivre dans un module)
+      defmodule Math do
+        def add(a, b) do
+          a + b
+        end
+
+        # Syntaxe raccourcie très courante
+        def sub(a, b), do: a - b
+      end
+  - **Pied de slide** : banner
+    - Convention : En Elixir, on ne parle jamais de la fonction `add`, mais toujours de `Math.add/2`.
+- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  > - **Citoyennes de 1er rang :** On manipule les fonctions comme des valeurs classiques.
+  > - **L'appel anonyme :** Notez le point `addition.(2, 3)`. C'est une distinction syntaxique voulue pour ne pas confondre fonction anonyme et fonction nommée d'un module.
+  > - **L'arité :** Retenez bien cette notation slash `/` (`add/2`), vous la retrouverez dans toute la documentation officielle et les messages d'erreur.
+
+---
+
+#### Slide 16 : L'Alternative aux "Objets" : Structs et Modules
+- **Type de slide** : slide
+- **Titre (title-slide)** : Structs & Modules : Séparer Données et Comportement
+- **Sous-titre (subtitle-slide)** : En l'absence de classes objet, découpler l'état (Structs) des transformations (Modules)
+- **Mise en page** : split-code
+  - **Colonne Gauche (Explication Conceptuelle)** : card
+    - badge-solid : Paradigme Fonctionnel
+    - Titre : Pas d'Encapsulation Mutable
+    - Liste (icon-bullet) :
+      - Rupture avec l'Orienté Objet : En Elixir, on ne regroupe pas données et méthodes au sein d'une même classe.
+      - Les Structs (`defstruct`) : Ce sont des Maps typées et nommées définissant la structure de données avec des valeurs par défaut.
+      - Les Modules (`defmodule`) : Regroupent les fonctions métier pures qui reçoivent les données, les transforment et retournent une nouvelle copie.
+      - Immuabilité stricte : `%{user | age: age + 1}` ne modifie pas l'utilisateur initial en mémoire, mais renvoie un nouvel utilisateur cloné et mis à jour.
+  - **Colonne Droite (Snippet de Code)** : code-box
+    - code-header : user_struct.ex
+    - Code (language-elixir) :
+      defmodule User do
+        # Définition de la structure de données
+        defstruct name: "Anonyme", age: 0
+
+        # Comportement
+        def grandir(%User{age: age} = user) do
+          %{user | age: age + 1}
+          # Retourne un NOUVEL utilisateur, ne modifie pas l'ancien (immuabilité)
+        end
+      end
+
+      jean = %User{name: "Jean", age: 30}
+      jean_plus_vieux = User.grandir(jean)
+  - **Pied de slide** : banner
+    - Formule clé : Données pures (`Struct`) + Fonctions de transformation (`Module`) = Code prévisible et sans effets de bord.
+- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  > - **Le choc de l'OO vers le fonctionnel :** En Java, on écrirait `jean.grandir()`, modifiant l'état interne de l'objet.
+  > - **L'approche Elixir :** On sépare strictement le conteneur de données (`User` avec son `defstruct`) des fonctions qui le manipulent.
+  > - **L'immuabilité en action :** `User.grandir(jean)` ne touche pas à la variable `jean` (qui a toujours 30 ans). Elle renvoie une nouvelle structure avec `age: 31`.
+  > - **Élimination des bugs :** Fini les effets de bord où une méthode tierce mute subrepticement votre objet sans que vous le sachiez.
+
+---
+
+#### Slide 17 : Les Flux / Le Pipe Operator (|>)
+- **Type de slide** : slide
+- **Titre (title-slide)** : Le Pipe Operator (|>) : L'Élégance des Flux
+- **Sous-titre (subtitle-slide)** : Transformer les imbrications de parenthèses en un pipeline limpide et naturel
+- **Mise en page** : split-code
+  - **Colonne Gauche (Explication Conceptuelle)** : card-featured
+    - badge-solid : Fonctionnalité Favorite
+    - Titre : Lisibilité & Composition de Flux
+    - Liste (icon-bullet) :
+      - Mécanisme : L'opérateur `|>` injecte automatiquement le résultat de l'expression de gauche comme premier argument de la fonction de droite.
+      - Fin des poupées russes : Supprime les imbrications illisibles de l'intérieur vers l'extérieur `f(g(h(x)))`.
+      - Sens de lecture naturel : Le flux se lit de haut en bas et de gauche à droite, comme une chaîne de transformation.
+      - Fondement de Phoenix : C'est ce mécanisme exact qui orchestre le passage des requêtes HTTP à travers les Plugs (`conn |> plug1 |> plug2`).
+  - **Colonne Droite (Snippet de Code)** : code-box
+    - code-header : pipe_operator.ex
+    - Code (language-elixir) :
+      # Sans le pipe operator (lecture difficile, de l'intérieur vers l'extérieur)
+      Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
+
+      # AVEC le pipe operator (lecture naturelle, de haut en bas)
+      1..10
+      |> Enum.filter(fn x -> rem(x, 2) == 0 end)
+      |> Enum.sum()
+  - **Pied de slide** : banner
+    - Équation de lisibilité : `donnée |> étape_1() |> étape_2() |> résultat_final`.
+- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  > - **Le pipe operator :** C'est la fonctionnalité préférée des développeurs Elixir.
+  > - **Comparaison visuelle :** En haut, pour comprendre ce que fait le code, il faut commencer par lire au milieu `1..10`, puis reculer vers `Enum.filter`, puis encore vers `Enum.sum`.
+  > - **Avec le pipe :** C'est limpide : je prends les nombres de 1 à 10, je garde les pairs, je calcule la somme.
+  > - **Lien vers Phoenix :** Retenez bien cette syntaxe, car Phoenix repose à 100% là-dessus pour traiter les connexions web d'étape en étape.
+
+---
+
+#### Slide 18 : Les 4 Pièges & Concepts Clés à Retenir
+- **Type de slide** : slide
+- **Titre (title-slide)** : Les 4 Pièges & Changements de Paradigme
+- **Sous-titre (subtitle-slide)** : Les réflexes impératifs à désapprendre pour maîtriser l'esprit d'Elixir
+- **Mise en page** : grid-4
+  - **Colonne 1 (Piège 1)** : card
+    - badge-gray : Piège #1
+    - Titre : Le Piège de l'Immuabilité
+    - Liste (icon-bullet) :
+      - Perte de modification : Modifier une liste ou une structure sans récupérer et réassigner le résultat entraîne la perte immédiate du calcul.
+      - Zéro mutation sur place : Aucune méthode ne modifie l'objet en mémoire.
+  - **Colonne 2 (Concept 2)** : card-featured
+    - badge-solid : Philosophie BEAM
+    - Titre : La Philosophie « Let it crash »
+    - Liste (icon-bullet) :
+      - Pas de try/catch à outrance : Contrairement à Java ou C#, on n'encapsule pas tout dans des blocs d'exception.
+      - Redémarrage sain : On laisse délibérément le processus planter ; un « Superviseur » le redémarre instantanément dans un état connu et sain.
+  - **Colonne 3 (Piège 3)** : card
+    - badge-gray : Piège #2
+    - Titre : Le Piège des Guillemets
+    - Liste (icon-bullet) :
+      - Double guillemet `"texte"` : C'est un String binaire UTF-8 classique.
+      - Simple guillemet `'texte'` : C'est une Charlist (liste de codes ASCII issue d'Erlang).
+      - En mémoire : Écrire `'hello'` équivaut strictement à `[104, 101, 108, 108, 111]`.
+  - **Colonne 4 (Concept 4)** : card
+    - badge-gray : Piège #3
+    - Titre : Adieu while et for
+    - Liste (icon-bullet) :
+      - Pas de mutation de variable : Les boucles traditionnelles `for`/`while` avec compteurs incrémentés sont impossibles.
+      - Transformations pures : Tout se gère par récursivité ou via le module `Enum` (`Enum.map`, `Enum.reduce`). On ne boucle pas, on transforme un flux.
+- **Pied de slide** : banner
+  - Mindset Elixir : L'immuabilité et la supervision changent radicalement la façon d'écrire et de fiabiliser un logiciel.
+- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  > - **Synthèse des pièges :** Pour conclure ma partie, voici les 4 points où les nouveaux venus trébuchent le plus :
+  > - **1. L'immuabilité :** Si vous faites un `List.delete(l, 1)` sans écrire `l = List.delete(l, 1)`, votre liste d'origine n'a pas bougé !
+  > - **2. Let it crash :** Ne cherchez pas à blinder votre code avec des try/catch partout. En Elixir, on laisse planter les micro-processus car l'arbre de supervision les relance instantanément.
+  > - **3. Les guillemets :** Attention : `"texte"` (String binaire) n'est pas `'texte'` (Charlist / liste d'entiers Erlang). Les libs Erlang demandent souvent des simples guillemets.
+  > - **4. Fin des boucles :** Pas de `while` ni de `for` mutable. On utilise `Enum.map` ou la récursion. On transforme la donnée.
+  > - **Transition vers la Partie 2 :** Vous avez maintenant en main tous les concepts fondamentaux d'Elixir. Je passe la parole à mon camarade pour découvrir comment le framework Phoenix exploite toute cette puissance pour révolutionner le web temps réel !
