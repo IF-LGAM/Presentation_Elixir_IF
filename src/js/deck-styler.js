@@ -203,8 +203,7 @@ window.DeckEngine.Styler = (function () {
     // Copier le HTML
     popoverEl.querySelector('#stylerCopyHtmlBtn')?.addEventListener('click', () => {
       if (!selectedElement) return;
-      // Nettoie temporairement les classes de styling
-      selectedElement.classList.remove('styler-selected-target', 'styler-hoverable');
+      selectedElement.classList.remove('styler-selected-target');
       const html = selectedElement.outerHTML;
       selectedElement.classList.add('styler-selected-target');
       navigator.clipboard?.writeText(html).then(() => {
@@ -380,24 +379,6 @@ window.DeckEngine.Styler = (function () {
     }
   }
 
-  function refreshCandidateHoverables() {
-    // Nettoie les anciens
-    document.querySelectorAll('.styler-hoverable').forEach(el => {
-      el.classList.remove('styler-hoverable');
-    });
-
-    if (!isModeActive) return;
-
-    // Ajoute aux candidats du slide actif
-    const activeSlide = document.querySelector('.slide.active');
-    if (activeSlide) {
-      const candidates = activeSlide.querySelectorAll(CANDIDATE_SELECTOR);
-      candidates.forEach(el => {
-        el.classList.add('styler-hoverable');
-      });
-    }
-  }
-
   function activate() {
     isModeActive = true;
     createStylerDOM();
@@ -407,7 +388,6 @@ window.DeckEngine.Styler = (function () {
     const btn = document.getElementById('elementStylerBtn');
     if (btn) btn.classList.add('active');
 
-    refreshCandidateHoverables();
     showToast('Mode Styliseur activé — Cliquez sur un élément');
   }
 
@@ -418,10 +398,6 @@ window.DeckEngine.Styler = (function () {
     
     const btn = document.getElementById('elementStylerBtn');
     if (btn) btn.classList.remove('active');
-
-    document.querySelectorAll('.styler-hoverable').forEach(el => {
-      el.classList.remove('styler-hoverable');
-    });
   }
 
   function toggle() {
@@ -447,7 +423,7 @@ window.DeckEngine.Styler = (function () {
       const activeSlide = document.querySelector('.slide.active');
       if (!activeSlide) return;
 
-      // Cherche l'élément candidat le plus proche du clic dans le slide
+      // Cherche l'élément candidat le plus proche du clic dans le slide actif
       const target = e.target.closest(CANDIDATE_SELECTOR);
       if (target && activeSlide.contains(target)) {
         e.preventDefault();
@@ -459,24 +435,12 @@ window.DeckEngine.Styler = (function () {
       }
     }, true); // Use capture to intercept before slide navigation!
 
-    // Écoute des changements de slide pour réactualiser les candidats
+    // Écoute des changements de slide pour refermer le popover si ouvert
     window.addEventListener('hashchange', () => {
       if (isModeActive) {
         closePopover();
-        setTimeout(refreshCandidateHoverables, 50);
       }
     });
-
-    const observer = new MutationObserver(() => {
-      if (isModeActive) {
-        refreshCandidateHoverables();
-      }
-    });
-
-    const viewport = document.getElementById('viewport');
-    if (viewport) {
-      observer.observe(viewport, { attributes: true, subtree: true, attributeFilter: ['class'] });
-    }
   }
 
   return {

@@ -65,13 +65,13 @@ body.deck-styler-mode .styler-banner {
   color: var(--text-main);
 }
 
-/* Survol des composants candidats lors du mode styliseur */
-body.deck-styler-mode .slide.active .styler-hoverable {
+/* Survol des composants candidats lors du mode styliseur (Pur CSS sans mutation DOM) */
+body.deck-styler-mode .slide.active :is(.x-card, .kpi-card, .schema-box, .terminal-box, .badge, .pill-tag, .btn-action, .data-table, .stepper-step, .cycle-step, .cycle-core, .callout, .quote-card, .quiz-opt-btn, .timeline-item, .chip, h1, h2, h3, h4, p, pre, code, button, td, th) {
   cursor: pointer !important;
   transition: outline 0.1s ease, box-shadow 0.1s ease !important;
 }
 
-body.deck-styler-mode .slide.active .styler-hoverable:hover {
+body.deck-styler-mode .slide.active :is(.x-card, .kpi-card, .schema-box, .terminal-box, .badge, .pill-tag, .btn-action, .data-table, .stepper-step, .cycle-step, .cycle-core, .callout, .quote-card, .quiz-opt-btn, .timeline-item, .chip, h1, h2, h3, h4, p, pre, code, button, td, th):hover {
   outline: 2px dashed var(--accent-primary, #E50914) !important;
   outline-offset: 2px;
   box-shadow: 0 0 12px rgba(229, 9, 20, 0.25) !important;
