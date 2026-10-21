@@ -28,15 +28,17 @@ Ce projet résout l'équation grâce à une **séparation stricte** et un **work
 
 ## ⚡ Démonstration Immédiate (Exemple Prêt à l'Emploi)
 
+> 🌐 **Démo en ligne immédiate** : [**Tester le Slide Deck en direct sur GitHub Pages**](https://antonindeloison.github.io/html-slides-template/) *(zéro téléchargement)*
+
 Une présentation vitrine complète de **11 diapositives** est directement fournie dans le fichier **`template_presentation.html`** !  
 Elle illustre et teste concrètement l'intégralité des fonctionnalités et des formes du dictionnaire (*fragments progressifs, steppers, tableaux et indicateurs KPI, snippets de code Prism.js, schémas d'architecture SVG, cercles vertueux avec flèches vectorielles, timeline verticale, diagrammes vectoriels Mermaid.js et quiz interactif avec validation en direct*).
 
-Lancez-la immédiatement dans votre navigateur par double-clic ou via votre terminal :
+Lancez-la immédiatement en local par double-clic ou via votre terminal :
 
 ```bash
 open template_presentation.html
-# Ou sous Linux : xdg-open template_presentation.html
-# Ou sous Windows : start template_presentation.html
+# Ou avec npm : npm run demo
+# Ou avec make : make demo
 ```
 
 - <kbd>→</kbd> / <kbd>Espace</kbd> : Naviguer et révéler les étapes progressives (fragments).
@@ -156,14 +158,39 @@ Quand l'IA compile votre plan Markdown, elle produit un diaporama riche doté de
 
 ---
 
+---
+
+## 🛠️ Outillage CLI & Automatisation (Optionnel)
+
+Pour les développeurs qui aiment piloter leurs projets depuis le terminal, des commandes sans dépendances externes sont disponibles (via `npm` ou `make`) :
+
+| Commande `npm` | Commande `make` | Description |
+| :--- | :--- | :--- |
+| `npm run demo` | `make demo` | Ouvre instantanément la présentation vitrine dans votre navigateur |
+| `npm run copy` | `make copy` | Assemble le prompt complet et le copie directement dans votre presse-papiers |
+| `npm run prompt` | `make prompt` | Affiche dans le terminal le prompt complet prêt à coller dans ChatGPT / Claude / Gemini |
+| `npm run validate` | `make validate` | Lance l'analyseur de conformité sur `template_presentation.html` |
+| `npm run validate:pres` | — | Valide la conformité de votre fichier généré `presentation.html` |
+| `npm run generate` | `make generate` | *(Optionnel)* Déclenche la génération automatique via API LLM (si `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` ou `GEMINI_API_KEY` est configurée) |
+
+---
+
 ## 📂 Organisation du Dépôt
 
 ```text
 .
+├── index.html                     # 🌐 Point d'entrée GitHub Pages (redirection automatique)
 ├── CONSIGNES_TEMPLATE.md          # ✍️ VOTRE COCKPIT : Cahier des charges & contenu Markdown à remplir
 ├── COMPOSANTS_DICTIONNAIRE.md     # 📚 LE DICTIONNAIRE : Référentiel des composants pour l'IA
-├── template_presentation.html     # 🌟 LA VITRINE : Présentation exemple complète prête à lancer (open template_presentation.html)
+├── template_presentation.html     # 🌟 LA VITRINE : Présentation exemple complète prête à lancer
 ├── assets/                        # 🎨 Médias vectoriels (logos SVG et schémas d'architecture)
+├── scripts/                       # 🛠️ Scripts utilitaires autonomes (générateur & validateur)
+│   └── generate.mjs               # CLI autonome (zéro dépendance)
+├── package.json                   # Définition des scripts npm (demo, copy, prompt, validate)
+├── Makefile                       # Raccourcis make (make demo, make validate, etc.)
+├── .nojekyll                      # Désactivation de Jekyll pour GitHub Pages
+├── .github/workflows/             # Déploiement CI/CD
+│   └── deploy-pages.yml           # Déploiement automatique vers GitHub Pages
 ├── src/
 │   ├── css/                       # Design system modulaire (thèmes, cartes, modales, print)
 │   │   ├── deck.css               # Point d'entrée CSS principal
