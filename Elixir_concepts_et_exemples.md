@@ -1,45 +1,6 @@
 ### Structure des Slides :
 
-#### Slide 1 : Annonce de Section / Sommaire (Intertitre)
-- **Type de slide** : slide
-- **Mise en page** : hero
-- **Badge section** : badge-solid : PARTIE 1 — JALON 4
-- **Titre (title-slide)** : Concepts Fondamentaux & Code en Action
-- **Sous-titre (subtitle-slide)** : Variables, filtrage par motif, types, fonctions, objets et flux (Durée : 10 min)
-- **Organisation (Sous-parties abordées)** : grid-3
-  - **Jalon 1** : card
-    - badge-gray : 2.5 min
-    - Titre : Variables & Pattern Matching
-    - Description : L'opérateur `=`, déstructuration instantanée, gestion d'erreurs et opérateur Pin `^`.
-  - **Jalon 2** : card
-    - badge-gray : 2 min
-    - Titre : Les Types de Base
-    - Description : Atoms, Tuples, Listes chaînées `[t|q]` et Maps associatives.
-  - **Jalon 3** : card
-    - badge-gray : 1 min
-    - Titre : Les Fonctions
-    - Description : Citoyennes de premier rang, fonctions anonymes, modules et notion d'arité.
-  - **Jalon 4** : card
-    - badge-gray : 1.5 min
-    - Titre : Alternative aux Objets
-    - Description : Séparation stricte données/méthodes avec Structs et Modules immuables.
-  - **Jalon 5** : card
-    - badge-gray : 1 min
-    - Titre : Flux & Pipe Operator `|>`
-    - Description : Chaînage limpide et transformation de données de haut en bas.
-  - **Jalon 6** : card
-    - badge-gray : 2 min
-    - Titre : Pièges & Philosophies
-    - Description : Immuabilité, « Let it crash », guillemets et disparition des boucles `for`/`while`.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
-  > - **Prise de parole & Transition :** Merci. Je prends maintenant le relais pour vous plonger concrètement dans le code et les mécanismes essentiels du langage Elixir.
-  > - **Objectif (10 min) :** Parcourir les fondations syntaxiques et conceptuelles qui font d'Elixir un langage si singulier et productif.
-  > - **Au programme :** Le pattern matching, les structures de données, l'absence de classes objet remplacée par les Structs, le célèbre pipe operator, et enfin 4 pièges majeurs à éviter absolument quand on vient de Java ou Python.
-  > - **Lancement :** Commençons immédiatement par la base de tout en Elixir : l'opérateur `=` et le pattern matching.
-
----
-
-#### Slide 2 : Variables et l'opérateur de Pattern Matching
+#### Slide 1 : Variables et l'opérateur de Pattern Matching
 - **Type de slide** : slide
 - **Titre (title-slide)** : Variables & Pattern Matching : Le Signe = Réinventé
 - **Sous-titre (subtitle-slide)** : En Elixir, le signe = n'est pas une simple assignation, c'est un opérateur de filtrage par motif
@@ -77,7 +38,7 @@
 
 ---
 
-#### Slide 3 : L'Opérateur Pin (^)
+#### Slide 2 : L'Opérateur Pin (^)
 - **Type de slide** : slide
 - **Titre (title-slide)** : L'Opérateur Pin (^) : Forcer le Test d'Égalité
 - **Sous-titre (subtitle-slide)** : Empêcher la réassignation d'une variable existante lors du filtrage par motif
@@ -113,7 +74,7 @@
 
 ---
 
-#### Slide 4 : Les Types de Base (1/2) : Atoms & Tuples
+#### Slide 3 : Les Types de Base (1/2) : Atoms & Tuples
 - **Type de slide** : slide
 - **Titre (title-slide)** : Types Fondamentaux : Atoms & Tuples
 - **Sous-titre (subtitle-slide)** : Typage dynamique fort, constantes symboliques et conteneurs à taille fixe
@@ -152,7 +113,7 @@
 
 ---
 
-#### Slide 5 : Les Types de Base (2/2) : Listes Chaînées & Maps
+#### Slide 4 : Les Types de Base (2/2) : Listes Chaînées & Maps
 - **Type de slide** : slide
 - **Titre (title-slide)** : Collections : Listes Chaînées & Maps
 - **Sous-titre (subtitle-slide)** : Décomposition Tête/Queue et dictionnaires associatifs clé/valeur
@@ -198,7 +159,7 @@
 
 ---
 
-#### Slide 6 : Les Fonctions & la Notion d'Arité
+#### Slide 5 : Les Fonctions & la Notion d'Arité
 - **Type de slide** : slide
 - **Titre (title-slide)** : Les Fonctions : Citoyennes de Premier Rang
 - **Sous-titre (subtitle-slide)** : Fonctions anonymes, fonctions nommées et identification stricte par nom et arité
@@ -236,7 +197,7 @@
 
 ---
 
-#### Slide 7 : L'Alternative aux "Objets" : Structs et Modules
+#### Slide 6 : L'Alternative aux "Objets" : Structs et Modules
 - **Type de slide** : slide
 - **Titre (title-slide)** : Structs & Modules : Séparer Données et Comportement
 - **Sous-titre (subtitle-slide)** : En l'absence de classes objet, découpler l'état (Structs) des transformations (Modules)
@@ -275,7 +236,7 @@
 
 ---
 
-#### Slide 8 : Les Flux / Le Pipe Operator (|>)
+#### Slide 7 : Les Flux / Le Pipe Operator (|>)
 - **Type de slide** : slide
 - **Titre (title-slide)** : Le Pipe Operator (|>) : L'Élégance des Flux
 - **Sous-titre (subtitle-slide)** : Transformer les imbrications de parenthèses en un pipeline limpide et naturel
@@ -308,7 +269,7 @@
 
 ---
 
-#### Slide 9 : Les 4 Pièges & Concepts Clés à Retenir
+#### Slide 8 : Les 4 Pièges & Concepts Clés à Retenir
 - **Type de slide** : slide
 - **Titre (title-slide)** : Les 4 Pièges & Changements de Paradigme
 - **Sous-titre (subtitle-slide)** : Les réflexes impératifs à désapprendre pour maîtriser l'esprit d'Elixir

@@ -290,14 +290,14 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
       - La Réponse : Apporter une syntaxe moderne, expressive, un outillage complet (`mix`) et la métaprogrammation sur la machine virtuelle Erlang (BEAM) pour exploiter nativement les processeurs multi-cœurs.
 
   - **Détails & Comparatif d'impact** : grid-2
-    - **Colonne Gauche (Les Limites de la POO Traditionnelle)** : card
+    - **Colonne Gauche (Les Limites de la POO Traditionnelle)** : card fragment
       - badge-gray : Avant Elixir (POO & Threads lourds)
       - Titre : Le Mur de la Concurrence
       - Liste (icon-bullet) :
         - Mémoire partagée mutable : source fréquente de corruption d'état et d'interblocages (*deadlocks*).
         - Coût élevé des threads OS : saturation de la RAM et goulots d'étranglement dès quelques milliers de calculs concurrents.
         - Fragilité systémique : une exception non interceptée dans un thread peut faire chuter le processus principal complet.
-    - **Colonne Droite (L'Apport Fondateur d'Elixir)** : card-featured
+    - **Colonne Droite (L'Apport Fondateur d'Elixir)** : card-featured fragment
       - badge-solid : La Solution Elixir (Fonctionnel & BEAM)
       - Titre : Productivité Moderne + Concurrence Massive
       - Liste (icon-bullet) :
@@ -306,8 +306,9 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
         - Philosophie *« Let it crash »* : résilience garantie par des superviseurs qui réinitialisent les processus en échec.
         - Outillage moderne : compilation rapide, gestionnaire de dépendances Hex et système de build unifié Mix.
 
-  - **Pied de slide** : banner
+  - **Pied de slide** : banner fragment
     - Synthèse : Robustesse industrielle d'Erlang/BEAM (1986) + Ergonomie et productivité d'Elixir (2012) = Un langage taillé pour les architectures multi-cœurs modernes.
+- **Animation & Révélation progressive (Fragments)** : Les cartes comparatives (.x-card fragment) puis la synthèse (.summary-box fragment) apparaissent successivement au clic / flèche droite.
 - **Logos de pied de slide** :
 - **Notes d'orateur (data-notes)** :
   > - **Objectif de la slide (3 min) :** Poser les bases historiques d'Elixir sans aborder le web applicatif pour l'instant.
@@ -319,7 +320,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 #### Slide 4 : Le Paradigme de Programmation
 - **Type de slide** : slide
-- **Durée estimée** : 
+- **Durée estimée** : 4 min
 - **Titre (title-slide)** : Le Paradigme de Programmation
 - **Sous-titre (subtitle-slide)** : Penser déclaratif et fonctionnel : exprimer l'intention plutôt que la mutation
 - **Mise en page** : grid-2
@@ -381,7 +382,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 #### Slide 6 : Le Modèle d'Exécution
 - **Type de slide** : slide
-- **Durée estimée** : 
+- **Durée estimée** : 1 min 30
 - **Titre (title-slide)** : Le Modèle d'Exécution
 - **Sous-titre (subtitle-slide)** : Du code source au bytecode optimisé sur la machine virtuelle BEAM
 - **Mise en page** : grid-2
@@ -412,7 +413,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 #### Slide 7 : La Gestion de la Mémoire
 - **Type de slide** : slide
-- **Durée estimée** : 
+- **Durée estimée** : 1 min 30
 - **Titre (title-slide)** : La Gestion de la Mémoire
 - **Sous-titre (subtitle-slide)** : Des tas isolés et un Garbage Collector
 - **Mise en page** : grid-2
@@ -443,7 +444,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 #### Slide 8 : La Concurrence et le Parallélisme
 - **Type de slide** : slide
-- **Durée estimée** : 
+- **Durée estimée** : 2 min
 - **Titre (title-slide)** : La Concurrence & le Parallélisme
 - **Sous-titre (subtitle-slide)** : Le modèle d'acteurs : des micro-processus légers sans mémoire partagée
 - **Mise en page** : grid-2
@@ -473,33 +474,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ---
 
-#### Slide 9 : Démo Livecoding
-- **Type de slide** : slide
-- **Durée estimée** : 7 min
-- **Titre (title-slide)** : Démo Livecoding
-- **Sous-titre (subtitle-slide)** : Démonstration sur écran avec backup vidéo
-- **Mise en page** : grid-2
-- **Contenu & Composants** :
-  - **Colonne Gauche (Session Live)** : card-featured
-    - badge-solid : En Direct
-    - Titre : Démonstration sur l'Écran
-    - Liste (icon-bullet) :
-      - Bascule immédiate sur l'écran partagé : Tout se déroule en direct dans l'éditeur et le terminal.
-      - Session interactive : Démonstration pratique et observation en temps réel.
-  - **Colonne Droite (Filet de Sécurité)** : card
-    - badge-gray : Backup Vidéo
-    - Titre : Vidéo de Secours (7 min)
-    - Description : Enregistrement complet chapitré, prêt à être lancé immédiatement si besoin.
-    - Lecteur / Bouton d'action :
-      - link-btn : `▶ Lancer la Vidéo de Secours (backup_demo.mp4)`
-  - **Pied de slide** : banner
-    - Formule clé : Place à la pratique : bascule sur l'écran pour la démonstration en direct !
-- **Logos de pied de slide** :
-- **Notes d'orateur (data-notes)** :
-  > - **Bascule immédiate :** Quitter la présentation pour afficher le terminal et l'IDE sur l'écran principal.
-  > - **Plan B (Secours) :** En cas d'aléa réseau ou machine, cliquer sur « Lancer la Vidéo de Secours » pour diffuser la vidéo de 7 minutes et continuer le commentaire en voix off.
-
-#### Slide 10 : Annonce de Section / Sommaire (Intertitre)
+#### Slide 9 : Annonce de Section / Sommaire (Intertitre)
 - **Type de slide** : slide
 - **Mise en page** : hero
 - **Badge section** : badge-solid : PARTIE 1 — JALON 4
@@ -538,7 +513,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ---
 
-#### Slide 11 : Variables et l'opérateur de Pattern Matching
+#### Slide 10 : Variables et l'opérateur de Pattern Matching
 - **Type de slide** : slide
 - **Titre (title-slide)** : Variables & Pattern Matching : Le Signe = Réinventé
 - **Sous-titre (subtitle-slide)** : En Elixir, le signe = n'est pas une simple assignation, c'est un opérateur de filtrage par motif
@@ -576,7 +551,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ---
 
-#### Slide 12 : L'Opérateur Pin (^)
+#### Slide 11 : L'Opérateur Pin (^)
 - **Type de slide** : slide
 - **Titre (title-slide)** : L'Opérateur Pin (^) : Forcer le Test d'Égalité
 - **Sous-titre (subtitle-slide)** : Empêcher la réassignation d'une variable existante lors du filtrage par motif
@@ -612,7 +587,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ---
 
-#### Slide 13 : Les Types de Base (1/2) : Atoms & Tuples
+#### Slide 12 : Les Types de Base (1/2) : Atoms & Tuples
 - **Type de slide** : slide
 - **Titre (title-slide)** : Types Fondamentaux : Atoms & Tuples
 - **Sous-titre (subtitle-slide)** : Typage dynamique fort, constantes symboliques et conteneurs à taille fixe
@@ -651,7 +626,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ---
 
-#### Slide 14 : Les Types de Base (2/2) : Listes Chaînées & Maps
+#### Slide 13 : Les Types de Base (2/2) : Listes Chaînées & Maps
 - **Type de slide** : slide
 - **Titre (title-slide)** : Collections : Listes Chaînées & Maps
 - **Sous-titre (subtitle-slide)** : Décomposition Tête/Queue et dictionnaires associatifs clé/valeur
@@ -697,7 +672,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ---
 
-#### Slide 15 : Les Fonctions & la Notion d'Arité
+#### Slide 14 : Les Fonctions & la Notion d'Arité
 - **Type de slide** : slide
 - **Titre (title-slide)** : Les Fonctions : Citoyennes de Premier Rang
 - **Sous-titre (subtitle-slide)** : Fonctions anonymes, fonctions nommées et identification stricte par nom et arité
@@ -735,7 +710,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ---
 
-#### Slide 16 : L'Alternative aux "Objets" : Structs et Modules
+#### Slide 15 : L'Alternative aux "Objets" : Structs et Modules
 - **Type de slide** : slide
 - **Titre (title-slide)** : Structs & Modules : Séparer Données et Comportement
 - **Sous-titre (subtitle-slide)** : En l'absence de classes objet, découpler l'état (Structs) des transformations (Modules)
@@ -774,7 +749,7 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ---
 
-#### Slide 17 : Les Flux / Le Pipe Operator (|>)
+#### Slide 16 : Les Flux / Le Pipe Operator (|>)
 - **Type de slide** : slide
 - **Titre (title-slide)** : Le Pipe Operator (|>) : L'Élégance des Flux
 - **Sous-titre (subtitle-slide)** : Transformer les imbrications de parenthèses en un pipeline limpide et naturel
@@ -807,11 +782,13 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
 
 ---
 
-#### Slide 18 : Les 4 Pièges & Concepts Clés à Retenir
+#### Slide 17 : Les 4 Pièges & Concepts Clés à Retenir
 - **Type de slide** : slide
+- **Durée estimée** : 2 min
 - **Titre (title-slide)** : Les 4 Pièges & Changements de Paradigme
 - **Sous-titre (subtitle-slide)** : Les réflexes impératifs à désapprendre pour maîtriser l'esprit d'Elixir
 - **Mise en page** : grid-4
+- **Contenu & Composants** :
   - **Colonne 1 (Piège 1)** : card
     - badge-gray : Piège #1
     - Titre : Le Piège de l'Immuabilité
@@ -837,9 +814,10 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
     - Liste (icon-bullet) :
       - Pas de mutation de variable : Les boucles traditionnelles `for`/`while` avec compteurs incrémentés sont impossibles.
       - Transformations pures : Tout se gère par récursivité ou via le module `Enum` (`Enum.map`, `Enum.reduce`). On ne boucle pas, on transforme un flux.
-- **Pied de slide** : banner
-  - Mindset Elixir : L'immuabilité et la supervision changent radicalement la façon d'écrire et de fiabiliser un logiciel.
-- **Notes présentateur (notes : data-notes ou speaker-notes)** :
+  - **Pied de slide** : banner
+    - Mindset Elixir : L'immuabilité et la supervision changent radicalement la façon d'écrire et de fiabiliser un logiciel.
+- **Logos de pied de slide** :
+- **Notes d'orateur (data-notes)** :
   > - **Synthèse des pièges :** Pour conclure ma partie, voici les 4 points où les nouveaux venus trébuchent le plus :
   > - **1. L'immuabilité :** Si vous faites un `List.delete(l, 1)` sans écrire `l = List.delete(l, 1)`, votre liste d'origine n'a pas bougé !
   > - **2. Let it crash :** Ne cherchez pas à blinder votre code avec des try/catch partout. En Elixir, on laisse planter les micro-processus car l'arbre de supervision les relance instantanément.

@@ -240,7 +240,8 @@ window.DeckEngine.DOM = (function () {
           <span>&bull;</span>
           <span>Export : <kbd>P</kbd></span>
         </div>
-        <div style="display: flex; gap: 0.35rem;">
+        <div style="display: flex; gap: 0.35rem; align-items: center;">
+          <span class="pill-tag gray" id="footerSlideCounter" style="font-weight: 700; font-size: 11px; margin-right: 0.25rem;">Slide <span id="footerSlideNum">1</span> / <span id="footerTotalSlides">1</span></span>
           <button id="prevBtn" class="ctrl-btn">&larr; Précédent</button>
           <button id="nextBtn" class="ctrl-btn">Suivant &rarr;</button>
         </div>

@@ -208,7 +208,9 @@ window.DeckEngine.Navigation = (function () {
     const progressFill = document.getElementById('progressFill');
     const headerSlideTitle = document.getElementById('headerSlideTitle');
 
+    const footerSlideNumEl = document.getElementById('footerSlideNum');
     if (currentSlideNumEl) currentSlideNumEl.textContent = currentIndex + 1;
+    if (footerSlideNumEl) footerSlideNumEl.textContent = currentIndex + 1;
     if (progressFill) progressFill.style.width = `${((currentIndex + 1) / totalSlides) * 100}%`;
     const title = activeSlide ? (activeSlide.getAttribute('data-title') || `Slide ${currentIndex + 1}`) : `Slide ${currentIndex + 1}`;
     if (headerSlideTitle) headerSlideTitle.textContent = title;
@@ -485,8 +487,10 @@ window.DeckEngine.Navigation = (function () {
     totalSlides = slides.length;
 
     const totalSlidesNumEl = document.getElementById('totalSlidesNum');
+    const footerTotalSlides = document.getElementById('footerTotalSlides');
     const notesTotalSlides = document.getElementById('notesTotalSlides');
     if (totalSlidesNumEl) totalSlidesNumEl.textContent = totalSlides;
+    if (footerTotalSlides) footerTotalSlides.textContent = totalSlides;
     if (notesTotalSlides) notesTotalSlides.textContent = totalSlides;
 
     initChannel();
