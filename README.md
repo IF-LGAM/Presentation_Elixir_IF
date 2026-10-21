@@ -218,9 +218,16 @@ Pour les développeurs qui aiment piloter leurs projets depuis le terminal, des 
 │       ├── deck-styler.js         # Inspecteur visuel, sélecteur de couleurs, formes & persistance
 │       ├── speaker.js             # Console orateur dual-screen & Pacing Tracker
 │       └── interactive.js         # Fragments, laser, blackout, zoom et Mermaid
+├── CHANGELOG.md                   # 📝 Historique des versions et notes de release
 ├── LICENSE.md                     # 📄 Licence open-source MIT
 └── README.md                      # Documentation centrale du projet
 ```
+
+---
+
+## 📝 Historique des Versions
+
+Consultez le fichier [CHANGELOG.md](CHANGELOG.md) pour le détail complet des nouveautés et correctifs de chaque version.
 
 ---
 
