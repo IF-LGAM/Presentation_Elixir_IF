@@ -332,9 +332,13 @@ window.DeckEngine.Styler = (function () {
           if (styleObj.borderStyle) {
             targetEl.style.borderStyle = styleObj.borderStyle;
           }
-          if (styleObj.fill) {
+          if (styleObj.fill && !targetEl.classList?.contains('cycle-track-line') && targetEl.tagName?.toLowerCase() !== 'circle') {
             targetEl.style.fill = styleObj.fill;
             targetEl.setAttribute('fill', styleObj.fill);
+          }
+          if (targetEl.classList?.contains('cycle-track-line')) {
+            targetEl.style.fill = 'none';
+            targetEl.setAttribute('fill', 'none');
           }
           if (styleObj.stroke) {
             targetEl.style.stroke = styleObj.stroke;
@@ -370,11 +374,23 @@ window.DeckEngine.Styler = (function () {
         el.style.display = '';
         el.style.fill = '';
         el.style.stroke = '';
-        if (el.hasAttribute('fill')) el.removeAttribute('fill');
+        if (el.classList?.contains('cycle-track-line') || el.tagName?.toLowerCase() === 'circle') {
+          el.style.fill = 'none';
+          el.setAttribute('fill', 'none');
+        } else {
+          if (el.hasAttribute('fill')) el.removeAttribute('fill');
+        }
         if (el.hasAttribute('stroke')) el.removeAttribute('stroke');
         if (el.getAttribute('style') === '') el.removeAttribute('style');
       }
     });
+
+    // Restaurer explicitement fill="none" sur tous les cercles de piste vectorielle
+    document.querySelectorAll('.cycle-track-line').forEach(circle => {
+      circle.style.fill = 'none';
+      circle.setAttribute('fill', 'none');
+    });
+
     syncBorderShapeUI();
     updateActiveSwatchHighlight();
     showToast('Tous les styles personnalisés ont été réinitialisés');
@@ -776,16 +792,28 @@ window.DeckEngine.Styler = (function () {
       selectedElement.style.display = '';
       selectedElement.style.fill = '';
       selectedElement.style.stroke = '';
-      if (selectedElement.hasAttribute('fill')) selectedElement.removeAttribute('fill');
+      if (selectedElement.classList?.contains('cycle-track-line') || selectedElement.tagName?.toLowerCase() === 'circle') {
+        selectedElement.style.fill = 'none';
+        selectedElement.setAttribute('fill', 'none');
+      } else {
+        if (selectedElement.hasAttribute('fill')) selectedElement.removeAttribute('fill');
+      }
       if (selectedElement.hasAttribute('stroke')) selectedElement.removeAttribute('stroke');
 
       // Réinitialiser également les flèches du cycle vertueux associées
       const track = selectedElement.closest('.cycle-track') || selectedElement.closest('.virtuous-circle')?.querySelector('.cycle-track');
       if (track) {
-        track.querySelectorAll('.cycle-arrow-head, .cycle-track-line').forEach(item => {
+        track.querySelectorAll('.cycle-arrow-head').forEach(item => {
           item.style.fill = '';
           item.style.stroke = '';
           item.removeAttribute('fill');
+          item.removeAttribute('stroke');
+          removeElementOverride(item);
+        });
+        track.querySelectorAll('.cycle-track-line').forEach(item => {
+          item.style.fill = 'none';
+          item.style.stroke = '';
+          item.setAttribute('fill', 'none');
           item.removeAttribute('stroke');
           removeElementOverride(item);
         });

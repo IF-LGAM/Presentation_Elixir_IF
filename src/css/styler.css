@@ -612,6 +612,10 @@ body.deck-styler-mode .virtuous-circle :is(.cycle-arrow-head, .cycle-track-line,
   cursor: pointer !important;
 }
 
+.cycle-track-line {
+  fill: none !important;
+}
+
 body.deck-styler-mode .virtuous-circle .cycle-arrow-head {
   stroke: transparent;
   stroke-width: 14px;

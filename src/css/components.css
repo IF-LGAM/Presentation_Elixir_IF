@@ -479,6 +479,7 @@ h4 {
 }
 
 .virtuous-circle .cycle-track-line {
+  fill: none !important;
   stroke: color-mix(in srgb, var(--accent-primary) 65%, var(--border-dark));
   stroke-dasharray: 6 6;
 }
