@@ -361,6 +361,99 @@ body[data-theme="light"] .styler-popover,
   display: flex;
 }
 
+/* Section Forme & Arrondi de Bordure */
+.styler-border-shape-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--border-dark, #333333);
+  padding-top: 8px;
+}
+
+.styler-shape-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.styler-val-badge {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-primary, #E50914);
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.25);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.styler-radius-slider-wrap {
+  display: flex;
+  align-items: center;
+  padding: 2px 2px;
+}
+
+.styler-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border-dark, #333333);
+  outline: none;
+  cursor: pointer;
+}
+
+.styler-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-primary, #E50914);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s ease;
+}
+
+.styler-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.22);
+}
+
+.styler-radius-presets,
+.styler-border-types {
+  display: flex;
+  gap: 4px;
+}
+
+.styler-preset-btn,
+.styler-border-type-btn {
+  flex: 1;
+  background: var(--card-bg, #1F1F1F);
+  border: 1px solid var(--border-dark, #333333);
+  color: var(--text-main, #FFFFFF);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.styler-preset-btn:hover,
+.styler-border-type-btn:hover {
+  background: var(--card-hover, #2B2B2B);
+  border-color: var(--text-muted);
+}
+
+.styler-preset-btn.active,
+.styler-border-type-btn.active {
+  background: var(--accent-primary, #E50914);
+  border-color: var(--accent-primary, #E50914);
+  color: #FFFFFF;
+}
+
 /* Contrôles Pipette libre & Hexadécimal */
 .styler-custom-controls {
   display: flex;

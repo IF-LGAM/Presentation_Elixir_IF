@@ -1,10 +1,10 @@
 /**
- * Deck Engine - Component Color Inspector & Styler
+ * Deck Engine - Component Color & Shape Inspector & Styler
  * Sous-responsabilité : Sélection visuelle au clic de n'importe quel composant
  * (cartes, badges, titres, boîtes, KPIs...) et modification en direct de sa
- * couleur de fond, couleur d'écriture et bordure avec la palette du Design System.
- * Persistance automatique intégrale dans le navigateur (localStorage) pour conserver
- * tous les styles personnalisés sans modifier manuellement le code HTML.
+ * couleur de fond, couleur d'écriture, bordure, ainsi que la forme des angles
+ * (arrondi border-radius, épaisseur, type de trait).
+ * Persistance automatique intégrale dans le navigateur (localStorage).
  */
 
 window.DeckEngine = window.DeckEngine || {};
@@ -179,12 +179,10 @@ window.DeckEngine.Styler = (function () {
     const slideIndex = allSlides.indexOf(slide);
     if (slideIndex < 0) return null;
 
-    // Si l'élément dispose d'un identifiant unique explicite
     if (el.id) {
       return `slide-${slideIndex}#${el.id}`;
     }
 
-    // Parcours hiérarchique stable basé sur les balises et leur index d'apparition
     const path = [];
     let curr = el;
     while (curr && curr !== slide) {
@@ -226,14 +224,20 @@ window.DeckEngine.Styler = (function () {
     const bg = el.style.backgroundColor || el.style.background || '';
     const col = el.style.color || '';
     const border = el.style.borderColor || '';
+    const radius = el.style.borderRadius || '';
+    const width = el.style.borderWidth || '';
+    const bstyle = el.style.borderStyle || '';
 
-    if (!bg && !col && !border) {
+    if (!bg && !col && !border && !radius && !width && !bstyle) {
       delete overrides[key];
     } else {
       overrides[key] = {
         background: bg,
         color: col,
-        borderColor: border
+        borderColor: border,
+        borderRadius: radius,
+        borderWidth: width,
+        borderStyle: bstyle
       };
     }
 
@@ -288,6 +292,15 @@ window.DeckEngine.Styler = (function () {
           if (styleObj.borderColor) {
             targetEl.style.borderColor = styleObj.borderColor;
           }
+          if (styleObj.borderRadius) {
+            targetEl.style.borderRadius = styleObj.borderRadius;
+          }
+          if (styleObj.borderWidth) {
+            targetEl.style.borderWidth = styleObj.borderWidth;
+          }
+          if (styleObj.borderStyle) {
+            targetEl.style.borderStyle = styleObj.borderStyle;
+          }
         }
       } catch (e) {
         console.warn('Erreur restauration style pour', key, e);
@@ -297,16 +310,19 @@ window.DeckEngine.Styler = (function () {
 
   function resetAllStyles() {
     saveStoredOverrides({});
-    // Supprime les styles inline sur tous les éléments stylisés
     document.querySelectorAll('[style]').forEach(el => {
       if (el.closest('.slide')) {
         el.style.background = '';
         el.style.backgroundColor = '';
         el.style.color = '';
         el.style.borderColor = '';
+        el.style.borderRadius = '';
+        el.style.borderWidth = '';
+        el.style.borderStyle = '';
         if (el.getAttribute('style') === '') el.removeAttribute('style');
       }
     });
+    syncBorderShapeUI();
     updateActiveSwatchHighlight();
     showToast('Tous les styles personnalisés ont été réinitialisés');
   }
@@ -322,6 +338,50 @@ window.DeckEngine.Styler = (function () {
     return `<${tag}${classList}>`;
   }
 
+  function syncBorderShapeUI() {
+    if (!selectedElement || !popoverEl) return;
+
+    // 1. Synchronisation Border Radius
+    const rawRadius = selectedElement.style.borderRadius || window.getComputedStyle(selectedElement).borderRadius || '0px';
+    const numRadius = parseInt(rawRadius, 10) || 0;
+    const isPill = rawRadius === '9999px' || numRadius >= 100;
+
+    const slider = popoverEl.querySelector('#stylerRadiusSlider');
+    const valBadge = popoverEl.querySelector('#stylerRadiusVal');
+    if (slider) slider.value = isPill ? 32 : Math.min(32, numRadius);
+    if (valBadge) valBadge.textContent = isPill ? 'Pilule' : `${numRadius}px`;
+
+    // Presets actifs
+    const presetBtns = popoverEl.querySelectorAll('.styler-preset-btn');
+    presetBtns.forEach(btn => {
+      const r = btn.getAttribute('data-radius');
+      if (isPill && r === '9999px') {
+        btn.classList.add('active');
+      } else if (!isPill && r === `${numRadius}px`) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // 2. Synchronisation Border Width / Style
+    const rawWidth = selectedElement.style.borderWidth || window.getComputedStyle(selectedElement).borderWidth || '0px';
+    const rawStyle = selectedElement.style.borderStyle || window.getComputedStyle(selectedElement).borderStyle || 'none';
+
+    const typeBtns = popoverEl.querySelectorAll('.styler-border-type-btn');
+    typeBtns.forEach(btn => {
+      const w = btn.getAttribute('data-width');
+      const s = btn.getAttribute('data-style');
+      if (w === '0px' && (rawWidth === '0px' || rawStyle === 'none')) {
+        btn.classList.add('active');
+      } else if (rawWidth.includes(w.replace('px', '')) && rawStyle === s) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
   function createStylerDOM() {
     if (popoverEl) return;
 
@@ -331,7 +391,7 @@ window.DeckEngine.Styler = (function () {
     bannerEl.id = 'stylerBanner';
     bannerEl.innerHTML = `
       <span class="styler-banner-dot"></span>
-      <span>Mode Styliseur actif — Cliquez sur un composant pour changer ses couleurs</span>
+      <span>Mode Styliseur actif — Cliquez sur un composant pour modifier son style</span>
       <button class="styler-banner-close" id="stylerBannerClose" title="Quitter le styliseur (Échap)">✕</button>
     `;
     document.body.appendChild(bannerEl);
@@ -366,7 +426,7 @@ window.DeckEngine.Styler = (function () {
       <div class="styler-tabs">
         <button class="styler-tab-btn active" data-prop="background" title="Modifier la couleur d'arrière-plan">🎨 Fond</button>
         <button class="styler-tab-btn" data-prop="color" title="Modifier la couleur du texte">✏️ Texte</button>
-        <button class="styler-tab-btn" data-prop="borderColor" title="Modifier la couleur de la bordure">🔲 Bordure</button>
+        <button class="styler-tab-btn" data-prop="borderColor" title="Modifier la bordure et forme des angles">🔲 Bordure & Forme</button>
       </div>
 
       <div>
@@ -395,6 +455,38 @@ window.DeckEngine.Styler = (function () {
         </div>
       </div>
 
+      <!-- Section Forme & Arrondi de Bordure (Visible dans l'onglet Bordure) -->
+      <div class="styler-border-shape-section" id="stylerBorderShapeSection" style="display: none;">
+        <div class="styler-shape-group">
+          <div class="styler-section-title">
+            <span>Arrondi des angles</span>
+            <span class="styler-val-badge" id="stylerRadiusVal">8px</span>
+          </div>
+          <div class="styler-radius-slider-wrap">
+            <input type="range" class="styler-range-slider" id="stylerRadiusSlider" min="0" max="32" value="8" step="1">
+          </div>
+          <div class="styler-radius-presets" id="stylerRadiusPresets">
+            <button class="styler-preset-btn" data-radius="0px" title="Coins carrés (0px)">Carré</button>
+            <button class="styler-preset-btn" data-radius="4px" title="Coins légers (4px)">Léger</button>
+            <button class="styler-preset-btn active" data-radius="8px" title="Coins standards (8px)">Moyen</button>
+            <button class="styler-preset-btn" data-radius="16px" title="Coins prononcés (16px)">Rond</button>
+            <button class="styler-preset-btn" data-radius="9999px" title="Format pilule / ovale">Pilule</button>
+          </div>
+        </div>
+
+        <div class="styler-shape-group">
+          <div class="styler-section-title">
+            <span>Épaisseur & Type</span>
+          </div>
+          <div class="styler-border-types" id="stylerBorderTypes">
+            <button class="styler-border-type-btn" data-width="1px" data-style="solid" title="Bordure fine 1px continue">1px Net</button>
+            <button class="styler-border-type-btn" data-width="2px" data-style="solid" title="Bordure moyenne 2px continue">2px Net</button>
+            <button class="styler-border-type-btn" data-width="2px" data-style="dashed" title="Bordure en pointillés">Pointillés</button>
+            <button class="styler-border-type-btn" data-width="0px" data-style="none" title="Aucune bordure">Sans</button>
+          </div>
+        </div>
+      </div>
+
       <div class="styler-actions">
         <button class="styler-action-btn" id="stylerCopyStyleBtn" title="Copier le style inline dans le presse-papiers">
           📋 Copier style
@@ -415,12 +507,60 @@ window.DeckEngine.Styler = (function () {
     
     // Changement d'onglet (Fond / Texte / Bordure)
     const tabBtns = popoverEl.querySelectorAll('.styler-tab-btn');
+    const shapeSection = popoverEl.querySelector('#stylerBorderShapeSection');
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         tabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentProperty = btn.getAttribute('data-prop');
+        
+        // Affichage de la section forme uniquement dans l'onglet bordure
+        if (shapeSection) {
+          shapeSection.style.display = (currentProperty === 'borderColor') ? 'flex' : 'none';
+        }
+
         updatePaletteLabel();
+        updateActiveSwatchHighlight();
+        if (currentProperty === 'borderColor') syncBorderShapeUI();
+      });
+    });
+
+    // 1. Slider d'arrondi
+    const radiusSlider = popoverEl.querySelector('#stylerRadiusSlider');
+    radiusSlider?.addEventListener('input', (e) => {
+      if (!selectedElement) return;
+      const val = e.target.value;
+      selectedElement.style.borderRadius = `${val}px`;
+      saveElementOverride(selectedElement);
+      syncBorderShapeUI();
+    });
+
+    // 2. Presets d'arrondi
+    const presetBtns = popoverEl.querySelectorAll('.styler-preset-btn');
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!selectedElement) return;
+        const rad = btn.getAttribute('data-radius');
+        selectedElement.style.borderRadius = rad;
+        saveElementOverride(selectedElement);
+        syncBorderShapeUI();
+      });
+    });
+
+    // 3. Types et épaisseurs de bordure
+    const borderTypeBtns = popoverEl.querySelectorAll('.styler-border-type-btn');
+    borderTypeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!selectedElement) return;
+        const w = btn.getAttribute('data-width');
+        const s = btn.getAttribute('data-style');
+        selectedElement.style.borderWidth = w;
+        selectedElement.style.borderStyle = s;
+        if (w !== '0px' && !selectedElement.style.borderColor) {
+          selectedElement.style.borderColor = 'var(--accent-primary)';
+        }
+        saveElementOverride(selectedElement);
+        syncBorderShapeUI();
         updateActiveSwatchHighlight();
       });
     });
@@ -510,10 +650,14 @@ window.DeckEngine.Styler = (function () {
       selectedElement.style.backgroundColor = '';
       selectedElement.style.color = '';
       selectedElement.style.borderColor = '';
+      selectedElement.style.borderRadius = '';
+      selectedElement.style.borderWidth = '';
+      selectedElement.style.borderStyle = '';
       if (selectedElement.getAttribute('style') === '') {
         selectedElement.removeAttribute('style');
       }
       removeElementOverride(selectedElement);
+      syncBorderShapeUI();
       updateActiveSwatchHighlight();
       showToast('Style réinitialisé pour cet élément');
     });
@@ -529,7 +673,7 @@ window.DeckEngine.Styler = (function () {
     if (!labelEl) return;
     if (currentProperty === 'background') labelEl.textContent = 'Nuancier Arrière-Plan';
     else if (currentProperty === 'color') labelEl.textContent = 'Nuancier Couleur du Texte';
-    else if (currentProperty === 'borderColor') labelEl.textContent = 'Nuancier Couleur Bordure';
+    else if (currentProperty === 'borderColor') labelEl.textContent = 'Couleur de la Bordure';
   }
 
   function renderSwatches() {
@@ -587,12 +731,18 @@ window.DeckEngine.Styler = (function () {
       selectedElement.style.color = colorVal;
     } else if (currentProperty === 'borderColor') {
       selectedElement.style.borderColor = colorVal;
+      // S'il n'y a pas de bordure active, activer une bordure fine
+      if (!selectedElement.style.borderWidth || selectedElement.style.borderWidth === '0px') {
+        selectedElement.style.borderWidth = '1px';
+        selectedElement.style.borderStyle = 'solid';
+      }
     }
 
     // Persistance automatique immédiate dans localStorage
     saveElementOverride(selectedElement);
 
     updateActiveSwatchHighlight();
+    if (currentProperty === 'borderColor') syncBorderShapeUI();
   }
 
   function positionPopover(targetEl) {
@@ -600,7 +750,7 @@ window.DeckEngine.Styler = (function () {
 
     const rect = targetEl.getBoundingClientRect();
     const popoverWidth = 326;
-    const popoverHeight = 430;
+    const popoverHeight = 490;
     const margin = 12;
 
     let top = rect.bottom + margin;
@@ -649,8 +799,11 @@ window.DeckEngine.Styler = (function () {
       parentBtn.style.opacity = parentCandidate ? '1' : '0.4';
     }
 
-    // Re-rendre les nuances personnalisées au cas où elles auraient changé
+    // Re-rendre les nuances personnalisées
     renderCustomColors();
+
+    // Synchroniser les contrôles de forme et d'arrondi
+    syncBorderShapeUI();
 
     // Ouvrir et positionner
     positionPopover(selectedElement);
