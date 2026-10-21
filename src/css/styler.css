@@ -599,3 +599,34 @@ body[data-theme="light"] .styler-popover,
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* ==========================================================================
+   SUPPORT VECTORIEL DU CYCLE VERTUEUX & SVG
+   ========================================================================== */
+body.deck-styler-mode .virtuous-circle .cycle-track {
+  pointer-events: none !important;
+}
+
+body.deck-styler-mode .virtuous-circle :is(.cycle-arrow-head, .cycle-track-line, g) {
+  pointer-events: all !important;
+  cursor: pointer !important;
+}
+
+body.deck-styler-mode .virtuous-circle .cycle-arrow-head {
+  stroke: transparent;
+  stroke-width: 14px;
+  paint-order: stroke fill;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+body.deck-styler-mode .virtuous-circle :is(.cycle-arrow-head, .cycle-track-line):hover {
+  filter: drop-shadow(0 0 10px var(--accent-primary, #E50914)) brightness(1.6) !important;
+}
+
+.styler-selected-target.cycle-arrow-head,
+path.styler-selected-target,
+circle.styler-selected-target {
+  filter: drop-shadow(0 0 12px var(--accent-primary, #E50914)) brightness(1.8) !important;
+  stroke: var(--accent-primary, #E50914) !important;
+  stroke-width: 3px !important;
+}

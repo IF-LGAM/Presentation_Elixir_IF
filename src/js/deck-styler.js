@@ -211,7 +211,7 @@ window.DeckEngine.Styler = (function () {
     while (curr && curr !== slide) {
       const parent = curr.parentElement;
       if (!parent) break;
-      const siblings = Array.from(parent.children).filter(c => c.tagName === curr.tagName);
+      const siblings = Array.from(parent.children).filter(c => c.tagName.toLowerCase() === curr.tagName.toLowerCase());
       const index = siblings.indexOf(curr);
       const tag = curr.tagName.toLowerCase();
       path.unshift(`${tag}:nth-of-type(${index + 1})`);
@@ -252,8 +252,10 @@ window.DeckEngine.Styler = (function () {
     const bstyle = el.style.borderStyle || '';
     const pad = el.style.padding || '';
     const disp = el.style.display || '';
+    const fill = el.style.fill || el.getAttribute?.('fill') || '';
+    const stroke = el.style.stroke || el.getAttribute?.('stroke') || '';
 
-    if (!bg && !col && !border && !radius && !width && !bstyle && !pad) {
+    if (!bg && !col && !border && !radius && !width && !bstyle && !pad && !fill && !stroke) {
       delete overrides[key];
     } else {
       overrides[key] = {
@@ -264,7 +266,9 @@ window.DeckEngine.Styler = (function () {
         borderWidth: width,
         borderStyle: bstyle,
         padding: pad,
-        display: disp
+        display: disp,
+        fill: fill,
+        stroke: stroke
       };
     }
 
@@ -328,6 +332,14 @@ window.DeckEngine.Styler = (function () {
           if (styleObj.borderStyle) {
             targetEl.style.borderStyle = styleObj.borderStyle;
           }
+          if (styleObj.fill) {
+            targetEl.style.fill = styleObj.fill;
+            targetEl.setAttribute('fill', styleObj.fill);
+          }
+          if (styleObj.stroke) {
+            targetEl.style.stroke = styleObj.stroke;
+            targetEl.setAttribute('stroke', styleObj.stroke);
+          }
           if (styleObj.padding) {
             targetEl.style.padding = styleObj.padding;
           } else if (styleObj.background || styleObj.borderRadius || styleObj.borderColor) {
@@ -356,6 +368,10 @@ window.DeckEngine.Styler = (function () {
         el.style.borderStyle = '';
         el.style.padding = '';
         el.style.display = '';
+        el.style.fill = '';
+        el.style.stroke = '';
+        if (el.hasAttribute('fill')) el.removeAttribute('fill');
+        if (el.hasAttribute('stroke')) el.removeAttribute('stroke');
         if (el.getAttribute('style') === '') el.removeAttribute('style');
       }
     });
@@ -366,6 +382,9 @@ window.DeckEngine.Styler = (function () {
 
   function getElementBadgeLabel(el) {
     if (!el) return 'Élément';
+    if (el.classList?.contains('cycle-arrow-head')) return 'Flèche (Cycle)';
+    if (el.classList?.contains('cycle-track-line')) return 'Piste (Cycle)';
+    if (el.classList?.contains('cycle-track')) return 'Cycle Vectoriel';
     const tag = el.tagName.toLowerCase();
     const classList = Array.from(el.classList)
       .filter(c => !c.startsWith('styler-'))
@@ -755,6 +774,23 @@ window.DeckEngine.Styler = (function () {
       selectedElement.style.borderStyle = '';
       selectedElement.style.padding = '';
       selectedElement.style.display = '';
+      selectedElement.style.fill = '';
+      selectedElement.style.stroke = '';
+      if (selectedElement.hasAttribute('fill')) selectedElement.removeAttribute('fill');
+      if (selectedElement.hasAttribute('stroke')) selectedElement.removeAttribute('stroke');
+
+      // Réinitialiser également les flèches du cycle vertueux associées
+      const track = selectedElement.closest('.cycle-track') || selectedElement.closest('.virtuous-circle')?.querySelector('.cycle-track');
+      if (track) {
+        track.querySelectorAll('.cycle-arrow-head, .cycle-track-line').forEach(item => {
+          item.style.fill = '';
+          item.style.stroke = '';
+          item.removeAttribute('fill');
+          item.removeAttribute('stroke');
+          removeElementOverride(item);
+        });
+      }
+
       if (selectedElement.getAttribute('style') === '') {
         selectedElement.removeAttribute('style');
       }
@@ -800,13 +836,14 @@ window.DeckEngine.Styler = (function () {
 
   function updateActiveSwatchHighlight() {
     if (!selectedElement || !popoverEl) return;
-    const computedVal = window.getComputedStyle(selectedElement)[currentProperty];
-    const inlineVal = selectedElement.style[currentProperty];
+    const activeColor = selectedElement.style.fill ||
+                        selectedElement.style[currentProperty] ||
+                        selectedElement.getAttribute?.('fill') || '';
 
     const swatches = popoverEl.querySelectorAll('.styler-swatch, .styler-custom-swatch');
     swatches.forEach(s => {
       const c = s.getAttribute('data-color');
-      if (inlineVal && (inlineVal.toLowerCase() === c.toLowerCase() || inlineVal === c)) {
+      if (activeColor && (activeColor.toLowerCase() === c.toLowerCase() || activeColor === c)) {
         s.classList.add('active');
       } else {
         s.classList.remove('active');
@@ -816,9 +853,9 @@ window.DeckEngine.Styler = (function () {
     // Synchronise la pipette et le champ hex
     const colorInput = popoverEl.querySelector('#stylerColorInput');
     const hexInput = popoverEl.querySelector('#stylerHexInput');
-    if (inlineVal && inlineVal.startsWith('#')) {
-      if (colorInput) colorInput.value = inlineVal;
-      if (hexInput) hexInput.value = inlineVal.toUpperCase();
+    if (activeColor && activeColor.startsWith('#')) {
+      if (colorInput) colorInput.value = activeColor;
+      if (hexInput) hexInput.value = activeColor.toUpperCase();
     }
   }
 
@@ -826,19 +863,71 @@ window.DeckEngine.Styler = (function () {
     if (!selectedElement) return;
     if (!colorVal) return;
 
-    if (currentProperty === 'background') {
-      ensureNativePadding(selectedElement);
-      selectedElement.style.background = colorVal;
-      selectedElement.style.backgroundColor = colorVal;
-    } else if (currentProperty === 'color') {
+    const isArrow = selectedElement.classList?.contains('cycle-arrow-head') || selectedElement.tagName?.toLowerCase() === 'path';
+    const isTrackLine = selectedElement.classList?.contains('cycle-track-line') || selectedElement.tagName?.toLowerCase() === 'circle';
+    const isCycleTrack = selectedElement.classList?.contains('cycle-track');
+    const isSvgShape = selectedElement instanceof SVGElement && selectedElement.tagName?.toLowerCase() !== 'svg';
+
+    if (isArrow) {
+      selectedElement.style.fill = colorVal;
       selectedElement.style.color = colorVal;
-    } else if (currentProperty === 'borderColor') {
-      ensureNativePadding(selectedElement);
-      selectedElement.style.borderColor = colorVal;
-      // S'il n'y a pas de bordure active, activer une bordure fine
-      if (!selectedElement.style.borderWidth || selectedElement.style.borderWidth === '0px') {
-        selectedElement.style.borderWidth = '1px';
-        selectedElement.style.borderStyle = 'solid';
+      selectedElement.setAttribute('fill', colorVal);
+
+      // Harmonisation immédiate de toutes les flèches du cycle vertueux
+      const track = selectedElement.closest('.cycle-track') || selectedElement.closest('.virtuous-circle')?.querySelector('.cycle-track');
+      if (track) {
+        track.querySelectorAll('.cycle-arrow-head').forEach(arrow => {
+          arrow.style.fill = colorVal;
+          arrow.style.color = colorVal;
+          arrow.setAttribute('fill', colorVal);
+          saveElementOverride(arrow);
+        });
+      }
+    } else if (isTrackLine) {
+      selectedElement.style.stroke = colorVal;
+      selectedElement.setAttribute('stroke', colorVal);
+
+      const track = selectedElement.closest('.cycle-track') || selectedElement.closest('.virtuous-circle')?.querySelector('.cycle-track');
+      if (track) {
+        track.querySelectorAll('.cycle-track-line').forEach(line => {
+          line.style.stroke = colorVal;
+          line.setAttribute('stroke', colorVal);
+          saveElementOverride(line);
+        });
+      }
+    } else if (isCycleTrack) {
+      selectedElement.style.color = colorVal;
+      selectedElement.querySelectorAll('.cycle-arrow-head').forEach(arrow => {
+        arrow.style.fill = colorVal;
+        arrow.setAttribute('fill', colorVal);
+        saveElementOverride(arrow);
+      });
+      selectedElement.querySelectorAll('.cycle-track-line').forEach(line => {
+        line.style.stroke = colorVal;
+        line.setAttribute('stroke', colorVal);
+        saveElementOverride(line);
+      });
+    } else if (isSvgShape) {
+      selectedElement.style.fill = colorVal;
+      selectedElement.style.stroke = colorVal;
+      selectedElement.style.color = colorVal;
+      selectedElement.setAttribute('fill', colorVal);
+      selectedElement.setAttribute('stroke', colorVal);
+    } else {
+      if (currentProperty === 'background') {
+        ensureNativePadding(selectedElement);
+        selectedElement.style.background = colorVal;
+        selectedElement.style.backgroundColor = colorVal;
+      } else if (currentProperty === 'color') {
+        selectedElement.style.color = colorVal;
+      } else if (currentProperty === 'borderColor') {
+        ensureNativePadding(selectedElement);
+        selectedElement.style.borderColor = colorVal;
+        // S'il n'y a pas de bordure active, activer une bordure fine
+        if (!selectedElement.style.borderWidth || selectedElement.style.borderWidth === '0px') {
+          selectedElement.style.borderWidth = '1px';
+          selectedElement.style.borderStyle = 'solid';
+        }
       }
     }
 
@@ -1001,8 +1090,12 @@ window.DeckEngine.Styler = (function () {
       // Détection de l'élément cliqué dans la slide active
       let target = e.target;
       if (target.nodeType === 3) target = target.parentElement;
-      if (target.closest('svg') && !target.classList.contains('slide-content')) {
-        target = target.closest('svg') || target;
+
+      // Priorité aux flèches et pistes vectorielles du cycle vertueux
+      if (target.closest('.cycle-arrow-head')) {
+        target = target.closest('.cycle-arrow-head');
+      } else if (target.closest('.cycle-track-line')) {
+        target = target.closest('.cycle-track-line');
       }
 
       // Si le clic est hors du slide actif
