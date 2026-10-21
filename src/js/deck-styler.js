@@ -237,11 +237,15 @@ window.DeckEngine.Styler = (function () {
         <div class="styler-custom-grid" id="stylerCustomGrid"></div>
       </div>
 
-      <div class="styler-custom-row">
-        <input type="color" class="styler-color-native" id="stylerColorInput" value="#E50914" title="Pipette de couleur libre">
-        <input type="text" class="styler-hex-input" id="stylerHexInput" value="#E50914" placeholder="#HEX ou couleur" spellcheck="false">
-        <button class="styler-action-btn primary" id="stylerApplyHexBtn" style="padding: 2px 8px; flex: initial;" title="Appliquer cette couleur au composant">Appliquer</button>
-        <button class="styler-action-btn" id="stylerAddHexBtn" style="padding: 2px 8px; flex: initial;" title="Enregistrer cette nuance dans Mes Nuances Personnalisées">+ Sauvegarder</button>
+      <div class="styler-custom-controls">
+        <div class="styler-hex-input-wrap">
+          <input type="color" class="styler-color-native" id="stylerColorInput" value="#E50914" title="Pipette de couleur libre">
+          <input type="text" class="styler-hex-input" id="stylerHexInput" value="#E50914" placeholder="#HEX ou couleur" spellcheck="false">
+        </div>
+        <div class="styler-hex-actions">
+          <button class="styler-action-btn primary" id="stylerApplyHexBtn" title="Appliquer cette couleur au composant">Appliquer</button>
+          <button class="styler-action-btn" id="stylerAddHexBtn" title="Enregistrer cette nuance dans Mes Nuances Personnalisées">+ Sauvegarder</button>
+        </div>
       </div>
 
       <div class="styler-actions">

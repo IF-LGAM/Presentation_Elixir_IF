@@ -87,23 +87,39 @@ body.deck-styler-mode .slide.active :is(.x-card, .kpi-card, .schema-box, .termin
 /* Popover Flottant du Styliseur */
 .styler-popover {
   position: fixed;
+  box-sizing: border-box;
   background: var(--header-bg, rgba(20, 20, 20, 0.96));
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid var(--border-dark, #333333);
   border-radius: 12px;
   padding: 12px 14px;
-  width: 320px;
+  width: 326px;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
   z-index: 10003;
   display: flex;
   flex-direction: column;
   gap: 10px;
   font-family: 'Inter', sans-serif;
+  color: var(--text-main, #FFFFFF);
   opacity: 0;
   visibility: hidden;
   transform: translateY(6px);
   transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+.styler-popover * {
+  box-sizing: border-box;
+}
+
+body.theme-light .styler-popover,
+body[data-theme="light"] .styler-popover,
+.deck-container.theme-light ~ .styler-popover,
+[data-theme="light"] .styler-popover {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: #E2E8F0;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  color: #0F172A;
 }
 
 .styler-popover.open {
@@ -345,15 +361,42 @@ body.deck-styler-mode .slide.active :is(.x-card, .kpi-card, .schema-box, .termin
   display: flex;
 }
 
-/* Ligne Pipette libre & Hexadécimal */
-.styler-custom-row {
+/* Contrôles Pipette libre & Hexadécimal */
+.styler-custom-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid var(--border-dark, #333333);
+  padding-top: 8px;
+}
+
+.styler-hex-input-wrap {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: var(--code-bg, #0B0B0B);
+  background: var(--card-bg, #1F1F1F);
   border: 1px solid var(--border-dark, #333333);
   border-radius: 6px;
   padding: 3px 6px 3px 4px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.styler-hex-input-wrap:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.styler-hex-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.styler-hex-actions .styler-action-btn {
+  flex: 1;
+  padding: 4px 6px;
+  font-size: 10.5px;
 }
 
 .styler-color-native {
@@ -385,7 +428,7 @@ body.deck-styler-mode .slide.active :is(.x-card, .kpi-card, .schema-box, .termin
   border: none;
   color: var(--text-main, #FFFFFF);
   font-family: 'Fira Code', monospace;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
   outline: none;
   text-transform: uppercase;
