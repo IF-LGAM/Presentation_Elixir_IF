@@ -111,6 +111,10 @@ function populateSpeakerWindow(speakerWindow) {
   });
 
   // 3. Injection du code avec les styles complets et centrage 16:9 rigide
+  const mainFavicon = document.querySelector('link[rel~="icon"]');
+  const faviconHref = mainFavicon ? mainFavicon.href : 'assets/favicon.svg';
+  const faviconType = mainFavicon && mainFavicon.type ? mainFavicon.type : 'image/svg+xml';
+
   speakerWindow.document.open();
   speakerWindow.document.write(`<!DOCTYPE html>
 <html lang="fr">
@@ -118,6 +122,7 @@ function populateSpeakerWindow(speakerWindow) {
   <meta charset="UTF-8">
   <base href="${window.location.href}">
   <title>Console Présentateur - Dual Screen</title>
+  <link rel="icon" type="${faviconType}" href="${faviconHref}">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
   <link rel="stylesheet" href="src/css/deck.css">

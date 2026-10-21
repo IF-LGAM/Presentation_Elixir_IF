@@ -7,10 +7,55 @@
 window.DeckEngine = window.DeckEngine || {};
 
 window.DeckEngine.DOM = (function () {
+  function setupFavicon(container) {
+    const rawLogo = (container.getAttribute('data-logo') || '').trim();
+    const rawFavicon = (container.getAttribute('data-favicon') || '').trim();
+    const target = rawFavicon || rawLogo;
+
+    let link = document.querySelector('link[rel~="icon"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+
+    const isEmoji = (str) => /^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/u.test(str) && !str.includes('/') && !str.includes('.');
+
+    if (target) {
+      if (isEmoji(target)) {
+        link.type = 'image/svg+xml';
+        link.href = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${target}</text></svg>`;
+      } else {
+        if (target.endsWith('.svg')) link.type = 'image/svg+xml';
+        else if (target.endsWith('.png')) link.type = 'image/png';
+        link.href = target;
+      }
+    } else if (!link.getAttribute('href')) {
+      // Favicon vectoriel par défaut (évite l'onglet vide ou le globe par défaut)
+      link.type = 'image/svg+xml';
+      link.href = 'assets/favicon.svg';
+    }
+  }
+
   function ensureStructure() {
     const container = document.querySelector('.deck-container') || document.body;
     const brand = container.getAttribute('data-brand') || 'DECK';
     const fullTitle = container.getAttribute('data-title') || document.title.replace(/ - Deck Engine$/, '') || 'TITRE FORMATION';
+
+    // 0. Configuration automatique ou personnalisée du favicon d'onglet
+    setupFavicon(container);
+
+    // Support du logo d'entête (data-logo)
+    const logoAttr = (container.getAttribute('data-logo') || '').trim();
+    const isEmojiLogo = /^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/u.test(logoAttr) && !logoAttr.includes('/') && !logoAttr.includes('.');
+    let logoHtml = '';
+    if (logoAttr) {
+      if (isEmojiLogo) {
+        logoHtml = `<span class="brand-logo-emoji" id="deckBrandLogo">${logoAttr}</span>`;
+      } else {
+        logoHtml = `<img class="brand-logo-img" id="deckBrandLogo" src="${logoAttr}" alt="Logo">`;
+      }
+    }
 
     // Formatage du titre brand (dernier mot avec span coloré si plusieurs mots)
     const titleParts = fullTitle.trim().split(' ');
@@ -26,6 +71,7 @@ window.DeckEngine.DOM = (function () {
       header.className = 'deck-header';
       header.innerHTML = `
         <div class="brand-wrap">
+          ${logoHtml}
           <span class="brand-pill" id="deckBrandPill">${brand}</span>
           <div class="brand-title" id="deckBrandTitle">${brandTitleHtml}</div>
         </div>
@@ -100,6 +146,14 @@ window.DeckEngine.DOM = (function () {
               </div>
             </div>
           </div>
+
+          <button id="elementStylerBtn" class="ctrl-btn" title="Inspecteur & Styliseur de composants (Touche I)">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            <span>Styliser (I)</span>
+          </button>
 
           <button id="speakerWindowBtn" class="ctrl-btn" title="Ouvrir la vue présentateur dual-screen (Touche S)">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -265,6 +319,9 @@ window.DeckEngine.DOM = (function () {
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>Couleur d'accent</span> <kbd>C</kbd>
+            </div>
+            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+              <span>Styliser un composant</span> <kbd>I</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>Mode Présentateur</span> <kbd>S</kbd>

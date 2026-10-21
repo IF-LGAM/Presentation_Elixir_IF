@@ -24,5 +24,8 @@
 /* 7. Sélecteur de Couleur en Direct & Popover Palette */
 @import "color-picker.css";
 
-/* 8. Export PDF Haute Fidélité (Paysage 16:9, pagination stricte) */
+/* 8. Inspecteur & Styliseur Visuel de Composants */
+@import "styler.css";
+
+/* 9. Export PDF Haute Fidélité (Paysage 16:9, pagination stricte) */
 @import "print.css";

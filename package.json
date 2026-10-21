@@ -1,0 +1,32 @@
+{
+  "name": "html-slides-template",
+  "version": "1.1.0",
+  "description": "Moteur de présentation HTML autonome et moderne assisté par IA avec console orateur dual-screen et auto-ajustement vectoriel",
+  "type": "module",
+  "main": "template_presentation.html",
+  "scripts": {
+    "start": "node scripts/generate.mjs --open template_presentation.html",
+    "demo": "node scripts/generate.mjs --open template_presentation.html",
+    "generate": "node scripts/generate.mjs --ai",
+    "prompt": "node scripts/generate.mjs --prompt",
+    "copy": "node scripts/generate.mjs --copy",
+    "validate": "node scripts/generate.mjs --validate template_presentation.html",
+    "validate:pres": "node scripts/generate.mjs --validate presentation.html"
+  },
+  "keywords": [
+    "slides",
+    "deck",
+    "html5",
+    "presentation",
+    "ai",
+    "speaker-view",
+    "pacing-tracker",
+    "mermaid"
+  ],
+  "author": "Antonin Deloison",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antonindeloison/html-slides-template.git"
+  }
+}
