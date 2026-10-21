@@ -21,8 +21,30 @@ Ce projet résout l'équation grâce à une **séparation stricte** et un **work
   - *Code, Terminaux & Diagrammes* : blocs de code colorés (Prism.js), terminaux avec copie en 1 clic, diagrammes vectoriels Mermaid.js.
   - *Interactivité & Pédagogie* : quiz QCM interactifs avec validation dynamique et explication argumentée.
   - *Badges, Puces & Logos* : tags pilules, puces coches contrastées et logos partenaires auto-calibrés.
-- **L'IA** : Elle lit vos consignes, pioche dans ce dictionnaire pour assembler les formes parfaites et génère le fichier HTML final (`presentation.html`).
-- **Le Navigateur** : Ouvrez directement `presentation.html` pour projeter. Zéro serveur, zéro bundler, zéro installation.
+- **L'IA** : Elle lit vos consignes, pioche dans ce dictionnaire pour assembler les formes parfaites et génère votre fichier HTML final (`presentation.html`).
+- **Le Navigateur** : Ouvrez directement votre fichier pour projeter. Zéro serveur, zéro bundler, zéro installation.
+
+---
+
+## ⚡ Démonstration Immédiate (Exemple Prêt à l'Emploi)
+
+Une présentation vitrine complète de **11 diapositives** est directement fournie dans le fichier **`template_presentation.html`** !  
+Elle illustre et teste concrètement l'intégralité des fonctionnalités et des formes du dictionnaire (*fragments progressifs, steppers, tableaux et indicateurs KPI, snippets de code Prism.js, schémas d'architecture SVG, cercles vertueux avec flèches vectorielles, timeline verticale, diagrammes vectoriels Mermaid.js et quiz interactif avec validation en direct*).
+
+Lancez-la immédiatement dans votre navigateur par double-clic ou via votre terminal :
+
+```bash
+open template_presentation.html
+# Ou sous Linux : xdg-open template_presentation.html
+# Ou sous Windows : start template_presentation.html
+```
+
+- <kbd>→</kbd> / <kbd>Espace</kbd> : Naviguer et révéler les étapes progressives (fragments).
+- <kbd>F</kbd> : Activer le mode plein écran pour la projection.
+- <kbd>S</kbd> : Ouvrir la **Console Présentateur Dual-Screen** synchronisée avec le Pacing Tracker.
+- <kbd>O</kbd> ou <kbd>Échap</kbd> : Afficher la planche contact de toutes les diapositives (Overview).
+- <kbd>T</kbd> : Tester en direct la rotation parmi les **7 ambiances visuelles**.
+- <kbd>P</kbd> : Générer l'export PDF vectoriel 16:9 haute fidélité (exactement 1 page par slide).
 
 ---
 
@@ -140,7 +162,8 @@ Quand l'IA compile votre plan Markdown, elle produit un diaporama riche doté de
 .
 ├── CONSIGNES_TEMPLATE.md          # ✍️ VOTRE COCKPIT : Cahier des charges & contenu Markdown à remplir
 ├── COMPOSANTS_DICTIONNAIRE.md     # 📚 LE DICTIONNAIRE : Référentiel des composants pour l'IA
-├── template_presentation.html     # 뼈 LE SQUELETTE : Modèle HTML de départ épuré
+├── template_presentation.html     # 🌟 LA VITRINE : Présentation exemple complète prête à lancer (open template_presentation.html)
+├── assets/                        # 🎨 Médias vectoriels (logos SVG et schémas d'architecture)
 ├── src/
 │   ├── css/                       # Design system modulaire (thèmes, cartes, modales, print)
 │   │   ├── deck.css               # Point d'entrée CSS principal
