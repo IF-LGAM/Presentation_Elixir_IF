@@ -568,4 +568,44 @@ window.DeckEngine.Zoom = (function () {
   };
 })();
 
+// ==========================================================================
+// 12. AUTO-ENHANCEMENT DU CYCLE VERTUEUX (FLÈCHES VECTORIELLES & SENS)
+// ==========================================================================
+window.DeckEngine.VirtuousCircle = (function () {
+  function ensureTracks() {
+    document.querySelectorAll('.virtuous-circle').forEach(circle => {
+      if (!circle.querySelector('.cycle-track')) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'cycle-track');
+        svg.setAttribute('viewBox', '0 0 340 340');
+        svg.innerHTML = `
+          <circle cx="170" cy="170" r="125" fill="none" class="cycle-track-line" stroke-width="2" />
+          <!-- Flèche 1 : Top -> Right (angle 315° / tangente 45°) -->
+          <g transform="translate(258.4, 81.6) rotate(45)">
+            <path d="M -6 -5 L 6 0 L -6 5 L -2 0 Z" class="cycle-arrow-head" />
+          </g>
+          <!-- Flèche 2 : Right -> Bottom (angle 45° / tangente 135°) -->
+          <g transform="translate(258.4, 258.4) rotate(135)">
+            <path d="M -6 -5 L 6 0 L -6 5 L -2 0 Z" class="cycle-arrow-head" />
+          </g>
+          <!-- Flèche 3 : Bottom -> Left (angle 135° / tangente 225°) -->
+          <g transform="translate(81.6, 258.4) rotate(225)">
+            <path d="M -6 -5 L 6 0 L -6 5 L -2 0 Z" class="cycle-arrow-head" />
+          </g>
+          <!-- Flèche 4 : Left -> Top (angle 225° / tangente 315°) -->
+          <g transform="translate(81.6, 81.6) rotate(315)">
+            <path d="M -6 -5 L 6 0 L -6 5 L -2 0 Z" class="cycle-arrow-head" />
+          </g>
+        `;
+        circle.insertBefore(svg, circle.firstChild);
+      }
+    });
+  }
+
+  return {
+    init: ensureTracks
+  };
+})();
+
+
 

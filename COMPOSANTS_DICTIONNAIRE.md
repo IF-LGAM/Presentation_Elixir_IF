@@ -55,10 +55,11 @@ Ce référentiel sert de table de correspondance stricte pour l'agent de génér
 
 | Alias court | Classe / Balise HTML | Utilisation & Description |
 | :--- | :--- | :--- |
-| `cycle` / `loop` | `<div class="virtuous-circle">` | Diagramme circulaire représentant une boucle vertueuse à 3, 4 ou 5 nœuds. |
-| `cycle-node` | `<div class="cycle-step" data-pos="...">` | Nœud unitaire du cercle positionné avec son titre et son impact. |
-| `cycle-center` | `<div class="cycle-core">` | Noyau central du cycle (ex: « Sol Vivant », « Résilience »). |
-| `cycle-arrow` | `<div class="cycle-connector">` | Indicateur vectoriel ou SVG de rotation continue entre les étapes. |
+| `cycle` / `loop` | `<div class="virtuous-circle">` | Diagramme circulaire représentant une boucle vertueuse à 3 ou 4 nœuds. |
+| `cycle-track` | `<svg class="cycle-track">` | Piste vectorielle circulaire avec flèches directionnelles indiquant le sens de rotation (injectée automatiquement si omise). |
+| `cycle-node` | `<div class="cycle-step" data-pos="top\|right\|bottom\|left">` | Nœud unitaire du cercle positionné sans chevauchement avec son icône et son intitulé. |
+| `cycle-center` | `<div class="cycle-core">` | Noyau central du cycle (ex: « Boucle Vertueuse »). |
+| `cycle-arrow` | `<path class="cycle-arrow-head">` | Flèches vectorielles intégrées sur la circonférence pour clarifier le sens horaire. |
 
 ---
 
@@ -155,8 +156,8 @@ Le moteur gère l'affichage, le redimensionnement précis et l'auto-calibrage de
 | Alias court | Attribut / Balise | Utilisation & Description |
 | :--- | :--- | :--- |
 | `notes` | `data-notes="..."` ou `<aside class="speaker-notes">` | Notes d'orateur lues par le Speaker Engine (`S` ou tiroir `N`). |
-| `theme-global` | `data-theme="dark\|light\|nordic\|cyberpunk\|emerald\|navy\|sepia"` sur `.deck-container` | **Thème global du deck** (catalogue de 7 ambiances visuelles). Touche `T` pour alterner. |
-| `theme-slide` | `data-theme="..."` sur `.slide` | **OPTIONNEL / EXCEPTIONNEL** : surcharge ponctuelle pour une slide isolée différente du deck (`dark`, `light`, `nordic`, `cyberpunk`, `emerald`, `navy`, `sepia`). |
+| `theme-global` | `data-theme="dark\|light\|nordic\|cyberpunk\|emerald\|navy\|sepia"` sur `.deck-container` | **Thème global du deck** (catalogue de 7 ambiances visuelles). Touche `T` pour alterner. Toutes les slides héritent automatiquement. |
+| `theme-slide` | ⛔ **INTERDIT** (ne pas utiliser sur `<section class="slide">`) | Les slides ne doivent jamais porter de `data-theme` local afin de garantir un contraste et une lisibilité parfaits lors du changement de thème par l'orateur. |
 | `title-slide` | `<h2 class="slide-title">` | Titre standardisé en Montserrat gras avec accent dynamique. |
 | `subtitle-slide`| `<p class="slide-subtitle">` | Sous-titre explicatif en Inter ardoise moyen (`#475569`). |
 

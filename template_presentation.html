@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Titre de la Présentation - Deck Engine</title>
+  <title>⚡ Démonstrateur Deck Engine : Guide Visuel des Composants &amp; Capacités</title>
 
   <!-- Google Fonts : Montserrat, Inter & Fira Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +18,13 @@
 
   <!-- Design System & Deck Engine Styles -->
   <link rel="stylesheet" href="src/css/deck.css">
+
+  <style>
+    /* Préservation du formatage multi-lignes dans le tiroir de notes rapide */
+    #notesContent {
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 
 <body>
@@ -26,191 +33,199 @@
        CONTENEUR DU DIAPORAMA (DÉCOUPLÉ À 100%)
        Le Header, Footer, Modale d'Overview, Drawer de Notes et Modale Raccourcis
        sont injectés automatiquement par src/js/deck.js.
+       Thème global défini une seule fois sur le conteneur racine.
        ===================================================================== -->
-  <div class="deck-container" id="deckContainer" data-brand="DECK" data-title="TITRE FORMATION" data-theme="dark">
+  <div class="deck-container" id="deckContainer" data-brand="DECK SHOWCASE"
+    data-title="⚡ Démonstrateur Deck Engine : Guide Visuel des Composants" data-theme="dark">
 
     <main class="slides-viewport" id="viewport">
 
       <!-- ==========================================
-           SLIDE 1 : TITRE & SOMMAIRE (HERO)
+           SLIDE 1 : COUVERTURE & SOMMAIRE (HERO)
            ========================================== -->
-      <section class="slide active" data-slide="1" data-title="Introduction & Sommaire"
-        data-notes="Accueillir l'auditoire, poser le cadre général, énoncer les pré-requis et clarifier le découpage horaire de la séance.">
+      <section class="slide active" data-slide="1" data-title="⚡ Sommaire &amp; Introduction"
+        data-notes="• Bienvenue à cette démonstration complète du Slide Deck Engine.&#10;• Ce diaporama a un double objectif : vous montrer le rendu esthétique haut de gamme du moteur, et servir de banc d'essai exhaustif pour tous les composants décrits dans COMPOSANTS_DICTIONNAIRE.md.&#10;• Vous allez découvrir 11 diapositives calibrées, toutes animées et conçues pour être projetées sans aucun outil externe.&#10;• Appuyez sur Espace ou Flèche droite pour lancer le parcours !">
         <div class="slide-content">
           <div class="slide-hero">
             <div style="margin-bottom: 0.85rem;">
-              <span class="pill-tag solid">Présentation Technique</span>
-              <span class="pill-tag gray" style="margin-left: 0.6rem;">⏱ Durée totale : ~45 min</span>
+              <span class="pill-tag solid">Démonstrateur Officiel</span>
+              <span class="pill-tag gray" style="margin-left: 0.6rem;">⏱ Durée globale : ~40 min &bull; 11 Slides</span>
             </div>
 
-            <h1 class="slide-title-hero">Titre de la Présentation</h1>
-            <div class="slide-subtitle-hero">Sous-titre d'accroche ou proposition de valeur technologique</div>
+            <h1 class="slide-title-hero">⚡ Deck Engine Showcase</h1>
+            <div class="slide-subtitle-hero">Le Moteur de Présentation HTML Augmenté par l'IA — Zéro Dépendance, Zéro Débordement</div>
 
-            <div class="grid-3" style="margin-top: 1.5rem; margin-bottom: 1.25rem; width: 100%;">
+            <div class="grid-3" style="margin-top: 1.5rem; margin-bottom: 1.25rem; width: 100%; text-align: left;">
               <div class="x-card featured">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
                   <span
                     style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800;">01</span>
-                  <span class="pill-tag">15 min</span>
+                  <span class="pill-tag gray">Slides 2 &bull; 3 &bull; 4</span>
                 </div>
-                <h3>Partie 1 : Fondations</h3>
-                <p>Contexte, historique, limites des approches existantes et changement de paradigme.</p>
+                <h3>Mises en Page &amp; Données</h3>
+                <p style="color: var(--text-muted);">Grilles 2 à 4 colonnes, comparatifs par étapes, frise chronologique horizontale et tableaux de données.</p>
               </div>
 
               <div class="x-card featured">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
                   <span
                     style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800;">02</span>
-                  <span class="pill-tag">20 min</span>
+                  <span class="pill-tag gray">Slides 5 &bull; 6 &bull; 7</span>
                 </div>
-                <h3>Partie 2 : Architecture & Code</h3>
-                <p>Piliers clés d'ingénierie, syntaxe, flux de données réactifs et démonstrations en direct.</p>
+                <h3>Code, Schémas &amp; Cycles</h3>
+                <p style="color: var(--text-muted);">Coloration syntaxique Prism.js, terminaux de commandes avec copie en 1 clic, architectures SVG et boucles vertueuses.</p>
               </div>
 
               <div class="x-card featured">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
                   <span
                     style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800;">03</span>
-                  <span class="pill-tag">10 min</span>
+                  <span class="pill-tag gray">Slides 8 &bull; 9 &bull; 10 &bull; 11</span>
                 </div>
-                <h3>Partie 3 : Quizz & TP</h3>
-                <p>Validation collective des notions à main levée puis mise en pratique immédiate sur machine.</p>
+                <h3>Interactivité &amp; Thèmes</h3>
+                <p style="color: var(--text-muted);">Timeline verticale, diagrammes vectoriels Mermaid.js, quizz interactif en direct et bascule de thème locale.</p>
               </div>
             </div>
 
             <div class="summary-box">
               <span>💡</span>
-              <span>Utilisez les touches <kbd>&larr;</kbd> et <kbd>&rarr;</kbd> ou <kbd>Espace</kbd> pour naviguer &bull; <kbd>S</kbd> pour la vue présentateur dual-screen &bull; <kbd>P</kbd> pour exporter en PDF.</span>
+              <span>Raccourcis essentiels : <kbd>&larr;</kbd> / <kbd>&rarr;</kbd> Naviguer &bull; <kbd>S</kbd> Console Orateur Dual-Screen &bull; <kbd>O</kbd> Vue Grille &bull; <kbd>T</kbd> Thème &bull; <kbd>P</kbd> Export PDF</span>
             </div>
           </div>
         </div>
 
-        <!-- Exemple optionnel : Logos de pied de slide auto-redimensionnés (gauche, milieu, droite)
-        <div class="slide-logo bottom-left">
-          <img src="assets/logos/elixir.svg" alt="Logo Gauche">
+        <!-- Logos de pied de slide auto-calibrés -->
+        <div class="slide-logo bottom-left logo-sm" title="Logo Moteur">
+          <img src="assets/logos/elixir.svg" alt="Moteur">
         </div>
-        <div class="slide-logo bottom-center">
-          <img src="assets/logos/erlang.svg" alt="Logo Milieu">
+        <div class="slide-logo bottom-right logo-sm" title="Logo Robustesse">
+          <img src="assets/logos/erlang.svg" alt="Robustesse">
         </div>
-        <div class="slide-logo bottom-right">
-          <img src="assets/logos/ruby.svg" alt="Logo Droite">
-        </div>
-        -->
       </section>
 
       <!-- ==========================================
-           SLIDE 2 : CONTEXTE / PROBLÉMATIQUE (GRID-2 + BULLETS)
+           SLIDE 2 : COMPARATIF & RÉVÉLATION PROGRESSIVE (FRAGMENTS)
            ========================================== -->
-      <section class="slide" data-slide="2" data-title="Contexte & Problématique"
-        data-notes="Mettre en évidence la friction subie par les équipes avant la nouvelle approche. Souligner les coûts cachés en maintenance et en consommation mémoire.">
+      <section class="slide" data-slide="2" data-title="Comparatif &amp; Fragments"
+        data-notes="• Observez comment les fragments permettent d'orchestrer le rythme : au premier clic, la colonne de gauche s'affiche pour poser le constat.&#10;• Au second clic, la colonne de droite apparaît pour apporter la solution avec sa bordure d'accent et sa lueur verte.&#10;• Enfin, la boîte de synthèse se dévoile pour ancrer le message clé dans l'esprit du public avant de changer de slide.">
         <div class="slide-content">
           <div class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span class="pill-tag solid">PARTIE 1 : FONDATIONS</span>
-              <span class="pill-tag gray">⏱ 5 min &bull; Slide 2/6</span>
+              <span class="pill-tag solid">PARTIE 1 : MISES EN PAGE</span>
+              <span class="pill-tag gray">⏱ 4 min &bull; Slide 2/11</span>
             </div>
-            <h2>Contexte & Limites des Approches Traditionnelles</h2>
-            <p>Pourquoi les architectures monolithiques ou les piles complexes atteignent leurs limites.</p>
+            <h2>Approches Traditionnelles vs Deck Engine</h2>
+            <p>Comparatif direct des paradigmes et démonstration de la révélation par étapes (Fragments progressifs au clic).</p>
           </div>
 
           <div class="grid-2">
-            <div class="x-card" style="border-left: 5px solid var(--text-dim);">
+            <!-- Colonne Gauche avec classe fragment -->
+            <div class="x-card fragment" style="border-left: 5px solid var(--text-dim);">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <h3 style="color: var(--text-muted);">L'Ancien Modèle / La Limite</h3>
-                <span class="pill-tag gray">Friction constatée</span>
+                <h3 style="color: var(--text-muted); font-size: 1.15rem;">Outils Lourds &amp; Slides Manuelles</h3>
+                <span class="pill-tag gray">La Friction Classique</span>
               </div>
               <ul style="padding-left: 0;">
-                <li class="bullet-check"><strong>Complexité accidentelle :</strong> multiplication des couches d'abstractions et friction frontend/backend.</li>
-                <li class="bullet-check"><strong>Coût mémoire prohibitif :</strong> chaque thread lourd consomme des ressources excessives et bloque sous forte charge.</li>
-                <li class="bullet-check"><strong>Maintenance chronophage :</strong> synchronisation fragile entre plusieurs dépôts et états asynchrones dispersés.</li>
+                <li class="bullet-check"><strong>Mise en page chronophage :</strong> Des heures passées à aligner des rectangles et des zones de texte sur PowerPoint ou Keynote.</li>
+                <li class="bullet-check"><strong>Rupture avec le code :</strong> Impossible d'embarquer facilement du code syntaxé ou des diagrammes texte versionnables.</li>
+                <li class="bullet-check"><strong>Débordements d'écran imprévus :</strong> Mauvaise surprise selon la résolution ou le format du vidéoprojecteur de la salle.</li>
               </ul>
             </div>
 
-            <div class="x-card featured" style="border-left: 5px solid var(--accent-primary);">
+            <!-- Colonne Droite avec classe fragment -->
+            <div class="x-card featured fragment" style="border-left: 5px solid var(--accent-primary);">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <h3 style="color: var(--text-main);">La Rupture Technologique</h3>
-                <span class="pill-tag">Solution moderne</span>
+                <h3 style="color: var(--text-main); font-size: 1.15rem;">Paradigme Découplé &amp; IA</h3>
+                <span class="pill-tag solid">Solution Deck Engine</span>
               </div>
               <ul style="padding-left: 0;">
-                <li class="bullet-check"><strong>Modèle unifié :</strong> une base de code unique où le serveur pilote l'interface sans boilerplate d'API REST.</li>
-                <li class="bullet-check"><strong>Concurrence ultra-légère :</strong> des millions de processus indépendants isolés ne partageant aucune mémoire sensible.</li>
-                <li class="bullet-check"><strong>Résilience industrielle :</strong> détection immédiate des pannes locales et redémarrage automatique dans un état sain.</li>
+                <li class="bullet-check"><strong>Rédaction pure en Markdown :</strong> L'utilisateur n'écrit que son contenu dans le template, l'IA produit le code HTML final.</li>
+                <li class="bullet-check"><strong>Auto-ajustement d'échelle adaptatif :</strong> Zéro débordement garanti grâce au script vectoriel <code class="inline-code">deck-fit.js</code>.</li>
+                <li class="bullet-check"><strong>Console orateur dual-screen :</strong> Pacing tracker et notes synchronisées en temps réel via l'API native BroadcastChannel.</li>
               </ul>
             </div>
           </div>
 
-          <div class="summary-box">
+          <!-- Boîte de synthèse avec classe fragment -->
+          <div class="summary-box fragment" style="margin-top: 1.1rem;">
             <span>⚡</span>
-            <span><strong>Synthèse :</strong> Le passage à un modèle d'acteurs isolés élimine 90% des goulots d'étranglement de synchronisation.</span>
+            <span><strong>Synthèse :</strong> La séparation stricte entre le fond (Markdown) et la forme (Dictionnaire HTML) libère 100% de votre temps d'ingénierie et garantit une clarté absolue.</span>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
-           SLIDE 3 : PROCESSUS & FRISES (STEPPER + GRID-4)
+           SLIDE 3 : PROCESSUS & STEPPER HORIZONTAL (STEPPER + GRID-4)
            ========================================== -->
-      <section class="slide" data-slide="3" data-title="Piliers Fondamentaux"
-        data-notes="Parcourir la frise d'étapes puis les 4 piliers. Insister sur la simplicité opérationnelle : moins de serveurs, moins d'outils tiers à manager.">
+      <section class="slide" data-slide="3" data-title="Processus &amp; Stepper Horizontal"
+        data-notes="• Le composant stepper-horizontal est idéal pour illustrer des cycles de déploiement, des frises historiques ou des méthodologies projet.&#10;• Chaque jalon possède son état actif rétro-éclairé et son connecteur visuel.&#10;• En dessous, la grille grid-4 permet de décliner immédiatement les vertus ou métriques associées à chaque étape.">
         <div class="slide-content">
           <div class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span class="pill-tag solid">PARTIE 2 : ARCHITECTURE</span>
-              <span class="pill-tag gray">⏱ 5 min &bull; Slide 3/6</span>
+              <span class="pill-tag solid">PARTIE 1 : PROCESSUS &amp; ÉTAPES</span>
+              <span class="pill-tag gray">⏱ 4 min &bull; Slide 3/11</span>
             </div>
-            <h2>Processus de Déploiement & Piliers Fondamentaux</h2>
-            <p>Cycle de vie unifié pour garantir montée en charge, clarté et sécurité du code.</p>
+            <h2>Cycle de Production en 4 Jalons</h2>
+            <p>De la prise de notes brute en Markdown à la diffusion fluide en direct devant votre auditoire.</p>
           </div>
 
           <!-- Composant Stepper Horizontal du Dictionnaire -->
           <div class="stepper-horizontal">
             <div class="step-node active">
               <div class="step-circle">1</div>
-              <div class="step-title">Conception</div>
-              <p class="step-desc">Modélisation fonctionnelle</p>
+              <div class="step-title">1. Idéation Markdown</div>
+              <p class="step-desc">Remplissage de CONSIGNES_TEMPLATE.md</p>
             </div>
             <div class="step-connector"></div>
             <div class="step-node active">
               <div class="step-circle">2</div>
-              <div class="step-title">Isolation</div>
-              <p class="step-desc">Micro-processus indépendants</p>
+              <div class="step-title">2. Compilation IA</div>
+              <p class="step-desc">Assemblage via le Dictionnaire</p>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-node active">
+              <div class="step-circle">3</div>
+              <div class="step-title">3. Contrôle Local</div>
+              <p class="step-desc">Aperçu direct sur presentation.html</p>
             </div>
             <div class="step-connector"></div>
             <div class="step-node">
-              <div class="step-circle">3</div>
-              <div class="step-title">Supervision</div>
-              <p class="step-desc">Résilience automatique</p>
+              <div class="step-circle">4</div>
+              <div class="step-title">4. Projection Direct</div>
+              <p class="step-desc">Plein écran (F) &amp; Console Orateur (S)</p>
             </div>
           </div>
 
+          <!-- Grille de 4 Piliers Fondamentaux -->
           <div class="grid-4" style="margin-bottom: 1rem;">
             <div class="x-card">
-              <div style="color: var(--accent-primary); font-size: 1.6rem; font-weight: 900; margin-bottom: 0.3rem;">01</div>
-              <h3>Immuabilité</h3>
-              <p>Données 100% immuables : zéro effet de bord masqué.</p>
+              <div style="color: var(--accent-primary); font-size: 1.5rem; font-weight: 900; margin-bottom: 0.25rem;">01</div>
+              <h3>Simplicité</h3>
+              <p>Un fichier Markdown unique, lisible et modifiable par toute l'équipe.</p>
             </div>
 
             <div class="x-card">
-              <div style="color: var(--accent-primary); font-size: 1.6rem; font-weight: 900; margin-bottom: 0.3rem;">02</div>
-              <h3>Isolation Pure</h3>
-              <p>Chaque tâche tourne dans son propre micro-processus.</p>
+              <div style="color: var(--accent-primary); font-size: 1.5rem; font-weight: 900; margin-bottom: 0.25rem;">02</div>
+              <h3>Vitesse</h3>
+              <p>Génération complète d'un diaporama riche en moins de 60 secondes.</p>
             </div>
 
             <div class="x-card featured">
-              <div style="color: var(--accent-primary); font-size: 1.6rem; font-weight: 900; margin-bottom: 0.3rem;">03</div>
-              <h3>Temps Réel Natif</h3>
-              <p>Mise à jour granulaire du DOM via WebSockets permanents.</p>
+              <div style="color: var(--accent-primary); font-size: 1.5rem; font-weight: 900; margin-bottom: 0.25rem;">03</div>
+              <h3>Autonomie</h3>
+              <p>Fichier HTML 100% autonome : zéro bundler, zéro serveur, compatible file://.</p>
             </div>
 
             <div class="x-card featured">
-              <div style="color: var(--accent-primary); font-size: 1.6rem; font-weight: 900; margin-bottom: 0.3rem;">04</div>
-              <h3>Supervision</h3>
-              <p>Philosophie « Let it crash » avec reprise sur erreur instantanée.</p>
+              <div style="color: var(--accent-primary); font-size: 1.5rem; font-weight: 900; margin-bottom: 0.25rem;">04</div>
+              <h3>Pacing Tracker</h3>
+              <p>Console dual-screen avec minuteur pour rester parfaitement dans les temps.</p>
             </div>
           </div>
 
           <div class="summary-box">
             <span>🚀</span>
-            <span><strong>Constat opérationnel :</strong> Une architecture réactive divise fréquemment les coûts d'infrastructure par 5 à 10.</span>
+            <span><strong>Impact opérationnel :</strong> Divisez par 10 le temps consacré à la préparation de vos supports techniques.</span>
           </div>
         </div>
       </section>
@@ -218,16 +233,16 @@
       <!-- ==========================================
            SLIDE 4 : DONNÉES & KPIS (DATA-TABLE + METRIC CARDS)
            ========================================== -->
-      <section class="slide" data-slide="4" data-title="Métriques & Comparatif"
-        data-notes="Commenter les résultats chiffrés et la réduction drastique de la latence mesurée en production.">
+      <section class="slide" data-slide="4" data-title="Données &amp; Métriques KPIs"
+        data-notes="• Cette slide démontre la complémentarité entre un tableau bien structuré et des cartes métriques géantes.&#10;• Les badges pilules dans le tableau attirent l'œil sur les valeurs remarquables.&#10;• À droite, les valeurs métriques en Montserrat 900 créent un point focal fort pour les chiffres percutants.">
         <div class="slide-content">
           <div class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span class="pill-tag solid">PARTIE 2 : RÉSULTATS</span>
-              <span class="pill-tag gray">⏱ 5 min &bull; Slide 4/6</span>
+              <span class="pill-tag solid">PARTIE 1 : DONNÉES &amp; CHIFFRES</span>
+              <span class="pill-tag gray">⏱ 3 min 30 &bull; Slide 4/11</span>
             </div>
-            <h2>Indicateurs Clés & Comparatif de Performance</h2>
-            <p>Mesures comparatives sur un cluster de 10 000 connexions concurrentes simultanées.</p>
+            <h2>Benchmarks d'Impact &amp; Indicateurs Clés</h2>
+            <p>Présentation de données quantitatives via tableaux zébrés et cartes de métriques géantes.</p>
           </div>
 
           <div class="grid-2" style="align-items: stretch; margin-bottom: 1rem;">
@@ -235,31 +250,31 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>Métrique Évaluée</th>
-                  <th>Monolithe Classique</th>
-                  <th>Nouvelle Architecture</th>
+                  <th>Critère Évalué</th>
+                  <th>Présentation Standard</th>
+                  <th>Deck Engine HTML</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Consommation RAM</strong></td>
-                  <td>~12 Go (Threads OS)</td>
-                  <td><span class="pill-tag solid">~850 Mo</span></td>
+                  <td><strong>Poids Moyen du Support</strong></td>
+                  <td>~45 Mo (Fichier PPTX lourd)</td>
+                  <td><span class="pill-tag solid">&lt; 350 Ko</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Temps de Réponse p99</strong></td>
-                  <td>340 ms</td>
-                  <td><span class="pill-tag solid">18 ms</span></td>
+                  <td><strong>Temps de Préparation</strong></td>
+                  <td>4 à 6 heures de mise en page</td>
+                  <td><span class="pill-tag solid">3 minutes</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Déploiement à Chaud</strong></td>
-                  <td>Interruption requise</td>
-                  <td><span class="pill-tag">Zero-Downtime</span></td>
+                  <td><strong>Adaptabilité Écran</strong></td>
+                  <td>Coupures &amp; déformations</td>
+                  <td><span class="pill-tag">Auto-fit vectoriel</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Résilience aux Pannes</strong></td>
-                  <td>Redémarrage conteneur</td>
-                  <td><span class="pill-tag">Auto-guérison locale</span></td>
+                  <td><strong>Synchronisation Orateur</strong></td>
+                  <td>Matériel &amp; câbles tiers</td>
+                  <td><span class="pill-tag">BroadcastChannel</span></td>
                 </tr>
               </tbody>
             </table>
@@ -267,69 +282,78 @@
             <!-- Composants Card Metric du Dictionnaire -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
               <div class="x-card metric">
-                <div class="metric-value">x10</div>
-                <h3 style="font-size: 1rem;">Débit Transactionnel</h3>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Requêtes traitées / seconde</p>
+                <div class="metric-value">x12</div>
+                <h3 style="font-size: 1rem;">Vitesse de Création</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Par rapport aux logiciels graphiques</p>
               </div>
 
               <div class="x-card metric featured">
-                <div class="metric-value">-85%</div>
-                <h3 style="font-size: 1rem;">Latence Réseau</h3>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Sur les flux temps réel</p>
+                <div class="metric-value">-90%</div>
+                <h3 style="font-size: 1rem;">Temps d'Alignement</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Grâce à l'automatisation IA</p>
               </div>
 
               <div class="x-card metric featured" style="grid-column: span 2;">
-                <div class="metric-value" style="font-size: 2rem;">99.99%</div>
-                <h3 style="font-size: 1rem;">Disponibilité Haute Fréquence</h3>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Mesurée sur 12 mois de production continue</p>
+                <div class="metric-value" style="font-size: 2.1rem;">100%</div>
+                <h3 style="font-size: 1rem;">Fidélité Vectorielle &amp; Zéro Débordement</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 0.5rem 0;">Contrôlé par deck-fit.js sur chaque slide</p>
+                <!-- Jauge visuelle progress-track -->
+                <div class="progress-track" style="width: 100%; height: 6px; background: var(--border-dark); border-radius: 999px; overflow: hidden;">
+                  <div class="progress-fill" style="width: 100%; height: 100%; background: var(--accent-primary);"></div>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="summary-box">
             <span>📊</span>
-            <span><strong>Bénéfice direct :</strong> Économie de 65% sur la facture cloud annuelle dès le premier trimestre.</span>
+            <span><strong>Bénéfice direct :</strong> Une transmission de données claire, lisible au premier coup d'œil par le décideur comme par le développeur.</span>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
-           SLIDE 5 : CODE & TERMINAL (SPLIT-CODE)
+           SLIDE 5 : CODE SYNTAXIQUE & TERMINAL (SPLIT-CODE)
            ========================================== -->
-      <section class="slide" data-slide="5" data-title="Implémentation & Code"
-        data-notes="Parcourir le pipeline de code : montrer comment les données circulent de manière pure et déterministe.">
+      <section class="slide" data-slide="5" data-title="Coloration Code &amp; Terminal"
+        data-notes="• La mise en page split-code est idéale pour les soutenances techniques et les cours de programmation.&#10;• Le bloc de code à droite utilise le thème Tomorrow Dark de Prism.js avec un contraste optimal.&#10;• Le terminal en dessous invite directement l'auditeur à tester la commande sur son propre ordinateur.">
         <div class="slide-content">
           <div class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span class="pill-tag solid">PARTIE 2 : CODE SOURCE</span>
-              <span class="pill-tag gray">⏱ 5 min &bull; Slide 5/6</span>
+              <span class="pill-tag solid">PARTIE 2 : DÉVELOPPEUR</span>
+              <span class="pill-tag gray">⏱ 4 min &bull; Slide 5/11</span>
             </div>
-            <h2>Implémentation Déclarative & Pipelines Purs</h2>
-            <p>Organisation modulaire du flux métier sans variables intermédiaires superflues.</p>
+            <h2>Coloration Syntaxique &amp; Terminaux Annotés</h2>
+            <p>Blocs de code Prism.js avec coloration haute fidélité et console système avec copie en 1 clic.</p>
           </div>
 
           <!-- Composant Split-Code du Dictionnaire -->
           <div class="split-code" style="margin-bottom: 1rem;">
             <div>
               <div class="x-card" style="margin-bottom: 0.85rem;">
-                <h3 style="margin-bottom: 0.5rem;">Principes de Conception</h3>
+                <h3 style="margin-bottom: 0.5rem;">Un Environnement Dédié aux Développeurs</h3>
                 <ul style="padding-left: 0;">
-                  <li class="bullet-check"><strong>Dispatch déclaratif :</strong> têtes de fonctions distinctes pour séparer cas d'erreur et cas nominal.</li>
-                  <li class="bullet-check"><strong>Opérateur pipeline (<code class="inline-code">|&gt;</code>) :</strong> passage fluide du résultat vers l'étape suivante.</li>
-                  <li class="bullet-check"><strong>Typage strict :</strong> validation des données en amont sans exceptions masquées.</li>
+                  <li class="bullet-check"><strong>Coloration Prism.js intégrée :</strong> Prise en charge universelle (Python, JavaScript, Elixir, SQL, Shell, etc.).</li>
+                  <li class="bullet-check"><strong>Copie en 1 clic :</strong> Bouton de presse-papiers avec toast de confirmation visuelle.</li>
+                  <li class="bullet-check"><strong>Actions &amp; Dépôts :</strong> Boutons d'action <code class="inline-code">.btn-action</code> et badges GitHub <code class="inline-code">.repo-link</code> prêts à l'emploi.</li>
                 </ul>
               </div>
 
-              <div style="display: flex; gap: 0.75rem; align-items: center;">
-                <a class="btn-action" href="#slide-6">Voir l'Atelier &rarr;</a>
-                <a class="repo-link" href="https://github.com/formation/atelier" target="_blank">
+              <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <a class="btn-action" href="#slide-6">Découvrir la suite &rarr;</a>
+                <a class="repo-link" href="https://github.com/votre-orga/html-slides-template" target="_blank">
                   <span>📦</span> Dépôt GitHub
                 </a>
               </div>
             </div>
 
             <div>
+              <!-- Composant Code Box Prism.js -->
               <div class="code-box">
+                <div class="terminal-header" style="margin-bottom: 0.4rem; padding-bottom: 0.3rem;">
+                  <span>pipeline.py</span>
+                  <span style="cursor: pointer; color: var(--accent-primary);" onclick="copyCommand('donnees |> valider |> diffuser')">Copier</span>
+                </div>
                 <pre><code class="language-python"># Traitement déclaratif et typé du flux de données
 def traiter_commande(donnees: dict) -> Result:
     return (
@@ -347,118 +371,339 @@ def valider_schema(payload: dict) -> dict:
               </div>
 
               <!-- Composant Terminal Box du Dictionnaire -->
-              <div class="terminal-box" style="margin-top: 0.75rem;">
-                git clone https://github.com/formation/atelier.git && make test
+              <div class="terminal-box command" style="margin-top: 0.75rem; cursor: pointer;" onclick="copyCommand('git clone https://github.com/votre-orga/html-slides-template.git && open presentation.html')">git clone https://github.com/votre-orga/html-slides-template.git &amp;&amp; open presentation.html</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 6 : ARCHITECTURE & SCHÉMA SYSTÈME (SPLIT-SCHEMA)
+           ========================================== -->
+      <section class="slide" data-slide="6" data-title="Architecture Système &amp; Schéma"
+        data-notes="• Le composant split-schema garantit que le texte explicatif et le schéma graphique restent au même niveau sans se gêner.&#10;• La classe schema-img contraint automatiquement la hauteur pour empêcher tout dépassement vertical.&#10;• Vous pouvez remplacer cette image par n'importe quel fichier SVG ou PNG exporté depuis draw.io ou Excalidraw.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 2 : ARCHITECTURE</span>
+              <span class="pill-tag gray">⏱ 3 min 30 &bull; Slide 6/11</span>
+            </div>
+            <h2>Schémas d'Architecture &amp; Flux de Données</h2>
+            <p>Intégration de visuels vectoriels SVG avec calibrage strict et légende descriptive.</p>
+          </div>
+
+          <!-- Composant Split-Schema du Dictionnaire -->
+          <div class="split-schema">
+            <div>
+              <div class="x-card featured">
+                <h3>Découplage Moteur &amp; Présentation</h3>
+                <ul style="padding-left: 0; margin-top: 0.6rem;">
+                  <li class="bullet-check"><strong>Noyau autonome :</strong> Le script <code class="inline-code">deck.js</code> injecte automatiquement le header persistant, la barre de défilement et le drawer de notes.</li>
+                  <li class="bullet-check"><strong>Passerelle BroadcastChannel :</strong> Synchronisation bidirectionnelle instantanée entre la vue projetée et la console privée.</li>
+                  <li class="bullet-check"><strong>Moteur deck-fit.js :</strong> Mesure dynamique du conteneur et mise à l'échelle centré pour éliminer tout ascenseur de défilement.</li>
+                  <li class="bullet-check"><strong>Rendu vectoriel pur :</strong> Contraste parfait sur vidéo-projecteur 4K comme sur écran de portable 13 pouces.</li>
+                </ul>
               </div>
             </div>
+
+            <!-- Composant Schema Box du Dictionnaire -->
+            <div class="schema-box">
+              <img src="assets/schemas/architecture-demo.svg" alt="Architecture Système" class="schema-img">
+              <div class="schema-caption"><strong>Figure 1 :</strong> Topologie de communication temps réel entre l'écran public et la console présentateur</div>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
-           SLIDE 6 : ARCHITECTURE & SCHÉMA SYSTÈME (SCHEMA-BOX & SPLIT-SCHEMA)
+           SLIDE 7 : CYCLES VERTUEUX & BOUCLES SYSTÉMIQUES
            ========================================== -->
-      <section class="slide" data-slide="6" data-title="Architecture & Schéma Système"
-        data-notes="Présenter le flux des requêtes depuis le client web jusqu'aux micro-processus isolés régis par l'arbre de supervision OTP.">
+      <section class="slide" data-slide="7" data-title="Boucle Vertueuse &amp; Cycles"
+        data-notes="• Le composant virtuous-circle est une exclusivité de notre dictionnaire : il permet de schématiser des boucles de rétroaction sans outil de dessin externe.&#10;• Les 4 nœuds périphériques s'articulent autour du noyau central grâce à des coordonnées absolues fluides.&#10;• C'est un composant visuel très marquant pour expliquer des cycles Scrum, DevOps ou des boucles de rentabilité.">
         <div class="slide-content">
           <div class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span class="pill-tag solid">PARTIE 3 : ARCHITECTURE</span>
-              <span class="pill-tag gray">⏱ 4 min &bull; Slide 6/7</span>
+              <span class="pill-tag solid">PARTIE 2 : CYCLES &amp; BOUCLES</span>
+              <span class="pill-tag gray">⏱ 3 min 30 &bull; Slide 7/11</span>
             </div>
-            <h2>Topologie Distribuée & Flux Temps Réel</h2>
-            <p>Vue d'ensemble de la communication asynchrone entre clients web et processus BEAM.</p>
+            <h2>Modélisation Circulaire &amp; Boucles d'Amélioration</h2>
+            <p>Visualisation de processus continus et d'itérations grâce au composant modulaire <code>virtuous-circle</code>.</p>
           </div>
 
-          <!-- Composant Grand Schéma du Dictionnaire -->
-          <div class="schema-box" style="margin-top: 0.5rem;">
-            <img src="assets/schemas/architecture-demo.svg" alt="Schéma d'Architecture Distribuée" class="schema-img">
-            <div class="schema-caption"><strong>Figure 1 :</strong> Routage WebSocket non-bloquant et supervision hiérarchique avec auto-guérison locale</div>
+          <div class="grid-2" style="align-items: center;">
+            <!-- Composant Virtuous Circle du Dictionnaire avec Piste Vectorielle & Flèches Directionnelles -->
+            <div class="virtuous-circle">
+              <svg class="cycle-track" viewBox="0 0 340 340">
+                <circle cx="170" cy="170" r="125" fill="none" class="cycle-track-line" stroke-width="2" />
+                <!-- Flèche 1 : Top -> Right (angle 315° / tangente 45°) -->
+                <g transform="translate(258.4, 81.6) rotate(45)">
+                  <path d="M -6 -5 L 6 0 L -6 5 L -2 0 Z" class="cycle-arrow-head" />
+                </g>
+                <!-- Flèche 2 : Right -> Bottom (angle 45° / tangente 135°) -->
+                <g transform="translate(258.4, 258.4) rotate(135)">
+                  <path d="M -6 -5 L 6 0 L -6 5 L -2 0 Z" class="cycle-arrow-head" />
+                </g>
+                <!-- Flèche 3 : Bottom -> Left (angle 135° / tangente 225°) -->
+                <g transform="translate(81.6, 258.4) rotate(225)">
+                  <path d="M -6 -5 L 6 0 L -6 5 L -2 0 Z" class="cycle-arrow-head" />
+                </g>
+                <!-- Flèche 4 : Left -> Top (angle 225° / tangente 315°) -->
+                <g transform="translate(81.6, 81.6) rotate(315)">
+                  <path d="M -6 -5 L 6 0 L -6 5 L -2 0 Z" class="cycle-arrow-head" />
+                </g>
+              </svg>
+
+              <div class="cycle-core">
+                <span style="font-size: 0.7rem; opacity: 0.75; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">BOUCLE</span>
+                <span style="font-size: 0.88rem; font-weight: 800; color: var(--accent-primary); margin: 0.15rem 0;">VERTUEUSE</span>
+                <span style="font-size: 0.68rem; opacity: 0.75; font-weight: 600;">DU DECK</span>
+              </div>
+              <div class="cycle-step" data-pos="top">✍️ 1. Rédaction Markdown</div>
+              <div class="cycle-step" data-pos="right">🤖 2. Assemblage IA</div>
+              <div class="cycle-step" data-pos="bottom">⚡ 3. Rendu HTML Pro</div>
+              <div class="cycle-step" data-pos="left">🎯 4. Présentation Direct</div>
+            </div>
+
+            <!-- Carte explicative des 4 phases -->
+            <div class="x-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="margin: 0;">Pourquoi une Boucle Vertueuse ?</h3>
+                <span class="pill-tag gray">Dynamique Continue</span>
+              </div>
+              <ul style="padding-left: 0;">
+                <li class="bullet-check"><strong>Phase 1 (Idéation) :</strong> Vous vous concentrez uniquement sur vos idées et vos arguments dans <code class="inline-code">CONSIGNES_TEMPLATE.md</code>.</li>
+                <li class="bullet-check"><strong>Phase 2 (Composition) :</strong> L'agent IA puise dans le dictionnaire pour générer le code optimal.</li>
+                <li class="bullet-check"><strong>Phase 3 (Livraison) :</strong> Le navigateur web projette instantanément sans temps de compilation ni outil lourd.</li>
+                <li class="bullet-check"><strong>Phase 4 (Répétition) :</strong> La console orateur affine vos timings réels pour la prochaine session.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <span>🔄</span>
+            <span><strong>Bénéfice systémique :</strong> Chaque présentation produite enrichit votre base de connaissances sans alourdir vos processus techniques.</span>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
-           SLIDE 7 : VALIDATION & QUIZZ INTERACTIF
+           SLIDE 8 : JALONS & TIMELINE VERTICALE
            ========================================== -->
-      <section class="slide" data-slide="7" data-title="Quizz Interactif"
-        data-notes="Interroger l'auditoire pour les options A, B, C, D. Cliquer sur l'option B pour faire apparaître la validation et les explications détaillées.">
+      <section class="slide" data-slide="8" data-title="Jalons &amp; Timeline Verticale"
+        data-notes="• La timeline verticale est parfaite pour relater l'historique d'un produit, une trajectoire de carrière ou une feuille de route trimestrielle.&#10;• Les puces lumineuses sur la ligne verticale guident naturellement la lecture de haut en bas.&#10;• À droite, nous rappelons les bénéfices tangibles atteints avec la version actuelle du moteur.">
         <div class="slide-content">
           <div class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span class="pill-tag solid">PARTIE 4 : VALIDATION</span>
-              <span class="pill-tag gray">⏱ 3 min &bull; Slide 7/7</span>
+              <span class="pill-tag solid">PARTIE 3 : CHRONOLOGIE</span>
+              <span class="pill-tag gray">⏱ 3 min &bull; Slide 8/11</span>
             </div>
-            <h2>Question : Quelle est la force principale de l'isolation mémoire par micro-processus ?</h2>
-            <p>Analysez les propositions ci-dessous avant d'afficher la réponse argumentée :</p>
+            <h2>Évolution &amp; Jalons de Conception</h2>
+            <p>Chronologie verticale jalonnée avec pastilles temporelles et alignement contextuel.</p>
+          </div>
+
+          <div class="grid-2" style="align-items: stretch;">
+            <!-- Composant Timeline Verticale du Dictionnaire -->
+            <div class="timeline-vertical">
+              <div class="timeline-card">
+                <span class="pill-tag gray" style="margin-bottom: 0.35rem;">V1 — Genèse (2023)</span>
+                <h4 style="margin: 0.2rem 0; font-size: 1.05rem;">Slides HTML Statiques</h4>
+                <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted);">Premiers gabarits HTML/CSS bruts sans découplage ni console orateur dédiée.</p>
+              </div>
+
+              <div class="timeline-card">
+                <span class="pill-tag gray" style="margin-bottom: 0.35rem;">V2 — Modularité (2024)</span>
+                <h4 style="margin: 0.2rem 0; font-size: 1.05rem;">Moteur d'Auto-Fit &amp; Pacing Tracker</h4>
+                <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted);">Algorithme d'échelle vectorielle sans ascenseur et console orateur synchronisée en direct.</p>
+              </div>
+
+              <div class="timeline-card" style="border-color: var(--accent-primary);">
+                <span class="pill-tag solid" style="margin-bottom: 0.35rem;">V3 — Version Actuelle</span>
+                <h4 style="margin: 0.2rem 0; font-size: 1.05rem;">Découplage Intégral &amp; Dictionnaire IA</h4>
+                <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted);">Génération 100% autonome par IA, support natif de Mermaid.js et 7 thèmes complets.</p>
+              </div>
+            </div>
+
+            <!-- Colonne droite : Synthèse des Bénéfices -->
+            <div class="x-card featured" style="display: flex; flex-direction: column; justify-content: center;">
+              <h3>Maturité Industrielle Validée</h3>
+              <ul style="padding-left: 0; margin-top: 0.75rem;">
+                <li class="bullet-check"><strong>Compatibilité universelle :</strong> Fonctionne sans accroc sur Chrome, Edge, Safari et Firefox.</li>
+                <li class="bullet-check"><strong>Zéro installation :</strong> Aucune dépendance npm ni environnement de build Node.js requis.</li>
+                <li class="bullet-check"><strong>Impression PDF sans bavure :</strong> Raccourci <kbd>P</kbd> calibré en 16:9 strict, exactement une page par diapositive.</li>
+                <li class="bullet-check"><strong>Recherche instantanée :</strong> Palette de commande <kbd>Cmd + K</kbd> pour retrouver n'importe quel mot-clé en plein direct.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <span>📅</span>
+            <span><strong>Perspective :</strong> Un écosystème mature éprouvé sur des centaines d'heures de formation et de keynotes techniques.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 9 : DIAGRAMMES VECTORIELS MERMAID.JS
+           ========================================== -->
+      <section class="slide" data-slide="9" data-title="Diagrammes Vectoriels Mermaid.js"
+        data-notes="• L'intégration de Mermaid.js transforme votre fichier HTML en outil de visualisation complet.&#10;• Aucun outil de capture d'écran n'a été utilisé ici : le schéma est calculé dynamiquement par le navigateur.&#10;• Si vous changez de thème (en appuyant sur T) ou de couleur d'accentuation, le diagramme se recolore automatiquement pour rester harmonieux !">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 3 : VECTEURS &amp; FLUX</span>
+              <span class="pill-tag gray">⏱ 4 min &bull; Slide 9/11</span>
+            </div>
+            <h2>Diagrammes Vectoriels Interactifs à Chaud</h2>
+            <p>Génération automatique de diagrammes de séquence ou de flux sans image externe via la classe <code>.mermaid</code> :</p>
+          </div>
+
+          <div class="x-card" style="padding: 1.25rem;">
+            <!-- Conteneur Mermaid du Dictionnaire -->
+            <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Orateur as 🎙️ Orateur (Console Privée)
+    participant Channel as 📡 BroadcastChannel
+    participant Public as 📺 Écran Public (Vidéoprojecteur)
+    participant Fit as 📐 deck-fit.js
+
+    Orateur->>Channel: Touche Flèche Droite (Next Slide)
+    Channel-->>Public: Événement SLIDE_CHANGE {slide: 9, frag: 0}
+    Public->>Fit: Mesure de la boîte englobante
+    Fit-->>Public: Ajustement d'échelle vectoriel (Zero Overflow)
+    Public-->>Orateur: Accusé de synchronisation et Pacing Tracker
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <span>🎨</span>
+            <span><strong>Adaptabilité dynamique :</strong> Le diagramme se redessine et s'harmonise automatiquement lors de la bascule de thème (<kbd>T</kbd>) ou du changement de palette d'accent !</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 10 : VALIDATION & QUIZZ INTERACTIF EN DIRECT
+           ========================================== -->
+      <section class="slide" data-slide="10" data-title="Quizz Interactif en Direct"
+        data-notes="• Cette slide est interactive : invitez l'auditoire à voter à main levée pour les options A, B, C ou D.&#10;• Cliquez sur l'option B : la boîte passe instantanément en vert émeraude avec son badge contrasté et fait apparaître l'explication argumentée.&#10;• Si quelqu'un clique sur une mauvaise option, celle-ci devient rouge bordeaux pour clarifier l'erreur.">
+        <div class="slide-content">
+          <div class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 4 : INTERACTIVITÉ &amp; TEST</span>
+              <span class="pill-tag gray">⏱ 3 min 30 &bull; Slide 10/11</span>
+            </div>
+            <h2>Question : Comment le Deck Engine garantit-il le zéro débordement lors de la projection ?</h2>
+            <p>Sélectionnez une réponse ci-dessous pour tester la validation dynamique et afficher l'explication détaillée :</p>
           </div>
 
           <!-- Composant Quiz du Dictionnaire -->
           <div class="quiz-container">
             <div class="grid-2" style="margin-top: 1rem; margin-bottom: 0.85rem;">
-              <button class="quiz-opt-btn" onclick="revealQuiz(1, 'A', false)">
+              <button class="quiz-opt-btn" onclick="revealQuiz(this, false, 'quizExplainShowcase')">
                 <span class="opt-badge">A</span>
-                <span>Elle oblige à compiler tout le code en WebAssembly pour tourner sur le poste client.</span>
+                <span>En tronquant brutalement les textes avec overflow: hidden sans prévenir.</span>
               </button>
-              <button class="quiz-opt-btn" onclick="revealQuiz(1, 'B', true)">
+              <button class="quiz-opt-btn" onclick="revealQuiz(this, true, 'quizExplainShowcase')">
                 <span class="opt-badge">B</span>
-                <span>L'isolation totale empêche qu'un crash local ne fasse tomber tout le serveur.</span>
+                <span>En calculant la hauteur exacte et en appliquant un auto-fit vectoriel centré par transform: scale.</span>
               </button>
-              <button class="quiz-opt-btn" onclick="revealQuiz(1, 'C', false)">
+              <button class="quiz-opt-btn" onclick="revealQuiz(this, false, 'quizExplainShowcase')">
                 <span class="opt-badge">C</span>
-                <span>Elle supprime définitivement le besoin d'effectuer des tests unitaires ou d'intégration.</span>
+                <span>En forçant obligatoirement l'installation d'un serveur d'application Node.js en local.</span>
               </button>
-              <button class="quiz-opt-btn" onclick="revealQuiz(1, 'D', false)">
+              <button class="quiz-opt-btn" onclick="revealQuiz(this, false, 'quizExplainShowcase')">
                 <span class="opt-badge">D</span>
-                <span>Elle stocke toutes les variables de session dans un unique thread global partagé.</span>
+                <span>En limitant chaque diapositive à 10 mots au maximum de manière arbitraire.</span>
               </button>
             </div>
 
-            <div id="quizExplain1" class="quiz-explanation-box">
-              <strong style="color: var(--accent-success); font-size: 1.05rem;">✔ Réponse exacte : Option B (Isolation totale et résilience)</strong>
-              <p style="margin-top: 0.35rem;">
-                Dans un modèle où chaque entité possède son propre micro-processus ne partageant pas de mémoire, toute anomalie est circonscrite. Les superviseurs rétablissent immédiatement le composant défaillant dans un état propre sans impacter les autres requêtes actives.
+            <!-- Explication révélée au clic -->
+            <div id="quizExplainShowcase" class="quiz-explanation-box">
+              <strong style="color: var(--accent-success); font-size: 1.05rem;">✔ Bonne réponse : Option B (Auto-fit adaptatif centré)</strong>
+              <p style="margin-top: 0.35rem; margin-bottom: 0;">
+                Grâce à <code class="inline-code">deck-fit.js</code>, le moteur mesure la hauteur et la largeur réelles du contenu de chaque diapositive par rapport à la taille de la fenêtre. Si le contenu dépasse le cadre 16:9, il applique un facteur d'échelle vectoriel parfait pour que tout reste visible sans coupure ni scroll horizontal ou vertical.
               </p>
             </div>
+          </div>
+
+          <div class="summary-box">
+            <span>💡</span>
+            <span><strong>Pédagogie active :</strong> Réveillez l'attention de la salle à mi-parcours grâce aux quiz interactifs avec feedback immédiat.</span>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
-           SLIDE 8 : DIAGRAMME DE SÉQUENCE MERMAID.JS
+           SLIDE 11 : CONCLUSION & RESSOURCES
            ========================================== -->
-      <section class="slide" data-slide="8" data-title="Architecture Mermaid.js"
-        data-notes="Explication du cycle de vie des requêtes avec rendu vectoriel Mermaid.js natif à chaud sans outil externe.">
+      <section class="slide" data-slide="11" data-title="Conclusion &amp; Ressources"
+        data-notes="• Nous voilà au terme de la démonstration du Deck Engine.&#10;• Toutes les diapositives s'adaptent automatiquement à 100% au thème actif sélectionné par l'orateur (Touche T).&#10;• Le public et l'orateur disposent maintenant de toutes les ressources et du dictionnaire pour créer leurs propres présentations sans coder.">
         <div class="slide-content">
           <div class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span class="pill-tag solid">PARTIE 5 : ARCHITECTURE</span>
-              <span class="pill-tag gray">⏱ 3 min &bull; Slide 8/8</span>
+              <span class="pill-tag solid">PARTIE 5 : CONCLUSION &amp; RESSOURCES</span>
+              <span class="pill-tag gray">⏱ 4 min &bull; Slide 11/11</span>
             </div>
-            <h2>Flux de Communication & Diagramme Vectoriel</h2>
-            <p>Diagramme de séquence généré directement à chaud via la balise standard <code>&lt;div class="mermaid"&gt;</code> :</p>
+            <h2>À Vous de Jouer : Créez Vos Présentations !</h2>
+            <p>Ressources de démarrage rapide, mémento de conception et prochaines étapes pour vos supports.</p>
           </div>
 
-          <div class="x-card" style="padding: 1.25rem;">
-            <div class="mermaid">
-sequenceDiagram
-    autonumber
-    actor Client as 🌐 Client Web
-    participant Proxy as ⚡ NGINX / Gateway
-    participant BEAM as 🟣 BEAM VM (Elixir)
-    participant Channel as 📡 WebSocket Channel
-    participant DB as 🗄️ PostgreSQL
+          <div class="grid-2" style="align-items: stretch; margin-bottom: 1rem;">
+            <!-- Colonne Gauche : Les 3 Règles Clés -->
+            <div class="x-card featured">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="margin: 0;">Les 3 Règles d'Or du Créateur</h3>
+                <span class="pill-tag solid">Workflow Express</span>
+              </div>
+              <ul style="padding-left: 0;">
+                <li class="bullet-check"><strong>1. Écrivez en Markdown pur :</strong> Ne touchez qu'au contenu dans <code class="inline-code">CONSIGNES_TEMPLATE.md</code>.</li>
+                <li class="bullet-check"><strong>2. Choisissez vos formes :</strong> Sélectionnez les composants graphiques dans <code class="inline-code">COMPOSANTS_DICTIONNAIRE.md</code>.</li>
+                <li class="bullet-check"><strong>3. Déléguez la compilation :</strong> Laissez l'IA générer le fichier <code class="inline-code">presentation.html</code> prêt pour la scène.</li>
+              </ul>
+            </div>
 
-    Client->>Proxy: Connexion WSS / HTTP Upgrade
-    Proxy->>BEAM: Routage vers Endpoint Phoenix
-    BEAM->>Channel: Spawn Processus Isolé (GenServer)
-    Channel-->>Client: Accusé de connexion {:ok, %{status: 200}}
-    Client->>Channel: Message push("event", payload)
-    Channel->>DB: Écriture asynchrone non bloquante
-    DB-->>Channel: Commit transactionnel
-    Channel-->>Client: Diffusion temps réel
+            <!-- Colonne Droite : Cartes de Liens & Actions -->
+            <div style="display: flex; flex-direction: column; gap: 0.85rem; justify-content: center;">
+              <a class="link-card" href="COMPOSANTS_DICTIONNAIRE.md" target="_blank">
+                <div>
+                  <h4 style="margin: 0; font-size: 1.05rem;">📚 Dictionnaire des Composants</h4>
+                  <p style="margin: 0.2rem 0 0 0; font-size: 0.85rem; color: var(--text-muted);">Consulter le catalogue complet des classes et alias HTML</p>
+                </div>
+                <span style="font-size: 1.3rem; color: var(--accent-primary);">&rarr;</span>
+              </a>
+
+              <a class="link-card" href="CONSIGNES_TEMPLATE.md" target="_blank">
+                <div>
+                  <h4 style="margin: 0; font-size: 1.05rem;">📝 Template de Consignes Markdown</h4>
+                  <p style="margin: 0.2rem 0 0 0; font-size: 0.85rem; color: var(--text-muted);">Structure prête à remplir avec vos propres sujets et timings</p>
+                </div>
+                <span style="font-size: 1.3rem; color: var(--accent-primary);">&rarr;</span>
+              </a>
+
+              <div style="margin-top: 0.25rem;">
+                <a class="btn-action" href="#slide-1" style="width: 100%; justify-content: center;">
+                  <span>↺</span> Recommencer la Démonstration
+                </a>
+              </div>
             </div>
           </div>
+
+          <div class="summary-box">
+            <span>🎉</span>
+            <span><strong>Félicitations :</strong> Vous disposez désormais de tous les outils pour créer des présentations percutantes, fluides et professionnelles !</span>
+          </div>
+        </div>
+
+        <!-- Logos de pied de slide auto-calibrés -->
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/elixir.svg" alt="Elixir">
+        </div>
+        <div class="slide-logo bottom-center logo-sm framed">
+          <img src="assets/logos/python.svg" alt="Python">
+        </div>
+        <div class="slide-logo bottom-right logo-sm">
+          <img src="assets/logos/ruby.svg" alt="Ruby">
         </div>
       </section>
 
@@ -467,6 +712,8 @@ sequenceDiagram
 
   <!-- Scripts du Deck Engine (Injectent automatiquement le header, footer, modales & contrôles) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-elixir.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script src="src/js/deck-dom.js"></script>
   <script src="src/js/deck-palette.js"></script>

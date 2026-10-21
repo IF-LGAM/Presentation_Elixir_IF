@@ -453,31 +453,62 @@ h4 {
 /* 10. Cycles Vertueux / Boucles */
 .virtuous-circle {
   position: relative;
-  width: 320px;
-  height: 320px;
+  width: 340px;
+  height: 340px;
   margin: 1.5rem auto;
   border-radius: 50%;
-  border: 2px dashed color-mix(in srgb, var(--accent-primary) 40%, var(--border-dark));
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+}
+
+.virtuous-circle:not(:has(.cycle-track)) {
+  border: 2px dashed color-mix(in srgb, var(--accent-primary) 50%, var(--border-dark));
+}
+
+.virtuous-circle .cycle-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  color: var(--accent-primary);
+}
+
+.virtuous-circle .cycle-track-line {
+  stroke: color-mix(in srgb, var(--accent-primary) 65%, var(--border-dark));
+  stroke-dasharray: 6 6;
+}
+
+.virtuous-circle .cycle-arrow-head {
+  fill: var(--accent-primary);
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--accent-primary) 50%, transparent));
 }
 
 .cycle-core {
-  width: 110px;
-  height: 110px;
+  width: 124px;
+  height: 124px;
   border-radius: 50%;
   background: var(--card-bg);
   border: 2px solid var(--accent-primary);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 0.76rem;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
   color: var(--text-main);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--accent-primary) 25%, transparent);
-  z-index: 2;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-primary) 25%, transparent);
+  z-index: 3;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .cycle-step {
@@ -485,19 +516,38 @@ h4 {
   background: var(--card-bg);
   border: 1px solid var(--border-dark);
   border-radius: 8px;
-  padding: 0.45rem 0.75rem;
-  font-size: 0.78rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--text-main);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
-  z-index: 3;
+  z-index: 4;
 }
 
-.cycle-step[data-pos="top"] { top: -16px; left: 50%; transform: translateX(-50%); }
-.cycle-step[data-pos="right"] { right: -24px; top: 50%; transform: translateY(-50%); }
-.cycle-step[data-pos="bottom"] { bottom: -16px; left: 50%; transform: translateX(-50%); }
-.cycle-step[data-pos="left"] { left: -24px; top: 50%; transform: translateY(-50%); }
+.cycle-step[data-pos="top"] {
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cycle-step[data-pos="bottom"] {
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cycle-step[data-pos="left"] {
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cycle-step[data-pos="right"] {
+  right: 0;
+  top: 50%;
+  transform: translate(50%, -50%);
+}
 
 /* 11. Liens, Boutons d'Action & Fiches */
 .text-link {

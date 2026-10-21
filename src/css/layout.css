@@ -52,6 +52,8 @@
   pointer-events: none;
   box-sizing: border-box;
   overflow: hidden;
+  background: var(--bg-dark);
+  color: var(--text-main);
 }
 
 .slide.active {

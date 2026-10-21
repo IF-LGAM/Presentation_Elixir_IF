@@ -76,6 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DeckEngine.Zoom.init();
   }
 
+  // 12. Initialisation des pistes et flèches de cycle vertueux
+  if (window.DeckEngine.VirtuousCircle && typeof window.DeckEngine.VirtuousCircle.init === 'function') {
+    window.DeckEngine.VirtuousCircle.init();
+  }
+
   // 7. Câblage des contrôles d'interface complémentaires
   const notesDrawer = document.getElementById('notesDrawer');
   const shortcutsModal = document.getElementById('shortcutsModal');
