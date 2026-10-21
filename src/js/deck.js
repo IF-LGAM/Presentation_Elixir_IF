@@ -81,9 +81,19 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DeckEngine.VirtuousCircle.init();
   }
 
-  // 7. Câblage des contrôles d'interface complémentaires
+  // 13. Initialisation du Styliseur Visuel de Composants (Touche I)
+  if (window.DeckEngine.Styler && typeof window.DeckEngine.Styler.init === 'function') {
+    window.DeckEngine.Styler.init();
+  }
+
+  // Câblage des contrôles d'interface complémentaires
   const notesDrawer = document.getElementById('notesDrawer');
   const shortcutsModal = document.getElementById('shortcutsModal');
+
+  // Bouton Styliseur de Composants
+  document.getElementById('elementStylerBtn')?.addEventListener('click', () => {
+    if (window.DeckEngine.Styler) window.DeckEngine.Styler.toggle();
+  });
 
   // Bouton Console Présentateur
   const openSpeaker = (e) => {

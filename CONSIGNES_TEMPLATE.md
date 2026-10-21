@@ -68,6 +68,19 @@ Le moteur de présentation (`Deck Engine`) applique le thème de manière hiéra
 
 ---
 
+### 1.4 Logo d'Entête & Favicon d'Onglet (Zéro Onglet Vide)
+Le moteur garantit qu'aucun onglet de navigateur ne s'affiche avec le globe vide ou une entête blanche sans identité :
+- **Favicon automatique** : Si rien n'est renseigné, le moteur injecte automatiquement le logo vectoriel SVG haute résolution (`assets/favicon.svg`) dans l'onglet du navigateur et dans la console orateur.
+- **Personnalisation via le conteneur racine** :
+  - `data-logo="assets/favicon.svg"` (ou tout chemin d'image, SVG ou emoji comme `data-logo="⚡"`) : affiche le logo dans l'entête à côté du titre de la présentation ET configure le favicon d'onglet.
+  - `data-favicon="chemin/vers/icone.svg"` : configure spécifiquement l'icône de l'onglet si vous souhaitez une icône distincte de l'entête.
+- **Balise HTML standard** : Vous pouvez également déclarer le favicon directement dans le `<head>` de votre page :
+  ```html
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  ```
+
+---
+
 ## ⚙️ 2. Spécifications Techniques & Fonctionnalités du Fichier
 
 1. **Fichier HTML 100% Découplé & Autonome** :

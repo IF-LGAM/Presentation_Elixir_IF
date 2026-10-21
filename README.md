@@ -126,6 +126,12 @@ Quand l'IA compile votre plan Markdown, elle produit un diaporama riche doté de
   - ⚓ *Corporate Navy* (Bleu institutionnel)
   - ☕ *Editorial Warm* (Sépia café & cuivre)
 - **Palette d'Accentuation Dynamique (<kbd>C</kbd>)** : Changez la couleur primaire en direct via un sélecteur interactif (presets, pipette, code `#HEX`), synchronisée avec la console orateur et persistée dans le navigateur.
+- **Inspecteur & Styliseur Visuel de Composants (<kbd>I</kbd>)** : Cliquez sur n'importe quel élément de la diapositive (titres, cartes, badges, citations, mais aussi tracés et flèches vectorielles SVG de cycles) pour personnaliser en direct :
+  - **Couleurs** : fond, texte, bordure ou SVG (`fill` / `stroke`) via la palette du Design System ou le sélecteur libre `#HEX` avec sauvegarde de vos nuances favorites.
+  - **Formes & Arrondis** : presets géométriques (*Carré*, *Léger*, *Arrondi*, *Pilule*) ou curseur fin (0 à 48px).
+  - **Bordures & Espacements** : épaisseur, style de trait et padding interactif (calibré pour préserver l'alignement typographique strict sans décalage inter-slides).
+  - **Persistance & Export** : vos styles restent enregistrés localement dans le navigateur (`localStorage`) pour préserver votre mise en forme sans modifier le code source, avec boutons en 1 clic pour copier le style inline (`style="..."`) ou le bloc HTML complet.
+- **Logo d'Entête & Favicon d'Onglet Automatique (`data-logo` / `data-favicon`)** : Finis les onglets de navigateur affichant un globe gris vide. Le moteur injecte automatiquement un favicon vectoriel SVG net (`assets/favicon.svg`) dans l'onglet du navigateur et la console orateur, et permet d'afficher votre logo de marque dans l'entête en un seul attribut `data-logo="..."` ou balise `<link rel="icon">`.
 
 ### 6. 🖨️ Export PDF 16:9 Haute Fidélité (<kbd>P</kbd>)
 - Feuille de style `@media print` calibrée en format paysage exact (`16in x 9in`).
@@ -148,7 +154,8 @@ Quand l'IA compile votre plan Markdown, elle produit un diaporama riche doté de
 | <kbd>Cmd</kbd> + <kbd>K</kbd> / <kbd>Ctrl</kbd> + <kbd>K</kbd> / <kbd>/</kbd> | Ouvrir la recherche plein texte instantanée (*Spotlight*) |
 | <kbd>O</kbd> / <kbd>Échap</kbd> | Vue d'ensemble en grille de miniatures (*Overview*) |
 | <kbd>T</kbd> | Changer d'ambiance visuelle (parmi les 7 thèmes) |
-| <kbd>C</kbd> | Changer la couleur d'accentuation |
+| <kbd>C</kbd> | Changer la couleur d'accentuation globale |
+| <kbd>I</kbd> | **Inspecter & Styliser un composant** (couleurs, bordure, forme, padding, SVG) |
 | <kbd>L</kbd> | Activer / Désactiver le Pointeur Laser Virtuel |
 | <kbd>B</kbd> / <kbd>.</kbd> | Masquer l'écran en noir (*Blackout*) |
 | <kbd>W</kbd> | Masquer l'écran en blanc (*Whiteout*) |
@@ -183,7 +190,11 @@ Pour les développeurs qui aiment piloter leurs projets depuis le terminal, des 
 ├── CONSIGNES_TEMPLATE.md          # ✍️ VOTRE COCKPIT : Cahier des charges & contenu Markdown à remplir
 ├── COMPOSANTS_DICTIONNAIRE.md     # 📚 LE DICTIONNAIRE : Référentiel des composants pour l'IA
 ├── template_presentation.html     # 🌟 LA VITRINE : Présentation exemple complète prête à lancer
-├── assets/                        # 🎨 Médias vectoriels (logos SVG et schémas d'architecture)
+├── assets/                        # 🎨 Médias vectoriels (logos SVG, favicons et schémas d'architecture)
+│   ├── favicon.svg                # ⚡ Favicon vectoriel haute résolution (onglet du navigateur)
+│   ├── logo.svg                   # ⚡ Logo principal du diaporama
+│   ├── logos/                     # Logos partenaires & technologies
+│   └── schemas/                   # Schémas d'architecture vectoriels
 ├── scripts/                       # 🛠️ Scripts utilitaires autonomes (générateur & validateur)
 │   └── generate.mjs               # CLI autonome (zéro dépendance)
 ├── package.json                   # Définition des scripts npm (demo, copy, prompt, validate)
@@ -192,22 +203,31 @@ Pour les développeurs qui aiment piloter leurs projets depuis le terminal, des 
 ├── .github/workflows/             # Déploiement CI/CD
 │   └── deploy-pages.yml           # Déploiement automatique vers GitHub Pages
 ├── src/
-│   ├── css/                       # Design system modulaire (thèmes, cartes, modales, print)
+│   ├── css/                       # Design system modulaire (thèmes, cartes, modales, print, styler)
 │   │   ├── deck.css               # Point d'entrée CSS principal
 │   │   ├── variables.css          # Design tokens & 7 thèmes
 │   │   ├── components.css         # Styles des cartes, quiz, frises et Mermaid
 │   │   ├── modals.css             # Modales (Recherche Spotlight, Zoom, Overview)
+│   │   ├── styler.css             # Interface & panneau flottant du styliseur de composants
 │   │   └── print.css              # Calibrage PDF 16:9 paysage
 │   └── js/                        # Moteur autonome du diaporama (zéro runtime externe)
 │       ├── deck.js                # Orchestrateur maître
 │       ├── deck-dom.js            # Injection dynamique de l'interface
 │       ├── deck-fit.js            # Auto-ajustement d'échelle anti-débordement
 │       ├── deck-navigation.js     # Moteur de navigation & raccourcis clavier
+│       ├── deck-styler.js         # Inspecteur visuel, sélecteur de couleurs, formes & persistance
 │       ├── speaker.js             # Console orateur dual-screen & Pacing Tracker
 │       └── interactive.js         # Fragments, laser, blackout, zoom et Mermaid
+├── CHANGELOG.md                   # 📝 Historique des versions et notes de release
 ├── LICENSE.md                     # 📄 Licence open-source MIT
 └── README.md                      # Documentation centrale du projet
 ```
+
+---
+
+## 📝 Historique des Versions
+
+Consultez le fichier [CHANGELOG.md](CHANGELOG.md) pour le détail complet des nouveautés et correctifs de chaque version.
 
 ---
 
