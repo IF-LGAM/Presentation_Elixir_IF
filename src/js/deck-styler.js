@@ -2,8 +2,9 @@
  * Deck Engine - Component Color & Shape Inspector & Styler
  * Sous-responsabilité : Sélection visuelle au clic de n'importe quel composant
  * (cartes, badges, titres, boîtes, KPIs...) et modification en direct de sa
- * couleur de fond, couleur d'écriture, bordure, ainsi que la forme des angles
- * (arrondi border-radius, épaisseur, type de trait).
+ * couleur de fond, couleur d'écriture, bordure, forme des angles (border-radius),
+ * épaisseur et marges internes natives (padding) pour éviter que les bordures
+ * ne touchent le texte.
  * Persistance automatique intégrale dans le navigateur (localStorage).
  */
 
@@ -77,12 +78,21 @@ window.DeckEngine.Styler = (function () {
     return null;
   }
 
+  // Assure un padding natif suffisant pour que les lettres ne touchent jamais la bordure
+  function ensureNativePadding(el) {
+    if (!el) return;
+    const isTextElement = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'SPAN', 'CODE', 'PRE', 'A'].includes(el.tagName);
+    if (isTextElement && (!el.style.padding || el.style.padding === '0px' || el.style.padding === '0')) {
+      el.style.padding = '8px 24px';
+      el.style.display = 'inline-block';
+    }
+  }
+
   // --- GESTION DES NUANCES FAVORITES ---
   function getCustomColors() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY_CUSTOM_COLORS);
       if (stored) return JSON.parse(stored);
-      // Synchronisation initiale avec les couleurs personnalisées du thème global si existantes
       const fallback = localStorage.getItem('deck_custom_colors');
       return fallback ? JSON.parse(fallback) : [];
     } catch {
@@ -227,8 +237,10 @@ window.DeckEngine.Styler = (function () {
     const radius = el.style.borderRadius || '';
     const width = el.style.borderWidth || '';
     const bstyle = el.style.borderStyle || '';
+    const pad = el.style.padding || '';
+    const disp = el.style.display || '';
 
-    if (!bg && !col && !border && !radius && !width && !bstyle) {
+    if (!bg && !col && !border && !radius && !width && !bstyle && !pad) {
       delete overrides[key];
     } else {
       overrides[key] = {
@@ -237,7 +249,9 @@ window.DeckEngine.Styler = (function () {
         borderColor: border,
         borderRadius: radius,
         borderWidth: width,
-        borderStyle: bstyle
+        borderStyle: bstyle,
+        padding: pad,
+        display: disp
       };
     }
 
@@ -301,6 +315,14 @@ window.DeckEngine.Styler = (function () {
           if (styleObj.borderStyle) {
             targetEl.style.borderStyle = styleObj.borderStyle;
           }
+          if (styleObj.padding) {
+            targetEl.style.padding = styleObj.padding;
+          } else if (styleObj.background || styleObj.borderRadius || styleObj.borderColor) {
+            ensureNativePadding(targetEl);
+          }
+          if (styleObj.display) {
+            targetEl.style.display = styleObj.display;
+          }
         }
       } catch (e) {
         console.warn('Erreur restauration style pour', key, e);
@@ -319,6 +341,8 @@ window.DeckEngine.Styler = (function () {
         el.style.borderRadius = '';
         el.style.borderWidth = '';
         el.style.borderStyle = '';
+        el.style.padding = '';
+        el.style.display = '';
         if (el.getAttribute('style') === '') el.removeAttribute('style');
       }
     });
@@ -351,8 +375,7 @@ window.DeckEngine.Styler = (function () {
     if (slider) slider.value = isPill ? 32 : Math.min(32, numRadius);
     if (valBadge) valBadge.textContent = isPill ? 'Pilule' : `${numRadius}px`;
 
-    // Presets actifs
-    const presetBtns = popoverEl.querySelectorAll('.styler-preset-btn');
+    const presetBtns = popoverEl.querySelectorAll('#stylerRadiusPresets .styler-preset-btn');
     presetBtns.forEach(btn => {
       const r = btn.getAttribute('data-radius');
       if (isPill && r === '9999px') {
@@ -364,7 +387,27 @@ window.DeckEngine.Styler = (function () {
       }
     });
 
-    // 2. Synchronisation Border Width / Style
+    // 2. Synchronisation Padding (Marge interne)
+    const rawPad = selectedElement.style.padding || window.getComputedStyle(selectedElement).padding || '0px';
+    const numPad = parseInt(rawPad, 10) || 0;
+    const padSlider = popoverEl.querySelector('#stylerPaddingSlider');
+    const padValBadge = popoverEl.querySelector('#stylerPaddingVal');
+    if (padSlider) padSlider.value = Math.min(36, numPad);
+    if (padValBadge) {
+      padValBadge.textContent = selectedElement.style.padding ? selectedElement.style.padding : (numPad > 0 ? `${numPad}px` : '0px');
+    }
+
+    const padPresetBtns = popoverEl.querySelectorAll('#stylerPaddingPresets .styler-preset-btn');
+    padPresetBtns.forEach(btn => {
+      const p = btn.getAttribute('data-pad');
+      if (selectedElement.style.padding === p || (!selectedElement.style.padding && p === '0px' && numPad === 0)) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // 3. Synchronisation Border Width / Style
     const rawWidth = selectedElement.style.borderWidth || window.getComputedStyle(selectedElement).borderWidth || '0px';
     const rawStyle = selectedElement.style.borderStyle || window.getComputedStyle(selectedElement).borderStyle || 'none';
 
@@ -476,6 +519,23 @@ window.DeckEngine.Styler = (function () {
 
         <div class="styler-shape-group">
           <div class="styler-section-title">
+            <span>Marges internes (Padding)</span>
+            <span class="styler-val-badge" id="stylerPaddingVal">8px 24px</span>
+          </div>
+          <div class="styler-radius-slider-wrap">
+            <input type="range" class="styler-range-slider" id="stylerPaddingSlider" min="0" max="36" value="12" step="2">
+          </div>
+          <div class="styler-radius-presets" id="stylerPaddingPresets">
+            <button class="styler-preset-btn" data-pad="0px" title="Aucun padding">0</button>
+            <button class="styler-preset-btn" data-pad="4px 14px" title="Padding compact">Fin</button>
+            <button class="styler-preset-btn active" data-pad="8px 24px" title="Padding équilibré">Moyen</button>
+            <button class="styler-preset-btn" data-pad="14px 32px" title="Padding large">Large</button>
+            <button class="styler-preset-btn" data-pad="20px 40px" title="Padding très généreux">Maxi</button>
+          </div>
+        </div>
+
+        <div class="styler-shape-group">
+          <div class="styler-section-title">
             <span>Épaisseur & Type</span>
           </div>
           <div class="styler-border-types" id="stylerBorderTypes">
@@ -529,6 +589,7 @@ window.DeckEngine.Styler = (function () {
     const radiusSlider = popoverEl.querySelector('#stylerRadiusSlider');
     radiusSlider?.addEventListener('input', (e) => {
       if (!selectedElement) return;
+      ensureNativePadding(selectedElement);
       const val = e.target.value;
       selectedElement.style.borderRadius = `${val}px`;
       saveElementOverride(selectedElement);
@@ -536,10 +597,11 @@ window.DeckEngine.Styler = (function () {
     });
 
     // 2. Presets d'arrondi
-    const presetBtns = popoverEl.querySelectorAll('.styler-preset-btn');
+    const presetBtns = popoverEl.querySelectorAll('#stylerRadiusPresets .styler-preset-btn');
     presetBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         if (!selectedElement) return;
+        ensureNativePadding(selectedElement);
         const rad = btn.getAttribute('data-radius');
         selectedElement.style.borderRadius = rad;
         saveElementOverride(selectedElement);
@@ -547,11 +609,36 @@ window.DeckEngine.Styler = (function () {
       });
     });
 
-    // 3. Types et épaisseurs de bordure
+    // 3. Slider de padding
+    const paddingSlider = popoverEl.querySelector('#stylerPaddingSlider');
+    paddingSlider?.addEventListener('input', (e) => {
+      if (!selectedElement) return;
+      const v = e.target.value;
+      selectedElement.style.padding = `${Math.round(v * 0.55)}px ${v}px`;
+      selectedElement.style.display = 'inline-block';
+      saveElementOverride(selectedElement);
+      syncBorderShapeUI();
+    });
+
+    // 4. Presets de padding
+    const padPresetBtns = popoverEl.querySelectorAll('#stylerPaddingPresets .styler-preset-btn');
+    padPresetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!selectedElement) return;
+        const pad = btn.getAttribute('data-pad');
+        selectedElement.style.padding = pad;
+        if (pad !== '0px') selectedElement.style.display = 'inline-block';
+        saveElementOverride(selectedElement);
+        syncBorderShapeUI();
+      });
+    });
+
+    // 5. Types et épaisseurs de bordure
     const borderTypeBtns = popoverEl.querySelectorAll('.styler-border-type-btn');
     borderTypeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         if (!selectedElement) return;
+        ensureNativePadding(selectedElement);
         const w = btn.getAttribute('data-width');
         const s = btn.getAttribute('data-style');
         selectedElement.style.borderWidth = w;
@@ -653,6 +740,8 @@ window.DeckEngine.Styler = (function () {
       selectedElement.style.borderRadius = '';
       selectedElement.style.borderWidth = '';
       selectedElement.style.borderStyle = '';
+      selectedElement.style.padding = '';
+      selectedElement.style.display = '';
       if (selectedElement.getAttribute('style') === '') {
         selectedElement.removeAttribute('style');
       }
@@ -725,11 +814,13 @@ window.DeckEngine.Styler = (function () {
     if (!colorVal) return;
 
     if (currentProperty === 'background') {
+      ensureNativePadding(selectedElement);
       selectedElement.style.background = colorVal;
       selectedElement.style.backgroundColor = colorVal;
     } else if (currentProperty === 'color') {
       selectedElement.style.color = colorVal;
     } else if (currentProperty === 'borderColor') {
+      ensureNativePadding(selectedElement);
       selectedElement.style.borderColor = colorVal;
       // S'il n'y a pas de bordure active, activer une bordure fine
       if (!selectedElement.style.borderWidth || selectedElement.style.borderWidth === '0px') {
@@ -742,7 +833,7 @@ window.DeckEngine.Styler = (function () {
     saveElementOverride(selectedElement);
 
     updateActiveSwatchHighlight();
-    if (currentProperty === 'borderColor') syncBorderShapeUI();
+    syncBorderShapeUI();
   }
 
   function positionPopover(targetEl) {
@@ -750,7 +841,7 @@ window.DeckEngine.Styler = (function () {
 
     const rect = targetEl.getBoundingClientRect();
     const popoverWidth = 326;
-    const popoverHeight = 490;
+    const popoverHeight = 520;
     const margin = 12;
 
     let top = rect.bottom + margin;
