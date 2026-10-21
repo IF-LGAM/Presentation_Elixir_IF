@@ -1274,3 +1274,192 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   > - **1:45 - 2:45 (Environnement Zéro Friction) :** « Côté environnement, nous avons éliminé toute friction : aucun besoin d'installer Elixir, Erlang ou PostgreSQL sur votre machine. Tout tourne dans deux conteneurs Docker Compose légers. Une commande `docker compose up -d`, un `mix ecto.setup` pour charger la base, et vous êtes prêts sur `localhost:4000`. »
   > - **2:45 - 4:00 (Le Cœur Pédagogique du TP) :** « Vos missions se concentrent sur ce qui fait la force unique de Phoenix : d'abord requêter et afficher les données avec Ecto, ensuite ajouter un formulaire de saisie avec validation instantanée, et enfin brancher PubSub pour que la dépense créée sur votre machine apparaisse instantanément sur celle de votre binôme. »
   > - **4:00 - 5:00 (Top Départ & Accompagnement) :** « La base de données embarque déjà plus de 130 porte-monnaies pour éprouver la scalabilité de l'application. Les dépôts sont ouverts, les commandes sont affichées à l'écran. Bon TP à tous, nous restons disponibles dans les rangs pour vous guider ! »
+
+---
+
+#### Slide 29 : Quiz 1 — Paradigme de Programmation
+- **Type de slide** : slide
+- **Durée estimée** : 1 min *(Partie 4 : Quiz & Validation des Connaissances)*
+- **Badge section** : badge-solid : QUIZ & VALIDATION — QUESTION 1/7
+- **Titre (title-slide)** : Quel paradigme de programmation est au cœur d'Elixir ?
+- **Sous-titre (subtitle-slide)** : Validez votre compréhension des fondations architecturales du langage
+- **Mise en page** : standard
+- **Contenu & Composants** :
+  - **Module d'évaluation** : quiz
+    - **Grille de sélection (grid-2)** :
+      - quiz-btn-correct : Option A : Le paradigme fonctionnel
+      - quiz-btn : Option B : Le paradigme orienté objet
+      - quiz-btn : Option C : Le paradigme procédural
+      - quiz-btn : Option D : Il est multi-paradigme
+    - **Zone d'explication révélée au clic** : quiz-feedback
+      - Titre statut : ✔ Bonne réponse : Option A (Le paradigme fonctionnel)
+      - Explication : Elixir est un langage purement fonctionnel : les données y sont strictement immuables, les fonctions sont des citoyennes de premier rang sans effets de bord cachés, et les classes ou l'héritage mutable sont totalement absents au profit de modules et de structures de données pures.
+  - **Pied de slide** : banner
+    - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Animation de la question (1 min) :** « Passons à notre premier quiz interactif pour valider l'ensemble des concepts abordés ! Première question : quel est le paradigme fondamental d'Elixir ? »
+  > - **Résolution & Débriefing :** « C'est évidemment la réponse A. Pas d'objets, pas d'état mutable partagé : tout repose sur des fonctions pures et la transformation continue de données. »
+
+---
+
+#### Slide 30 : Quiz 2 — Empreinte Mémoire des Processus BEAM
+- **Type de slide** : slide
+- **Durée estimée** : 1 min *(Partie 4 : Quiz & Validation des Connaissances)*
+- **Badge section** : badge-solid : QUIZ & VALIDATION — QUESTION 2/7
+- **Titre (title-slide)** : Quel est le poids approximatif en RAM d'un micro-processus sur la BEAM ?
+- **Sous-titre (subtitle-slide)** : Mesurez la légèreté de l'unité fondamentale de concurrence d'Erlang/Elixir
+- **Mise en page** : standard
+- **Contenu & Composants** :
+  - **Module d'évaluation** : quiz
+    - **Grille de sélection (grid-2)** :
+      - quiz-btn : Option A : Environ 2 Go
+      - quiz-btn : Option B : Environ 2 Mo
+      - quiz-btn-correct : Option C : Environ 2 Ko
+      - quiz-btn : Option D : Environ 200 Ko
+    - **Zone d'explication révélée au clic** : quiz-feedback
+      - Titre statut : ✔ Bonne réponse : Option C (Environ 2 Ko)
+      - Explication : Contrairement aux threads lourds des systèmes d'exploitation (qui réservent couramment 1 à 2 Mo de mémoire), un micro-processus BEAM démarre avec seulement environ 2 Ko de mémoire vive. Cette ultra-légèreté permet d'en faire tourner des millions simultanément sur un simple ordinateur portable.
+  - **Pied de slide** : banner
+    - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Animation de la question (1 min) :** « Deuxième question, essentielle pour comprendre la scalabilité de Phoenix : combien pèse un micro-processus à sa création ? »
+  > - **Résolution & Débriefing :** « Réponse C : 2 Ko seulement ! C'est ce qui permet à Phoenix d'ouvrir des millions de connexions WebSocket concurrentes là où d'autres architectures saturent dès quelques milliers. »
+
+---
+
+#### Slide 31 : Quiz 3 — Philosophie « Let it crash » & Supervision
+- **Type de slide** : slide
+- **Durée estimée** : 1 min *(Partie 4 : Quiz & Validation des Connaissances)*
+- **Badge section** : badge-solid : QUIZ & VALIDATION — QUESTION 3/7
+- **Titre (title-slide)** : Que signifie la philosophie « Let it crash » ?
+- **Sous-titre (subtitle-slide)** : Décryptez le secret de la haute disponibilité et de la tolérance aux pannes
+- **Mise en page** : standard
+- **Contenu & Composants** :
+  - **Module d'évaluation** : quiz
+    - **Grille de sélection (grid-2)** :
+      - quiz-btn-correct : Option A : Le processus meurt et est réinitialisé proprement
+      - quiz-btn : Option B : Le système ralentit pour éviter les plantages
+      - quiz-btn : Option C : Il faut redémarrer tout le serveur manuellement
+      - quiz-btn : Option D : Il faut ignorer complètement les erreurs
+    - **Zone d'explication révélée au clic** : quiz-feedback
+      - Titre statut : ✔ Bonne réponse : Option A (Le processus meurt et est réinitialisé proprement)
+      - Explication : En Elixir, on n'essaie pas d'entourer tout le code de blocs défensifs try/catch. Grâce à l'isolation totale des processus et aux superviseurs (Supervisors), un processus rencontrant une anomalie meurt immédiatement sans polluer la mémoire des autres, et son superviseur le recrée instantanément dans un état sain connu.
+  - **Pied de slide** : banner
+    - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Animation de la question (1 min) :** « Troisième question sur la devise la plus célèbre de l'écosystème Erlang/Elixir : « Let it crash » ! »
+  > - **Résolution & Débriefing :** « Réponse A : plutôt que de masquer un état corrompu, on laisse le micro-processus mourir pour que l'arbre de supervision le redémarre instantanément dans un état propre. C'est l'autoguérison native. »
+
+---
+
+#### Slide 32 : Quiz 4 — Le Modèle Plug & Pipeline Web
+- **Type de slide** : slide
+- **Durée estimée** : 1 min *(Partie 4 : Quiz & Validation des Connaissances)*
+- **Badge section** : badge-solid : QUIZ & VALIDATION — QUESTION 4/7
+- **Titre (title-slide)** : Qu'est-ce qu'un Plug dans Elixir ?
+- **Sous-titre (subtitle-slide)** : L'abstraction pivot pour concevoir des applications et des pipelines web
+- **Mise en page** : standard
+- **Contenu & Composants** :
+  - **Module d'évaluation** : quiz
+    - **Grille de sélection (grid-2)** :
+      - quiz-btn : Option A : Un outil surprise qui nous servira plus tard
+      - quiz-btn : Option B : Un micro-processus BEAM dédié à chaque utilisateur connecté
+      - quiz-btn : Option C : Un modèle de base de données contenant les règles métier
+      - quiz-btn-correct : Option D : L'équivalent d'une Servlet HTTP en Java
+    - **Zone d'explication révélée au clic** : quiz-feedback
+      - Titre statut : ✔ Bonne réponse : Option D (L'équivalent d'une Servlet HTTP en Java)
+      - Explication : Plug est la spécification formelle et l'abstraction centrale du web en Elixir (comparable aux Servlets Java ou aux middlewares Rack). Un Plug reçoit la structure de connexion `%Plug.Conn{}` en entrée et applique une transformation pure pour produire la réponse HTTP au travers d'un pipeline composable.
+  - **Pied de slide** : banner
+    - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Animation de la question (1 min) :** « Quatrième question : nous avons vu le composant Plug lors de l'étude de Phoenix. Quelle est sa nature exacte ? »
+  > - **Résolution & Débriefing :** « Réponse D : c'est l'équivalent direct des Servlets en Java ou des middlewares. Tout le web Phoenix est un pipeline de Plugs pures recevant et transformant une structure Conn. »
+
+---
+
+#### Slide 33 : Quiz 5 — Rôle des Contexts dans Phoenix
+- **Type de slide** : slide
+- **Durée estimée** : 1 min *(Partie 4 : Quiz & Validation des Connaissances)*
+- **Badge section** : badge-solid : QUIZ & VALIDATION — QUESTION 5/7
+- **Titre (title-slide)** : À quoi servent les « Contexts » dans l'architecture Phoenix ?
+- **Sous-titre (subtitle-slide)** : Structuration architecturale et découplage entre métier et couches web
+- **Mise en page** : standard
+- **Contenu & Composants** :
+  - **Module d'évaluation** : quiz
+    - **Grille de sélection (grid-2)** :
+      - quiz-btn : Option A : À créer des animations en temps réel
+      - quiz-btn : Option B : À compiler le framework plus rapidement
+      - quiz-btn-correct : Option C : À séparer le métier de l'interface web
+      - quiz-btn : Option D : À gérer la sécurité du protocole HTTP
+    - **Zone d'explication révélée au clic** : quiz-feedback
+      - Titre statut : ✔ Bonne réponse : Option C (À séparer le métier de l'interface web)
+      - Explication : Les Contexts sont des modules Elixir dédiés qui définissent les frontières et l'API publique de votre logique métier. Ils encapsulent la persistance (Ecto) et isolent strictement les règles métier des couches d'acheminement et de présentation (contrôleurs web, LiveView, API JSON).
+  - **Pied de slide** : banner
+    - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Animation de la question (1 min) :** « Cinquième question sur l'organisation interne de Phoenix : quel est le rôle d'un Context ? »
+  > - **Résolution & Débriefing :** « Réponse C : les Contexts incarnent le principe « le web n'est qu'un détail ». Ils isolent la logique métier des contrôleurs et des sockets pour garder une architecture propre et pérenne. »
+
+---
+
+#### Slide 34 : Quiz 6 — Communication Concurrente & Modèle d'Acteurs
+- **Type de slide** : slide
+- **Durée estimée** : 1 min *(Partie 4 : Quiz & Validation des Connaissances)*
+- **Badge section** : badge-solid : QUIZ & VALIDATION — QUESTION 6/7
+- **Titre (title-slide)** : Comment deux processus communiquent-ils entre eux ?
+- **Sous-titre (subtitle-slide)** : L'application stricte du modèle d'acteurs sans verrous ni mémoire partagée
+- **Mise en page** : standard
+- **Contenu & Composants** :
+  - **Module d'évaluation** : quiz
+    - **Grille de sélection (grid-2)** :
+      - quiz-btn : Option A : Par des systèmes de verrous (mutex)
+      - quiz-btn : Option B : Par des pointeurs mémoire partagés
+      - quiz-btn : Option C : Par des bases de données externes
+      - quiz-btn-correct : Option D : Par échange de messages asynchrones
+    - **Zone d'explication révélée au clic** : quiz-feedback
+      - Titre statut : ✔ Bonne réponse : Option D (Par échange de messages asynchrones)
+      - Explication : Sur la BEAM, chaque processus possède son propre tas mémoire privé et étanche. Les processus ne partagent jamais d'adresse mémoire : ils communiquent exclusivement par passage de messages asynchrones déposés dans la boîte aux lettres (mailbox) du destinataire, éliminant totalement les verrous, conditions de course et blocages mutuels.
+  - **Pied de slide** : banner
+    - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Animation de la question (1 min) :** « Sixième question sur la concurrence : comment s'échangent les données entre deux processus isolés ? »
+  > - **Résolution & Débriefing :** « Réponse D : par échange de messages asynchrones. C'est l'essence même du modèle d'acteurs, qui garantit l'absence totale de verrous (locks) et de bugs de concurrence. »
+
+---
+
+#### Slide 35 : Quiz 7 — L'Opérateur de Match (=)
+- **Type de slide** : slide
+- **Durée estimée** : 1 min *(Partie 4 : Quiz & Validation des Connaissances)*
+- **Badge section** : badge-solid : QUIZ & VALIDATION — QUESTION 7/7
+- **Titre (title-slide)** : Que fait réellement le signe = en Elixir ?
+- **Sous-titre (subtitle-slide)** : La syntaxe la plus fondamentale et polyvalente du langage
+- **Mise en page** : standard
+- **Contenu & Composants** :
+  - **Module d'évaluation** : quiz
+    - **Grille de sélection (grid-2)** :
+      - quiz-btn : Option A : Il vérifie l'égalité stricte des types
+      - quiz-btn : Option B : Il crée un pointeur vers la donnée
+      - quiz-btn : Option C : Il assigne strictement une valeur
+      - quiz-btn-correct : Option D : Il effectue un filtrage par motif
+    - **Zone d'explication révélée au clic** : quiz-feedback
+      - Titre statut : ✔ Bonne réponse : Option D (Il effectue un filtrage par motif)
+      - Explication : En Elixir, le symbole `=` n'est pas une simple affectation, mais l'opérateur de filtrage par motif (Pattern Matching). Il vérifie la concordance des structures à gauche et à droite, valide la forme des données et extrait/lie directement les variables internes en cas de correspondance.
+  - **Pied de slide** : banner
+    - Formule clé : Cliquez sur une option pour valider votre réponse en direct et afficher l'explication détaillée.
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/faculte.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Animation de la question (1 min) :** « Dernière question pour clore ce quiz : que représente réellement le signe = en Elixir ? »
+  > - **Résolution & Débriefing :** « Réponse D : le filtrage par motif (Pattern Matching). C'est la pierre angulaire de tout le code Elixir, de la déstructuration de tuples à la gestion des erreurs. Bravo à tous ! »
