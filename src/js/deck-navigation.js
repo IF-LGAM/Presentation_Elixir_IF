@@ -368,6 +368,10 @@ window.DeckEngine.Navigation = (function () {
         case 'C':
           e.preventDefault();
           if (window.DeckEngine.Palette) window.DeckEngine.Palette.cycleAccentColor(); break;
+        case 'i':
+        case 'I':
+          e.preventDefault();
+          if (window.DeckEngine.Styler) window.DeckEngine.Styler.toggle(); break;
         case 's':
         case 'S':
           if (typeof openSpeakerWindow === 'function') openSpeakerWindow();
@@ -385,6 +389,10 @@ window.DeckEngine.Navigation = (function () {
         case '?':
           if (shortcutsModal) shortcutsModal.classList.toggle('open'); break;
         case 'Escape':
+          if (window.DeckEngine.Styler && window.DeckEngine.Styler.isActive()) {
+            window.DeckEngine.Styler.deactivate();
+            return;
+          }
           if (window.DeckEngine.Zoom && window.DeckEngine.Zoom.isOpen()) {
             window.DeckEngine.Zoom.close();
             return;

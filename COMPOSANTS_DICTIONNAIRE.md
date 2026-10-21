@@ -373,3 +373,21 @@ Pour permettre à l'orateur ou à l'auditoire d'agrandir un schéma technique, u
    - Une pastille discrète 🔍 apparaît en haut à droite au survol.
    - Au clic : ouverture en plein écran épuré avec fond flouté (`backdrop-filter: blur(14px)`).
    - Re-cliquer n'importe où ou presser <kbd>Échap</kbd> referme le zoom instantanément.
+
+---
+
+## 14. Inspecteur & Styliseur Visuel de Composants (Touche `I`)
+
+Pour personnaliser visuellement un composant en direct sans devoir éditer le code à l'aveugle :
+
+1. Cliquez sur le bouton **"Styliser (I)"** dans le header ou pressez la touche <kbd>I</kbd>.
+2. Une bannière de mode s'affiche et les composants du slide actif deviennent survolables avec contour pointillé.
+3. **Cliquez sur n'importe quel élément** (carte `.x-card`, badge, KPI, titre, boîte de schéma...) :
+   - Le popover de stylisation s'affiche immédiatement avec le badge du composant sélectionné.
+   - Vous pouvez naviguer vers le parent direct d'un clic (bouton `↑`).
+   - Choisissez l'onglet : **🎨 Fond**, **✏️ Texte** ou **🔲 Bordure**.
+   - Cliquez sur n'importe quelle nuance du Design System (thème, couleurs vives, transparent) ou utilisez la pipette hexadécimale.
+4. **Export immédiat** :
+   - Cliquez sur **"Copier style"** pour récupérer l'attribut `style="..."` et le coller dans votre HTML.
+   - Cliquez sur **"Copier HTML"** pour obtenir le composant complet prêt à l'emploi.
+   - Cliquez sur **"Reset"** pour rétablir les styles d'origine.

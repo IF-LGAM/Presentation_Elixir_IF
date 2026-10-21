@@ -101,6 +101,14 @@ window.DeckEngine.DOM = (function () {
             </div>
           </div>
 
+          <button id="elementStylerBtn" class="ctrl-btn" title="Inspecteur & Styliseur de composants (Touche I)">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            <span>Styliser (I)</span>
+          </button>
+
           <button id="speakerWindowBtn" class="ctrl-btn" title="Ouvrir la vue présentateur dual-screen (Touche S)">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
@@ -265,6 +273,9 @@ window.DeckEngine.DOM = (function () {
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>Couleur d'accent</span> <kbd>C</kbd>
+            </div>
+            <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
+              <span>Styliser un composant</span> <kbd>I</kbd>
             </div>
             <div style="background: var(--card-hover); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-dark); color: var(--text-main); display: flex; justify-content: space-between; align-items: center;">
               <span>Mode Présentateur</span> <kbd>S</kbd>

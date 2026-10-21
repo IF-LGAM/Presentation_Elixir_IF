@@ -126,6 +126,7 @@ Quand l'IA compile votre plan Markdown, elle produit un diaporama riche doté de
   - ⚓ *Corporate Navy* (Bleu institutionnel)
   - ☕ *Editorial Warm* (Sépia café & cuivre)
 - **Palette d'Accentuation Dynamique (<kbd>C</kbd>)** : Changez la couleur primaire en direct via un sélecteur interactif (presets, pipette, code `#HEX`), synchronisée avec la console orateur et persistée dans le navigateur.
+- **Inspecteur & Styliseur Visuel de Composants (<kbd>I</kbd>)** : Cliquez sur n'importe quel élément de la diapositive (carte, badge, KPI, titre, boîte, citation) pour personnaliser en direct sa couleur de fond, couleur de texte ou de bordure avec la palette du Design System, puis copiez le style CSS (`style="..."`) ou le code HTML prêt à coller dans votre gabarit.
 
 ### 6. 🖨️ Export PDF 16:9 Haute Fidélité (<kbd>P</kbd>)
 - Feuille de style `@media print` calibrée en format paysage exact (`16in x 9in`).
@@ -148,7 +149,8 @@ Quand l'IA compile votre plan Markdown, elle produit un diaporama riche doté de
 | <kbd>Cmd</kbd> + <kbd>K</kbd> / <kbd>Ctrl</kbd> + <kbd>K</kbd> / <kbd>/</kbd> | Ouvrir la recherche plein texte instantanée (*Spotlight*) |
 | <kbd>O</kbd> / <kbd>Échap</kbd> | Vue d'ensemble en grille de miniatures (*Overview*) |
 | <kbd>T</kbd> | Changer d'ambiance visuelle (parmi les 7 thèmes) |
-| <kbd>C</kbd> | Changer la couleur d'accentuation |
+| <kbd>C</kbd> | Changer la couleur d'accentuation globale |
+| <kbd>I</kbd> | **Inspecter & Styliser un composant** (fond, texte, bordure) |
 | <kbd>L</kbd> | Activer / Désactiver le Pointeur Laser Virtuel |
 | <kbd>B</kbd> / <kbd>.</kbd> | Masquer l'écran en noir (*Blackout*) |
 | <kbd>W</kbd> | Masquer l'écran en blanc (*Whiteout*) |
