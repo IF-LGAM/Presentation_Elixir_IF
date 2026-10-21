@@ -256,6 +256,95 @@ body.deck-styler-mode .slide.active :is(.x-card, .kpi-card, .schema-box, .termin
   background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
 }
 
+/* Section Mes Couleurs Personnalisées */
+.styler-custom-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-top: 1px solid var(--border-dark, #333333);
+  padding-top: 6px;
+}
+
+.styler-clear-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 9.5px;
+  cursor: pointer;
+  padding: 0;
+  text-transform: none;
+  transition: color 0.15s ease;
+  font-family: inherit;
+}
+
+.styler-clear-btn:hover {
+  color: var(--accent-error, #EF4444);
+}
+
+.styler-custom-grid {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-height: 24px;
+}
+
+.styler-custom-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.styler-custom-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background-color: var(--swatch-color);
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.styler-custom-swatch:hover {
+  transform: scale(1.18);
+  box-shadow: 0 0 8px var(--swatch-color);
+}
+
+.styler-custom-swatch.active {
+  border-color: #FFFFFF;
+  box-shadow: 0 0 10px var(--swatch-color);
+  transform: scale(1.12);
+}
+
+.styler-custom-delete {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 13px;
+  height: 13px;
+  background: #EF4444;
+  color: #FFF;
+  border: none;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.styler-custom-item:hover .styler-custom-delete {
+  display: flex;
+}
+
 /* Ligne Pipette libre & Hexadécimal */
 .styler-custom-row {
   display: flex;

@@ -2,7 +2,8 @@
  * Deck Engine - Component Color Inspector & Styler
  * Sous-responsabilité : Sélection visuelle au clic de n'importe quel composant
  * (cartes, badges, titres, boîtes, KPIs...) et modification en direct de sa
- * couleur de fond, couleur d'écriture et bordure avec la palette du Design System.
+ * couleur de fond, couleur d'écriture et bordure avec la palette du Design System
+ * ainsi que l'enregistrement de couleurs personnalisées réutilisables.
  */
 
 window.DeckEngine = window.DeckEngine || {};
@@ -57,6 +58,110 @@ window.DeckEngine.Styler = (function () {
     toastEl._timer = setTimeout(() => {
       toastEl.classList.remove('show');
     }, 2200);
+  }
+
+  function normalizeHexColor(val) {
+    if (!val || typeof val !== 'string') return null;
+    let s = val.trim();
+    if (!s.startsWith('#')) s = '#' + s;
+    if (/^#[0-9A-Fa-f]{3}$/.test(s)) {
+      return ('#' + s[1] + s[1] + s[2] + s[2] + s[3] + s[3]).toUpperCase();
+    }
+    if (/^#[0-9A-Fa-f]{6}$/.test(s)) {
+      return s.toUpperCase();
+    }
+    return null;
+  }
+
+  function getCustomColors() {
+    try {
+      const stored = localStorage.getItem('deck_styler_custom_colors');
+      if (stored) return JSON.parse(stored);
+      // Synchronisation initiale avec les couleurs personnalisées du thème global si existantes
+      const fallback = localStorage.getItem('deck_custom_colors');
+      return fallback ? JSON.parse(fallback) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveCustomColors(colors) {
+    try {
+      localStorage.setItem('deck_styler_custom_colors', JSON.stringify(colors));
+    } catch (e) {
+      console.warn('Erreur sauvegarde custom colors styler:', e);
+    }
+  }
+
+  function addCustomColor(hex) {
+    const norm = normalizeHexColor(hex);
+    if (!norm) return false;
+    let colors = getCustomColors();
+    colors = colors.filter(c => c.toUpperCase() !== norm);
+    colors.unshift(norm);
+    if (colors.length > 14) colors.pop();
+    saveCustomColors(colors);
+    renderCustomColors();
+    updateActiveSwatchHighlight();
+    return true;
+  }
+
+  function deleteCustomColor(hex) {
+    let colors = getCustomColors();
+    colors = colors.filter(c => c.toUpperCase() !== hex.toUpperCase());
+    saveCustomColors(colors);
+    renderCustomColors();
+    updateActiveSwatchHighlight();
+  }
+
+  function clearCustomColors() {
+    saveCustomColors([]);
+    renderCustomColors();
+    updateActiveSwatchHighlight();
+  }
+
+  function renderCustomColors() {
+    const customSection = popoverEl?.querySelector('#stylerCustomSection');
+    const customGrid = popoverEl?.querySelector('#stylerCustomGrid');
+    if (!customGrid) return;
+
+    const colors = getCustomColors();
+    if (!colors || colors.length === 0) {
+      if (customSection) customSection.style.display = 'none';
+      customGrid.innerHTML = '';
+      return;
+    }
+
+    if (customSection) customSection.style.display = 'flex';
+    customGrid.innerHTML = '';
+
+    colors.forEach(col => {
+      const itemWrap = document.createElement('div');
+      itemWrap.className = 'styler-custom-item';
+
+      const swatch = document.createElement('button');
+      swatch.className = 'styler-custom-swatch';
+      swatch.style.setProperty('--swatch-color', col);
+      swatch.title = `Nuance personnalisée : ${col}`;
+      swatch.setAttribute('data-color', col);
+      swatch.addEventListener('click', () => {
+        applyColor(col);
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'styler-custom-delete';
+      delBtn.innerHTML = '&times;';
+      delBtn.title = `Supprimer la nuance ${col}`;
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteCustomColor(col);
+        showToast(`Nuance ${col} supprimée`);
+      });
+
+      itemWrap.appendChild(swatch);
+      itemWrap.appendChild(delBtn);
+      customGrid.appendChild(itemWrap);
+    });
   }
 
   function getElementBadgeLabel(el) {
@@ -124,10 +229,19 @@ window.DeckEngine.Styler = (function () {
         <div class="styler-swatches-grid" id="stylerSwatchesGrid"></div>
       </div>
 
+      <div class="styler-custom-section" id="stylerCustomSection" style="display: none;">
+        <div class="styler-section-title">
+          <span>Mes Nuances Personnalisées</span>
+          <button class="styler-clear-btn" id="stylerClearCustomBtn" title="Effacer toutes mes nuances">Effacer</button>
+        </div>
+        <div class="styler-custom-grid" id="stylerCustomGrid"></div>
+      </div>
+
       <div class="styler-custom-row">
         <input type="color" class="styler-color-native" id="stylerColorInput" value="#E50914" title="Pipette de couleur libre">
         <input type="text" class="styler-hex-input" id="stylerHexInput" value="#E50914" placeholder="#HEX ou couleur" spellcheck="false">
-        <button class="styler-action-btn primary" id="stylerApplyHexBtn" style="padding: 2px 8px; flex: initial;">Appliquer</button>
+        <button class="styler-action-btn primary" id="stylerApplyHexBtn" style="padding: 2px 8px; flex: initial;" title="Appliquer cette couleur au composant">Appliquer</button>
+        <button class="styler-action-btn" id="stylerAddHexBtn" style="padding: 2px 8px; flex: initial;" title="Enregistrer cette nuance dans Mes Nuances Personnalisées">+ Sauvegarder</button>
       </div>
 
       <div class="styler-actions">
@@ -160,8 +274,11 @@ window.DeckEngine.Styler = (function () {
       });
     });
 
-    // Génération des swatches
+    // Génération des swatches prédéfinis
     renderSwatches();
+
+    // Rendu des nuances personnalisées
+    renderCustomColors();
 
     // Input native color
     const colorInput = popoverEl.querySelector('#stylerColorInput');
@@ -174,14 +291,36 @@ window.DeckEngine.Styler = (function () {
     // Bouton appliquer hex
     popoverEl.querySelector('#stylerApplyHexBtn')?.addEventListener('click', () => {
       if (hexInput && hexInput.value.trim()) {
-        applyColor(hexInput.value.trim());
+        const val = hexInput.value.trim();
+        applyColor(val);
       }
+    });
+
+    // Bouton sauvegarder hex dans mes nuances
+    popoverEl.querySelector('#stylerAddHexBtn')?.addEventListener('click', () => {
+      const val = hexInput?.value?.trim() || colorInput?.value;
+      if (val) {
+        if (addCustomColor(val)) {
+          applyColor(val);
+          showToast(`✓ Nuance ${normalizeHexColor(val)} enregistrée !`);
+        } else {
+          showToast('Code hexadécimal invalide');
+        }
+      }
+    });
+
+    // Bouton effacer mes nuances personnalisées
+    popoverEl.querySelector('#stylerClearCustomBtn')?.addEventListener('click', () => {
+      clearCustomColors();
+      showToast('Nuances personnalisées effacées');
     });
 
     hexInput?.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        applyColor(hexInput.value.trim());
+        const val = hexInput.value.trim();
+        applyColor(val);
+        addCustomColor(val);
       }
     });
 
@@ -266,7 +405,7 @@ window.DeckEngine.Styler = (function () {
     const computedVal = window.getComputedStyle(selectedElement)[currentProperty];
     const inlineVal = selectedElement.style[currentProperty];
 
-    const swatches = popoverEl.querySelectorAll('.styler-swatch');
+    const swatches = popoverEl.querySelectorAll('.styler-swatch, .styler-custom-swatch');
     swatches.forEach(s => {
       const c = s.getAttribute('data-color');
       if (inlineVal && (inlineVal.toLowerCase() === c.toLowerCase() || inlineVal === c)) {
@@ -306,7 +445,7 @@ window.DeckEngine.Styler = (function () {
 
     const rect = targetEl.getBoundingClientRect();
     const popoverWidth = 320;
-    const popoverHeight = 360;
+    const popoverHeight = 410;
     const margin = 12;
 
     let top = rect.bottom + margin;
@@ -354,6 +493,9 @@ window.DeckEngine.Styler = (function () {
       parentBtn.disabled = !parentCandidate;
       parentBtn.style.opacity = parentCandidate ? '1' : '0.4';
     }
+
+    // Re-rendre les nuances personnalisées au cas où elles auraient changé
+    renderCustomColors();
 
     // Ouvrir et positionner
     positionPopover(selectedElement);
@@ -450,6 +592,9 @@ window.DeckEngine.Styler = (function () {
     toggle,
     isActive: () => isModeActive,
     closePopover,
-    selectElement
+    selectElement,
+    addCustomColor,
+    deleteCustomColor,
+    getCustomColors
   };
 })();
