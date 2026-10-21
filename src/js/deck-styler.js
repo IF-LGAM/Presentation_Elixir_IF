@@ -111,8 +111,8 @@ window.DeckEngine.Styler = (function () {
     if (isHeadingOrParagraph) {
       const topPad = parseInt(computed.paddingTop, 10) || 0;
       const leftPad = parseInt(computed.paddingLeft, 10) || 0;
-      if (!el.style.padding && topPad < 4 && leftPad < 4) {
-        el.style.padding = '8px 24px';
+      if (!el.style.padding && topPad < 2 && leftPad < 2) {
+        el.style.padding = '3px 12px';
         if (computed.display === 'block' && el.tagName.startsWith('H')) {
           el.style.display = 'inline-block';
         }
@@ -467,7 +467,7 @@ window.DeckEngine.Styler = (function () {
     const numPad = parseInt(rawPad, 10) || 0;
     const padSlider = popoverEl.querySelector('#stylerPaddingSlider');
     const padValBadge = popoverEl.querySelector('#stylerPaddingVal');
-    if (padSlider) padSlider.value = Math.min(36, numPad);
+    if (padSlider) padSlider.value = Math.min(24, numPad);
     if (padValBadge) {
       padValBadge.textContent = selectedElement.style.padding ? selectedElement.style.padding : (numPad > 0 ? `${numPad}px` : '0px');
     }
@@ -595,17 +595,17 @@ window.DeckEngine.Styler = (function () {
         <div class="styler-shape-group">
           <div class="styler-section-title">
             <span>Marges internes (Padding)</span>
-            <span class="styler-val-badge" id="stylerPaddingVal">8px 24px</span>
+            <span class="styler-val-badge" id="stylerPaddingVal">3px 12px</span>
           </div>
           <div class="styler-radius-slider-wrap">
-            <input type="range" class="styler-range-slider" id="stylerPaddingSlider" min="0" max="36" value="12" step="2">
+            <input type="range" class="styler-range-slider" id="stylerPaddingSlider" min="0" max="24" value="12" step="1">
           </div>
           <div class="styler-radius-presets" id="stylerPaddingPresets">
             <button class="styler-preset-btn" data-pad="0px" title="Aucun padding">0</button>
-            <button class="styler-preset-btn" data-pad="4px 14px" title="Padding compact">Fin</button>
-            <button class="styler-preset-btn active" data-pad="8px 24px" title="Padding équilibré">Moyen</button>
-            <button class="styler-preset-btn" data-pad="14px 32px" title="Padding large">Large</button>
-            <button class="styler-preset-btn" data-pad="20px 40px" title="Padding très généreux">Maxi</button>
+            <button class="styler-preset-btn" data-pad="2px 8px" title="Padding très fin">Fin</button>
+            <button class="styler-preset-btn active" data-pad="3px 12px" title="Padding équilibré">Moyen</button>
+            <button class="styler-preset-btn" data-pad="6px 16px" title="Padding aéré">Aéré</button>
+            <button class="styler-preset-btn" data-pad="8px 22px" title="Padding large">Large</button>
           </div>
         </div>
 
@@ -686,8 +686,9 @@ window.DeckEngine.Styler = (function () {
     const paddingSlider = popoverEl.querySelector('#stylerPaddingSlider');
     paddingSlider?.addEventListener('input', (e) => {
       if (!selectedElement) return;
-      const v = e.target.value;
-      selectedElement.style.padding = `${Math.round(v * 0.55)}px ${v}px`;
+      const v = parseInt(e.target.value, 10);
+      const vert = Math.max(0, Math.round(v * 0.28));
+      selectedElement.style.padding = `${vert}px ${v}px`;
       if (window.getComputedStyle(selectedElement).display === 'inline') {
         selectedElement.style.display = 'inline-block';
       }

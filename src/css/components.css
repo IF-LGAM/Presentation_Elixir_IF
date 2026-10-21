@@ -18,6 +18,10 @@ h4 {
   line-height: 1.1;
   margin-bottom: 0.5rem;
   max-width: 1080px;
+  display: inline-block;
+  padding: 4px 12px;
+  margin-left: -12px;
+  border-radius: 8px;
 }
 
 .slide-subtitle-hero {
@@ -26,6 +30,10 @@ h4 {
   color: var(--accent-primary);
   margin-bottom: 1.4rem;
   max-width: 980px;
+  display: inline-block;
+  padding: 2px 10px;
+  margin-left: -10px;
+  border-radius: 6px;
 }
 
 .slide-header {
@@ -35,6 +43,10 @@ h4 {
 .slide-header h2 {
   font-size: 2.15rem;
   margin-top: 0.2rem;
+  display: inline-block;
+  padding: 3px 12px;
+  margin-left: -12px;
+  border-radius: 8px;
 }
 
 .slide-header p {
@@ -42,6 +54,10 @@ h4 {
   color: var(--text-muted);
   margin-top: 0.2rem;
   line-height: 1.4;
+  display: inline-block;
+  padding: 2px 8px;
+  margin-left: -8px;
+  border-radius: 6px;
 }
 
 /* 2. Badges & Tags (Pills) */
@@ -76,13 +92,19 @@ h4 {
   list-style: none;
   position: relative;
   padding-left: 1.6rem;
+  padding-right: 8px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin-left: -6px;
+  border-radius: 6px;
   margin-bottom: 0.5rem;
 }
 
 .bullet-check::before {
   content: '✓';
   position: absolute;
-  left: 0;
+  left: 6px;
+  top: 3px;
   color: var(--accent-primary);
   font-weight: 900;
 }
