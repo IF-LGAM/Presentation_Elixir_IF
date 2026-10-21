@@ -97,14 +97,30 @@ window.DeckEngine.Theme = (function () {
 
   function applyTheme(themeId, save = true) {
     const themeObj = getThemeById(themeId);
-    currentThemeId = themeObj.id;
-
     const container = document.querySelector('.deck-container') || document.body;
 
-    // Suppression de toutes les classes de thème existantes
+    // Si le thème est déjà appliqué sur le DOM, ne rien faire pour éviter tout flash/restyle
+    const alreadyApplied = currentThemeId === themeObj.id &&
+      container.classList.contains(`theme-${themeObj.id}`) &&
+      document.body.classList.contains(`theme-${themeObj.id}`);
+
+    if (alreadyApplied) {
+      return;
+    }
+
+    if (save) {
+      document.body.classList.add('theme-transitioning');
+      setTimeout(() => document.body.classList.remove('theme-transitioning'), 300);
+    }
+
+    currentThemeId = themeObj.id;
+
+    // Remplacement atomique : retirer uniquement les autres thèmes sans laisser le DOM sans thème
     THEMES.forEach(t => {
-      container.classList.remove(`theme-${t.id}`);
-      document.body.classList.remove(`theme-${t.id}`);
+      if (t.id !== currentThemeId) {
+        container.classList.remove(`theme-${t.id}`);
+        document.body.classList.remove(`theme-${t.id}`);
+      }
     });
 
     // Application de la nouvelle classe et de l'attribut data-theme
@@ -179,21 +195,23 @@ window.DeckEngine.Theme = (function () {
     const container = document.querySelector('.deck-container') || document.body;
     const defaultDeckTheme = container.getAttribute('data-theme') || 'dark';
 
+    let targetTheme = null;
+
     // Priorité 1 : Choix manuel explicite de l'utilisateur
     if (userManualTheme) {
-      applyTheme(userManualTheme, false);
+      targetTheme = userManualTheme;
     } else {
       // Priorité 2 : Surcharge locale explicite sur la slide
       const explicitTheme = slide.getAttribute('data-theme');
       if (explicitTheme && THEMES.some(t => t.id === explicitTheme)) {
-        applyTheme(explicitTheme, false);
+        targetTheme = explicitTheme;
       } else if (slide.classList.contains('light') || slide.classList.contains('theme-light')) {
-        applyTheme('light', false);
+        targetTheme = 'light';
       } else if (slide.classList.contains('dark') || slide.classList.contains('theme-dark')) {
-        applyTheme('dark', false);
+        targetTheme = 'dark';
       } else if (defaultDeckTheme) {
         // Priorité 3 : Thème global défini au niveau du conteneur du diaporama
-        applyTheme(defaultDeckTheme, false);
+        targetTheme = defaultDeckTheme;
       } else {
         // Priorité 4 : Détection intelligente par calcul de luminance du fond
         let isLight = false;
@@ -213,8 +231,13 @@ window.DeckEngine.Theme = (function () {
             }
           }
         }
-        applyTheme(isLight ? 'light' : 'dark', false);
+        targetTheme = isLight ? 'light' : 'dark';
       }
+    }
+
+    // Appliquer le thème uniquement s'il est différent du thème courant
+    if (targetTheme && targetTheme !== currentThemeId) {
+      applyTheme(targetTheme, false);
     }
 
     // Propagation automatique d'une couleur d'accent propre à la slide si présente

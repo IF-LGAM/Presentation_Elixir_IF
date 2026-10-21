@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="theme-dark" data-theme="dark">
 
 <head>
   <meta charset="UTF-8">
@@ -23,6 +23,10 @@
   <link rel="stylesheet" href="src/css/deck.css">
 
   <style>
+    /* Prévention du FOUC (Flash blanc avant chargement du JS) */
+    html.theme-dark, body.theme-dark {
+      background-color: #141414;
+    }
     /* Préservation du formatage multi-lignes dans le tiroir de notes rapide */
     #notesContent {
       white-space: pre-wrap;
@@ -30,7 +34,7 @@
   </style>
 </head>
 
-<body>
+<body class="theme-dark" data-theme="dark">
 
   <!-- =====================================================================
        CONTENEUR DU DIAPORAMA
@@ -53,7 +57,7 @@
           <div class="slide-hero">
             <div style="margin-bottom: 0.85rem;">
               <span class="pill-tag solid">Master MIAGE</span>
-              <span class="pill-tag gray" style="margin-left: 0.6rem;">⏱ Séance : ~60 min &bull; Slide 1/26</span>
+              <span class="pill-tag gray" style="margin-left: 0.6rem;">⏱ Séance : ~60 min &bull; Slide 1/27</span>
             </div>
 
             <h1 class="slide-title-hero">Elixir &amp; Phoenix Framework</h1>
@@ -96,7 +100,7 @@
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -109,7 +113,7 @@
           <div class="slide-hero">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; width: 100%;">
               <span class="pill-tag solid">PARTIE 1 : FONDATIONS</span>
-              <span class="pill-tag gray">⏱ 21 min &bull; Slide 2/26</span>
+              <span class="pill-tag gray">⏱ 21 min &bull; Slide 2/27</span>
             </div>
 
             <h1 class="slide-title-hero">Fondations &amp; Langage Elixir</h1>
@@ -161,7 +165,7 @@
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -174,7 +178,7 @@
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 1 : HISTOIRE &amp; GENÈSE</span>
-              <span class="pill-tag gray">⏱ 3 min &bull; Slide 3/26</span>
+              <span class="pill-tag gray">⏱ 3 min &bull; Slide 3/27</span>
             </div>
             <h2 class="slide-title">De l'Impasse Monocœur à la Naissance d'Elixir</h2>
             <div class="slide-subtitle">Chronologie d'une transition : des verrous de la POO à la concurrence massive sur la BEAM</div>
@@ -248,13 +252,7 @@
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/erlang.svg" alt="Erlang">
-        </div>
-        <div class="slide-logo bottom-center logo-sm">
-          <img src="assets/logos/ruby.svg" alt="Ruby">
-        </div>
-        <div class="slide-logo bottom-right logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -267,7 +265,7 @@
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 1 : PARADIGME</span>
-              <span class="pill-tag gray">⏱ 4 min &bull; Slide 4/26</span>
+              <span class="pill-tag gray">⏱ 4 min &bull; Slide 4/27</span>
             </div>
             <h2 class="slide-title">Le Paradigme de Programmation</h2>
             <div class="slide-subtitle">Penser déclaratif et fonctionnel : exprimer l'intention plutôt que la mutation</div>
@@ -304,6 +302,10 @@
             <span><strong>Règle d'or :</strong> « En impératif, on commande à la machine comment modifier la mémoire. En déclaratif, on transforme des données immuables. »</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -315,7 +317,7 @@
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 1 : TYPAGE</span>
-              <span class="pill-tag gray">⏱ 1 min 30 &bull; Slide 5/26</span>
+              <span class="pill-tag gray">⏱ 1 min 30 &bull; Slide 5/27</span>
             </div>
             <h2 class="slide-title">Le Système de Typage</h2>
             <div class="slide-subtitle">Dynamique à l'écriture, fort et rigoureux à l'exécution (Durée : 1 min 30)</div>
@@ -352,6 +354,10 @@
             <span><strong>Règle d'or :</strong> « La flexibilité d'un langage dynamique alliée à la rigueur d'un typage fort sans conversions cachées. »</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -363,7 +369,7 @@
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 1 : EXÉCUTION &amp; BEAM</span>
-              <span class="pill-tag gray">⏱ 1 min 30 &bull; Slide 6/26</span>
+              <span class="pill-tag gray">⏱ 1 min 30 &bull; Slide 6/27</span>
             </div>
             <h2 class="slide-title">Le Modèle d'Exécution</h2>
             <div class="slide-subtitle">Du code source au bytecode optimisé sur la machine virtuelle BEAM</div>
@@ -400,6 +406,10 @@
             <span><strong>Règle d'or :</strong> « La BEAM est à Elixir ce que la JVM est à Java : un moteur d'exécution compilé taillé pour la vitesse et la haute disponibilité. »</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -411,7 +421,7 @@
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 1 : ARCHITECTURE MÉMOIRE</span>
-              <span class="pill-tag gray">⏱ 1 min 30 &bull; Slide 7/26</span>
+              <span class="pill-tag gray">⏱ 1 min 30 &bull; Slide 7/27</span>
             </div>
             <h2 class="slide-title">La Gestion de la Mémoire</h2>
             <div class="slide-subtitle">Des tas isolés et un Garbage Collector unitaire par micro-processus</div>
@@ -448,6 +458,10 @@
             <span><strong>Règle d'or :</strong> « Cloisonner la mémoire par processus élimine le gel applicatif du Garbage Collector et garantit une latence ultra-stable. »</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -459,7 +473,7 @@
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 1 : CONCURRENCE</span>
-              <span class="pill-tag gray">⏱ 2 min &bull; Slide 8/26</span>
+              <span class="pill-tag gray">⏱ 2 min &bull; Slide 8/27</span>
             </div>
             <h2 class="slide-title">La Concurrence &amp; le Parallélisme</h2>
             <div class="slide-subtitle">Le modèle d'acteurs : des micro-processus légers sans mémoire partagée</div>
@@ -497,54 +511,86 @@
             <span><strong>Règle d'or :</strong> « Ne pas communiquer en partageant de la mémoire, mais partager de la mémoire en communiquant. »</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
-           SLIDE 9 : DÉMO LIVECODING
+           SLIDE 9 : ANNONCE SECTION / JALON 4
            ========================================== -->
-      <section class="slide" data-slide="9" data-title="Démo Livecoding"
-        data-notes="• Bascule immédiate : Quitter la présentation pour afficher le terminal et l'IDE sur l'écran principal.&#10;• Plan B (Secours) : En cas d'aléa réseau ou machine, cliquer sur « Lancer la Vidéo de Secours » pour diffuser la vidéo de 7 minutes et continuer le commentaire en voix off.">
+      <section class="slide" data-slide="9" data-title="Concepts Fondamentaux &amp; Code en Action"
+        data-notes="• Prise de parole &amp; Transition : Merci. Je prends maintenant le relais pour vous plonger concrètement dans le code et les mécanismes essentiels du langage Elixir.&#10;• Objectif (10 min) : Parcourir les fondations syntaxiques et conceptuelles qui font d'Elixir un langage si singulier et productif.&#10;• Au programme : Le pattern matching, les structures de données, l'absence de classes objet remplacée par les Structs, le célèbre pipe operator, et enfin 4 pièges majeurs à éviter absolument quand on vient de Java ou Python.&#10;• Lancement : Commençons immédiatement par la base de tout en Elixir : l'opérateur = et le pattern matching.">
         <div class="slide-content">
-          <header class="slide-header">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span class="pill-tag solid">PARTIE 1 : DÉMO PRATIQUE</span>
-              <span class="pill-tag gray">⏱ 7 min &bull; Slide 9/26</span>
-            </div>
-            <h2 class="slide-title">Démo Livecoding</h2>
-            <div class="slide-subtitle">Démonstration sur écran avec backup vidéo (Durée : 7 min)</div>
-          </header>
-
-          <div class="grid-2">
-            <div class="x-card featured">
-              <div style="margin-bottom: 0.5rem;">
-                <span class="pill-tag solid">En Direct</span>
-              </div>
-              <h3>Démonstration sur l'Écran</h3>
-              <ul class="bullet-check" style="margin-top: 0.75rem;">
-                <li><strong>Bascule immédiate :</strong> Tout se déroule en direct dans l'éditeur (VS Code) et le terminal interactif <code>iex</code>.</li>
-                <li><strong>Session interactive :</strong> Observation des micro-processus, de l'immutabilité et des benchmarks en direct.</li>
-                <li><strong>Validation concrète :</strong> Mise à l'épreuve des concepts théoriques abordés lors des 8 premières minutes.</li>
-              </ul>
+          <div class="slide-hero">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; width: 100%;">
+              <span class="pill-tag solid">PARTIE 1 — JALON 4</span>
+              <span class="pill-tag gray">⏱ 10 min &bull; Slide 9/27</span>
             </div>
 
-            <div class="x-card">
-              <div style="margin-bottom: 0.5rem;">
-                <span class="pill-tag gray">Backup Vidéo</span>
+            <h1 class="slide-title-hero">Concepts Fondamentaux &amp; Code en Action</h1>
+            <div class="slide-subtitle-hero">Variables, filtrage par motif, types, fonctions, objets et flux (Durée : 10 min)</div>
+
+            <div class="grid-3" style="margin-top: 1.5rem; margin-bottom: 1.25rem; width: 100%; text-align: left;">
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">2.5 min</span>
+                </div>
+                <h3>Variables &amp; Pattern Matching</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;">L'opérateur <code>=</code>, déstructuration instantanée, gestion d'erreurs et opérateur Pin <code>^</code>.</p>
               </div>
-              <h3>Vidéo de Secours (7 min)</h3>
-              <p style="color: var(--text-muted); margin-bottom: 1rem;">Enregistrement complet chapitré, prêt à être lancé immédiatement en cas d'imprévu technique.</p>
-              <div style="text-align: center; margin-top: 1.25rem;">
-                <a href="#slide-9" class="btn-action" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
-                  <span>▶</span> Lancer la Vidéo de Secours (backup_demo.mp4)
-                </a>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">2 min</span>
+                </div>
+                <h3>Les Types de Base</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;">Atoms, Tuples, Listes chaînées <code>[t|q]</code> et Maps associatives.</p>
               </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">1 min</span>
+                </div>
+                <h3>Les Fonctions</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;">Citoyennes de premier rang, fonctions anonymes, modules et notion d'arité.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">1.5 min</span>
+                </div>
+                <h3>Alternative aux Objets</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;">Séparation stricte données/méthodes avec Structs et Modules immuables.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">1 min</span>
+                </div>
+                <h3>Flux &amp; Pipe Operator <code>|&gt;</code></h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;">Chaînage limpide et transformation de données de haut en bas.</p>
+              </div>
+
+              <div class="x-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="pill-tag gray">2 min</span>
+                </div>
+                <h3>Pièges &amp; Philosophies</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;">Immuabilité, « Let it crash », guillemets et disparition des boucles <code>for</code>/<code>while</code>.</p>
+              </div>
+            </div>
+
+            <div class="summary-box">
+              <span>🚀</span>
+              <span><strong>Code en action :</strong> 10 minutes d'immersion concrète dans les mécanismes syntaxiques et conceptuels d'Elixir.</span>
             </div>
           </div>
+        </div>
 
-          <div class="summary-box" style="margin-top: 1.5rem;">
-            <span>💻</span>
-            <span><strong>Place à la pratique :</strong> Bascule sur l'écran pour la démonstration en direct !</span>
-          </div>
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -557,7 +603,7 @@
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">CONCEPTS : L'OPÉRATEUR =</span>
-              <span class="pill-tag gray">⏱ 2.5 min &bull; Slide 10/26</span>
+              <span class="pill-tag gray">⏱ 2.5 min &bull; Slide 10/27</span>
             </div>
             <h2 class="slide-title">Variables &amp; Pattern Matching : Le Signe = Réinventé</h2>
             <div class="slide-subtitle">En Elixir, le signe = n'est pas une simple assignation, c'est un opérateur de filtrage par motif</div>
@@ -599,6 +645,10 @@ x = 1
             <span><strong>Règle d'or :</strong> Le signe <code>=</code> valide la forme des données et extrait les valeurs en une seule et unique opération.</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -610,7 +660,7 @@ x = 1
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">CONCEPTS : OPÉRATEUR PIN</span>
-              <span class="pill-tag gray">⏱ 1 min &bull; Slide 11/26</span>
+              <span class="pill-tag gray">⏱ 1 min &bull; Slide 11/27</span>
             </div>
             <h2 class="slide-title">L'Opérateur Pin (^) : Forcer le Test d'Égalité</h2>
             <div class="slide-subtitle">Empêcher la réassignation d'une variable existante lors du filtrage par motif</div>
@@ -650,6 +700,10 @@ x = 1
             <span><strong>Principe :</strong> Sans <code>^</code>, <code>x = 2</code> écrase la liaison ; avec <code>^x = 2</code>, on teste si la variable vaut bien 2.</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -661,7 +715,7 @@ x = 1
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">CONCEPTS : ATOMS &amp; TUPLES</span>
-              <span class="pill-tag gray">⏱ 1 min &bull; Slide 12/26</span>
+              <span class="pill-tag gray">⏱ 1 min &bull; Slide 12/27</span>
             </div>
             <h2 class="slide-title">Types Fondamentaux : Atoms &amp; Tuples</h2>
             <div class="slide-subtitle">Typage dynamique fort, constantes symboliques et conteneurs à taille fixe</div>
@@ -704,6 +758,10 @@ nom_direct = elem(utilisateur, 1) # => "Jean"</code></pre>
             <span><strong>Convention universelle :</strong> Le standard Elixir retourne presque toujours <code>{:ok, resultat}</code> en cas de succès et <code>{:error, raison}</code> en cas d'échec.</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -715,7 +773,7 @@ nom_direct = elem(utilisateur, 1) # => "Jean"</code></pre>
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">CONCEPTS : LISTES &amp; MAPS</span>
-              <span class="pill-tag gray">⏱ 1 min &bull; Slide 13/26</span>
+              <span class="pill-tag gray">⏱ 1 min &bull; Slide 13/27</span>
             </div>
             <h2 class="slide-title">Collections : Listes Chaînées &amp; Maps</h2>
             <div class="slide-subtitle">Décomposition Tête/Queue et dictionnaires associatifs clé/valeur</div>
@@ -763,6 +821,10 @@ map.age              # => 30 (si la clé est un atom)
             <span><strong>À retenir :</strong> Les listes chaînées s'alimentent toujours par la tête ; les maps fournissent la flexibilité clé/valeur.</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -774,7 +836,7 @@ map.age              # => 30 (si la clé est un atom)
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">CONCEPTS : FONCTIONS</span>
-              <span class="pill-tag gray">⏱ 1 min &bull; Slide 14/26</span>
+              <span class="pill-tag gray">⏱ 1 min &bull; Slide 14/27</span>
             </div>
             <h2 class="slide-title">Les Fonctions : Citoyennes de Premier Rang</h2>
             <div class="slide-subtitle">Fonctions anonymes, fonctions nommées et identification stricte par nom et arité</div>
@@ -820,6 +882,10 @@ Math.sub(10, 5) # => 5</code></pre>
             <span><strong>Convention :</strong> En Elixir, on ne parle jamais de la fonction <code>add</code>, mais toujours de <code>Math.add/2</code>.</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -831,7 +897,7 @@ Math.sub(10, 5) # => 5</code></pre>
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">CONCEPTS : STRUCTS &amp; MODULES</span>
-              <span class="pill-tag gray">⏱ 1.5 min &bull; Slide 15/26</span>
+              <span class="pill-tag gray">⏱ 1.5 min &bull; Slide 15/27</span>
             </div>
             <h2 class="slide-title">Structs &amp; Modules : Séparer Données et Comportement</h2>
             <div class="slide-subtitle">En l'absence de classes objet, découpler l'état (Structs) des transformations (Modules)</div>
@@ -877,6 +943,10 @@ jean_plus_vieux = User.grandir(jean)
             <span><strong>Formule clé :</strong> Données pures (<code>Struct</code>) + Fonctions de transformation (<code>Module</code>) = Code prévisible et sans effets de bord.</span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -888,7 +958,7 @@ jean_plus_vieux = User.grandir(jean)
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">CONCEPTS : PIPE OPERATOR</span>
-              <span class="pill-tag gray">⏱ 1 min &bull; Slide 16/26</span>
+              <span class="pill-tag gray">⏱ 1 min &bull; Slide 16/27</span>
             </div>
             <h2 class="slide-title">Le Pipe Operator (|&gt;) : L'Élégance des Flux</h2>
             <div class="slide-subtitle">Transformer les imbrications de parenthèses en un pipeline limpide et naturel</div>
@@ -929,6 +999,10 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
             <span><strong>Équation de lisibilité :</strong> <code>donnée |&gt; étape_1() |&gt; étape_2() |&gt; résultat_final</code></span>
           </div>
         </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
       </section>
 
       <!-- ==========================================
@@ -940,7 +1014,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">SYNTHÈSE : LES PIÈGES</span>
-              <span class="pill-tag gray">⏱ 2 min &bull; Slide 17/26</span>
+              <span class="pill-tag gray">⏱ 2 min &bull; Slide 17/27</span>
             </div>
             <h2 class="slide-title">Les 4 Pièges &amp; Changements de Paradigme</h2>
             <div class="slide-subtitle">Les réflexes impératifs à désapprendre pour maîtriser l'esprit d'Elixir</div>
@@ -999,7 +1073,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -1012,7 +1086,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
           <div class="slide-hero">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; width: 100%;">
               <span class="pill-tag solid">PARTIE 2 : ARCHITECTURE WEB</span>
-              <span class="pill-tag gray">⏱ 1 min &bull; Slide 18/26</span>
+              <span class="pill-tag gray">⏱ 1 min &bull; Slide 18/27</span>
             </div>
 
             <h1 class="slide-title-hero">Framework Phoenix &amp; Temps Réel</h1>
@@ -1060,7 +1134,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -1073,7 +1147,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 2 — JALON 1</span>
-              <span class="pill-tag gray">⏱ 3 min &bull; Slide 19/26</span>
+              <span class="pill-tag gray">⏱ 3 min &bull; Slide 19/27</span>
             </div>
             <h2 class="slide-title">Pourquoi Phoenix ?</h2>
             <div class="slide-subtitle">L'inadéquation des architectures web classiques face à la persistance</div>
@@ -1114,7 +1188,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -1127,7 +1201,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 2 — JALON 2</span>
-              <span class="pill-tag gray">⏱ 2 min 30 &bull; Slide 20/26</span>
+              <span class="pill-tag gray">⏱ 2 min 30 &bull; Slide 20/27</span>
             </div>
             <h2 class="slide-title">Fonctionnement Interne : Le Modèle Plug</h2>
             <div class="slide-subtitle">Une architecture web pensée comme un pipeline de transformations pures</div>
@@ -1171,7 +1245,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -1184,7 +1258,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 2 — JALON 2</span>
-              <span class="pill-tag gray">⏱ 2 min 30 &bull; Slide 21/26</span>
+              <span class="pill-tag gray">⏱ 2 min 30 &bull; Slide 21/27</span>
             </div>
             <h2 class="slide-title">Découplage : Le Web n'est qu'un Détail</h2>
             <div class="slide-subtitle">Séparer strictement le domaine métier des protocoles de transport</div>
@@ -1223,7 +1297,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -1236,7 +1310,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 2 — JALON 3</span>
-              <span class="pill-tag gray">⏱ 3 min &bull; Slide 22/26</span>
+              <span class="pill-tag gray">⏱ 3 min &bull; Slide 22/27</span>
             </div>
             <h2 class="slide-title">Modèle de Rendu : Phoenix face à Thymeleaf</h2>
             <div class="slide-subtitle">De la régénération HTML complète au différentiel binaire sur socket</div>
@@ -1275,7 +1349,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -1288,7 +1362,7 @@ Enum.sum(Enum.filter(1..10, fn x -> rem(x, 2) == 0 end))
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 2 — JALON 4</span>
-              <span class="pill-tag gray">⏱ 2 min 30 &bull; Slide 23/26</span>
+              <span class="pill-tag gray">⏱ 2 min 30 &bull; Slide 23/27</span>
             </div>
             <h2 class="slide-title">Le Routage Phoenix : Scopes, Pipelines &amp; Live Sessions</h2>
             <div class="slide-subtitle">Coexistence native du Web classique, des APIs REST et des tunnels temps réel</div>
@@ -1354,7 +1428,7 @@ end</code></pre>
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -1367,7 +1441,7 @@ end</code></pre>
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 2 — JALON 4</span>
-              <span class="pill-tag gray">⏱ 2 min 30 &bull; Slide 24/26</span>
+              <span class="pill-tag gray">⏱ 2 min 30 &bull; Slide 24/27</span>
             </div>
             <h2 class="slide-title">Contrôleurs Standard : Fonctions Pures &amp; Algorithmique Métier</h2>
             <div class="slide-subtitle">Pattern matching en signature, gestion d'erreurs et calcul des dettes</div>
@@ -1426,7 +1500,7 @@ end</code></pre>
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -1439,7 +1513,7 @@ end</code></pre>
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 2 — JALON 4</span>
-              <span class="pill-tag gray">⏱ 3 min 30 &bull; Slide 25/26</span>
+              <span class="pill-tag gray">⏱ 3 min 30 &bull; Slide 25/27</span>
             </div>
             <h2 class="slide-title">LiveView &amp; PubSub : Collaboration Temps Réel Native</h2>
             <div class="slide-subtitle">Synchronisation instantanée entre utilisateurs sans Redis ni polling JavaScript</div>
@@ -1498,7 +1572,7 @@ end</code></pre>
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 
@@ -1511,7 +1585,7 @@ end</code></pre>
           <header class="slide-header">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
               <span class="pill-tag solid">PARTIE 2 — JALON 4</span>
-              <span class="pill-tag gray">⏱ 1 min 30 &bull; Slide 26/26</span>
+              <span class="pill-tag gray">⏱ 1 min 30 &bull; Slide 26/27</span>
             </div>
             <h2 class="slide-title">Matrice Décisionnelle : Choisir l'Outil Adapté</h2>
             <div class="slide-subtitle">Pourquoi « Les bons comptes » combine harmonieusement contrôleurs HTTP et LiveView</div>
@@ -1552,7 +1626,60 @@ end</code></pre>
         </div>
 
         <div class="slide-logo bottom-left logo-sm">
-          <img src="assets/logos/elixir.svg" alt="Elixir">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SLIDE 27 : DÉMO LIVECODING
+           ========================================== -->
+      <section class="slide" data-slide="27" data-title="Démo Livecoding : Les Bons Comptes"
+        data-notes="• Bascule immédiate : Quitter la présentation pour afficher le terminal et l'IDE sur l'écran principal.&#10;• Plan B (Secours) : En cas d'aléa réseau ou machine, cliquer sur « Lancer la Vidéo de Secours » pour diffuser la vidéo de 7 minutes et continuer le commentaire en voix off.">
+        <div class="slide-content">
+          <header class="slide-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <span class="pill-tag solid">PARTIE 3 : DÉMO EN DIRECT</span>
+              <span class="pill-tag gray">⏱ 5 min &bull; Slide 27/27</span>
+            </div>
+            <h2 class="slide-title">Démo Livecoding</h2>
+            <div class="slide-subtitle">Démonstration sur écran avec backup vidéo (Durée : 5 à 7 min)</div>
+          </header>
+
+          <div class="grid-2">
+            <div class="x-card featured">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag solid">En Direct</span>
+              </div>
+              <h3>Démonstration sur l'Écran</h3>
+              <ul class="bullet-check" style="margin-top: 0.75rem;">
+                <li><strong>Bascule immédiate sur l'écran partagé :</strong> Tout se déroule en direct dans l'éditeur (VS Code) et le terminal.</li>
+                <li><strong>Session interactive :</strong> Démonstration pratique et observation en temps réel.</li>
+                <li><strong>Validation concrète :</strong> Mise à l'épreuve des flux LiveView et de la synchronisation collaborative.</li>
+              </ul>
+            </div>
+
+            <div class="x-card">
+              <div style="margin-bottom: 0.5rem;">
+                <span class="pill-tag gray">Backup Vidéo</span>
+              </div>
+              <h3>Vidéo de Secours (7 min)</h3>
+              <p style="color: var(--text-muted); margin-bottom: 1rem;">Enregistrement complet chapitré, prêt à être lancé immédiatement si besoin.</p>
+              <div style="text-align: center; margin-top: 1.25rem;">
+                <a href="assets/videos/backup_demo.mp4" target="_blank" class="btn-action" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                  <span>▶</span> Lancer la Vidéo de Secours (backup_demo.mp4)
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-box" style="margin-top: 1.5rem;">
+            <span>💻</span>
+            <span><strong>Place à la pratique :</strong> Bascule sur l'écran pour la démonstration en direct !</span>
+          </div>
+        </div>
+
+        <div class="slide-logo bottom-left logo-sm">
+          <img src="assets/logos/faculte.svg" alt="Faculté des Sciences et Technologies">
         </div>
       </section>
 

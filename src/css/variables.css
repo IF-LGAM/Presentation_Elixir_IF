@@ -150,18 +150,18 @@ body[data-theme="sepia"],
   --footer-bg: rgba(25, 22, 20, 0.95);
 }
 
-/* Transition douce automatique lors du changement d'ambiance */
-.deck-container,
-.deck-header,
-.deck-footer,
-.ctrl-btn,
-.slide-badge-title,
-.slide-counter,
-.notes-drawer,
-.x-card,
-.schema-box,
-.terminal-box,
-.data-table,
-.stepper-horizontal {
+/* Transition douce active UNIQUEMENT lors du changement volontaire d'ambiance */
+body.theme-transitioning .deck-container,
+body.theme-transitioning .deck-header,
+body.theme-transitioning .deck-footer,
+body.theme-transitioning .ctrl-btn,
+body.theme-transitioning .slide-badge-title,
+body.theme-transitioning .slide-counter,
+body.theme-transitioning .notes-drawer,
+body.theme-transitioning .x-card,
+body.theme-transitioning .schema-box,
+body.theme-transitioning .terminal-box,
+body.theme-transitioning .data-table,
+body.theme-transitioning .stepper-horizontal {
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }

@@ -1192,3 +1192,32 @@ Chaque diapositive du plan doit obligatoirement respecter le canevas standardis�
   > - **Pour le reste :** LiveView prend en charge 90% de l'interface avec une réactivité et une économie de code incomparables.
   > - **Passage de relais vers la Démo :** Vous avez vu l'architecture et le code réel. Place maintenant à l'action : je passe la main à mon camarade pour la démonstration en direct de l'application « Les bons comptes » !
 
+---
+
+#### Slide 27 : Démo Livecoding
+- **Type de slide** : slide
+- **Durée estimée** : 5 min *(Partie 3 : Démo & TP Pratique)*
+- **Titre (title-slide)** : Démo Livecoding
+- **Sous-titre (subtitle-slide)** : Démonstration sur écran avec backup vidéo (Durée : 5 à 7 min)
+- **Mise en page** : grid-2
+- **Contenu & Composants** :
+  - **Colonne Gauche (Session Live)** : card-featured
+    - badge-solid : En Direct
+    - Titre : Démonstration sur l'Écran
+    - Liste (icon-bullet) :
+      - Bascule immédiate sur l'écran partagé : Tout se déroule en direct dans l'éditeur et le terminal.
+      - Session interactive : Démonstration pratique et observation en temps réel.
+      - Validation concrète : Mise à l'épreuve des flux LiveView et de la synchronisation collaborative.
+  - **Colonne Droite (Filet de Sécurité)** : card
+    - badge-gray : Backup Vidéo
+    - Titre : Vidéo de Secours (7 min)
+    - Description : Enregistrement complet chapitré, prêt à être lancé immédiatement si besoin.
+    - Lecteur / Bouton d'action :
+      - link-btn : `▶ Lancer la Vidéo de Secours (backup_demo.mp4)` (cible : `assets/videos/backup_demo.mp4`)
+  - **Pied de slide** : banner
+    - Formule clé : Place à la pratique : bascule sur l'écran pour la démonstration en direct !
+- **Logos de pied de slide** :
+  - `bottom-left logo-sm` : `assets/logos/elixir.svg`
+- **Notes d'orateur (data-notes)** :
+  > - **Bascule immédiate :** Quitter la présentation pour afficher le terminal et l'IDE sur l'écran principal.
+  > - **Plan B (Secours) :** En cas d'aléa réseau ou machine, cliquer sur « Lancer la Vidéo de Secours » pour diffuser la vidéo de 7 minutes et continuer le commentaire en voix off.
