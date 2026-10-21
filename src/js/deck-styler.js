@@ -78,23 +78,42 @@ window.DeckEngine.Styler = (function () {
     return null;
   }
 
-  // Assure un padding natif suffisant pour que les lettres ne touchent jamais la bordure
+  // Assure un padding d'aisance UNIQUEMENT pour les titres/paragraphes bruts sans padding préalable
   function ensureNativePadding(el) {
     if (!el) return;
-    const isTextOrInline = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'SPAN', 'CODE', 'PRE', 'A', 'KBD', 'STRONG', 'EM', 'B', 'I'].includes(el.tagName);
-    const isTextLikeDiv = el.tagName === 'DIV' && (
-      el.classList.contains('slide-subtitle-hero') ||
-      el.classList.contains('step-desc') ||
-      el.classList.contains('step-title') ||
-      el.classList.contains('schema-caption') ||
-      el.classList.contains('metric-label') ||
-      (!el.querySelector('div, p, h1, h2, h3, h4, section, table, ul, ol') && el.textContent.trim().length > 0)
-    );
 
-    if (isTextOrInline || isTextLikeDiv) {
-      if (!el.style.padding || el.style.padding === '0px' || el.style.padding === '0') {
+    // Ne jamais altérer les conteneurs et composants structurés
+    if (el.classList?.contains('cycle-core') || 
+        el.classList?.contains('cycle-step') || 
+        el.classList?.contains('x-card') || 
+        el.classList?.contains('kpi-card') ||
+        el.classList?.contains('summary-box') ||
+        el.classList?.contains('schema-box') ||
+        el.classList?.contains('terminal-box') ||
+        el.classList?.contains('btn-action') ||
+        el.classList?.contains('pill-tag') ||
+        el.classList?.contains('badge') ||
+        el.classList?.contains('chip')) {
+      return;
+    }
+
+    const computed = window.getComputedStyle(el);
+    // Ne jamais écraser un conteneur flex ou grid natif
+    if (computed.display.includes('flex') || computed.display.includes('grid')) {
+      return;
+    }
+
+    // Uniquement pour les éléments purement textuels (titres et paragraphes)
+    const isHeadingOrParagraph = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P'].includes(el.tagName) ||
+                                 el.classList?.contains('slide-subtitle-hero') ||
+                                 el.classList?.contains('slide-title-hero');
+
+    if (isHeadingOrParagraph) {
+      const topPad = parseInt(computed.paddingTop, 10) || 0;
+      const leftPad = parseInt(computed.paddingLeft, 10) || 0;
+      if (!el.style.padding && topPad < 4 && leftPad < 4) {
         el.style.padding = '8px 24px';
-        if (window.getComputedStyle(el).display === 'inline' || el.tagName === 'DIV' || isTextOrInline) {
+        if (computed.display === 'block' && el.tagName.startsWith('H')) {
           el.style.display = 'inline-block';
         }
       }
@@ -344,13 +363,21 @@ window.DeckEngine.Styler = (function () {
             targetEl.style.stroke = styleObj.stroke;
             targetEl.setAttribute('stroke', styleObj.stroke);
           }
-          if (styleObj.padding) {
-            targetEl.style.padding = styleObj.padding;
-          } else if (styleObj.background || styleObj.borderRadius || styleObj.borderColor) {
-            ensureNativePadding(targetEl);
-          }
-          if (styleObj.display) {
-            targetEl.style.display = styleObj.display;
+          if (targetEl.classList?.contains('cycle-core')) {
+            targetEl.style.display = '';
+            targetEl.style.padding = '';
+          } else {
+            if (styleObj.padding) {
+              targetEl.style.padding = styleObj.padding;
+            } else if (styleObj.background) {
+              ensureNativePadding(targetEl);
+            }
+            if (styleObj.display) {
+              const comp = window.getComputedStyle(targetEl);
+              if (!comp.display.includes('flex') && !comp.display.includes('grid')) {
+                targetEl.style.display = styleObj.display;
+              }
+            }
           }
         }
       } catch (e) {
@@ -633,11 +660,10 @@ window.DeckEngine.Styler = (function () {
       });
     });
 
-    // 1. Slider d'arrondi
+    // 1. Slider d'arrondi (Forme)
     const radiusSlider = popoverEl.querySelector('#stylerRadiusSlider');
     radiusSlider?.addEventListener('input', (e) => {
       if (!selectedElement) return;
-      ensureNativePadding(selectedElement);
       const val = e.target.value;
       selectedElement.style.borderRadius = `${val}px`;
       saveElementOverride(selectedElement);
@@ -649,7 +675,6 @@ window.DeckEngine.Styler = (function () {
     presetBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         if (!selectedElement) return;
-        ensureNativePadding(selectedElement);
         const rad = btn.getAttribute('data-radius');
         selectedElement.style.borderRadius = rad;
         saveElementOverride(selectedElement);
@@ -663,7 +688,9 @@ window.DeckEngine.Styler = (function () {
       if (!selectedElement) return;
       const v = e.target.value;
       selectedElement.style.padding = `${Math.round(v * 0.55)}px ${v}px`;
-      selectedElement.style.display = 'inline-block';
+      if (window.getComputedStyle(selectedElement).display === 'inline') {
+        selectedElement.style.display = 'inline-block';
+      }
       saveElementOverride(selectedElement);
       syncBorderShapeUI();
     });
@@ -675,7 +702,9 @@ window.DeckEngine.Styler = (function () {
         if (!selectedElement) return;
         const pad = btn.getAttribute('data-pad');
         selectedElement.style.padding = pad;
-        if (pad !== '0px') selectedElement.style.display = 'inline-block';
+        if (pad !== '0px' && window.getComputedStyle(selectedElement).display === 'inline') {
+          selectedElement.style.display = 'inline-block';
+        }
         saveElementOverride(selectedElement);
         syncBorderShapeUI();
       });
@@ -686,7 +715,6 @@ window.DeckEngine.Styler = (function () {
     borderTypeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         if (!selectedElement) return;
-        ensureNativePadding(selectedElement);
         const w = btn.getAttribute('data-width');
         const s = btn.getAttribute('data-style');
         selectedElement.style.borderWidth = w;
@@ -949,7 +977,6 @@ window.DeckEngine.Styler = (function () {
       } else if (currentProperty === 'color') {
         selectedElement.style.color = colorVal;
       } else if (currentProperty === 'borderColor') {
-        ensureNativePadding(selectedElement);
         selectedElement.style.borderColor = colorVal;
         // S'il n'y a pas de bordure active, activer une bordure fine
         if (!selectedElement.style.borderWidth || selectedElement.style.borderWidth === '0px') {
