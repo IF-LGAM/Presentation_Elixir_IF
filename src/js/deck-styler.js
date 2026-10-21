@@ -2,8 +2,9 @@
  * Deck Engine - Component Color Inspector & Styler
  * Sous-responsabilité : Sélection visuelle au clic de n'importe quel composant
  * (cartes, badges, titres, boîtes, KPIs...) et modification en direct de sa
- * couleur de fond, couleur d'écriture et bordure avec la palette du Design System
- * ainsi que l'enregistrement de couleurs personnalisées réutilisables.
+ * couleur de fond, couleur d'écriture et bordure avec la palette du Design System.
+ * Persistance automatique intégrale dans le navigateur (localStorage) pour conserver
+ * tous les styles personnalisés sans modifier manuellement le code HTML.
  */
 
 window.DeckEngine = window.DeckEngine || {};
@@ -15,6 +16,9 @@ window.DeckEngine.Styler = (function () {
   let popoverEl = null;
   let bannerEl = null;
   let toastEl = null;
+
+  const STORAGE_KEY_OVERRIDES = 'deck_styler_saved_overrides';
+  const STORAGE_KEY_CUSTOM_COLORS = 'deck_styler_custom_colors';
 
   // Palette de couleurs préconfigurées du Design System
   const COLOR_PALETTE = [
@@ -73,9 +77,10 @@ window.DeckEngine.Styler = (function () {
     return null;
   }
 
+  // --- GESTION DES NUANCES FAVORITES ---
   function getCustomColors() {
     try {
-      const stored = localStorage.getItem('deck_styler_custom_colors');
+      const stored = localStorage.getItem(STORAGE_KEY_CUSTOM_COLORS);
       if (stored) return JSON.parse(stored);
       // Synchronisation initiale avec les couleurs personnalisées du thème global si existantes
       const fallback = localStorage.getItem('deck_custom_colors');
@@ -87,7 +92,7 @@ window.DeckEngine.Styler = (function () {
 
   function saveCustomColors(colors) {
     try {
-      localStorage.setItem('deck_styler_custom_colors', JSON.stringify(colors));
+      localStorage.setItem(STORAGE_KEY_CUSTOM_COLORS, JSON.stringify(colors));
     } catch (e) {
       console.warn('Erreur sauvegarde custom colors styler:', e);
     }
@@ -162,6 +167,148 @@ window.DeckEngine.Styler = (function () {
       itemWrap.appendChild(delBtn);
       customGrid.appendChild(itemWrap);
     });
+  }
+
+  // --- PERSISTANCE AUTOMATIQUE DES STYLES DE COMPOSANTS ---
+  function getElementKey(el) {
+    if (!el) return null;
+    const slide = el.closest('.slide');
+    if (!slide) return null;
+
+    const allSlides = Array.from(document.querySelectorAll('.slide'));
+    const slideIndex = allSlides.indexOf(slide);
+    if (slideIndex < 0) return null;
+
+    // Si l'élément dispose d'un identifiant unique explicite
+    if (el.id) {
+      return `slide-${slideIndex}#${el.id}`;
+    }
+
+    // Parcours hiérarchique stable basé sur les balises et leur index d'apparition
+    const path = [];
+    let curr = el;
+    while (curr && curr !== slide) {
+      const parent = curr.parentElement;
+      if (!parent) break;
+      const siblings = Array.from(parent.children).filter(c => c.tagName === curr.tagName);
+      const index = siblings.indexOf(curr);
+      const tag = curr.tagName.toLowerCase();
+      path.unshift(`${tag}:nth-of-type(${index + 1})`);
+      curr = parent;
+    }
+
+    return `slide-${slideIndex} > ${path.join(' > ')}`;
+  }
+
+  function getStoredOverrides() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_OVERRIDES);
+      return stored ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function saveStoredOverrides(overrides) {
+    try {
+      localStorage.setItem(STORAGE_KEY_OVERRIDES, JSON.stringify(overrides));
+    } catch (e) {
+      console.warn('Erreur sauvegarde overrides styler:', e);
+    }
+  }
+
+  function saveElementOverride(el) {
+    if (!el) return;
+    const key = getElementKey(el);
+    if (!key) return;
+
+    const overrides = getStoredOverrides();
+    const bg = el.style.backgroundColor || el.style.background || '';
+    const col = el.style.color || '';
+    const border = el.style.borderColor || '';
+
+    if (!bg && !col && !border) {
+      delete overrides[key];
+    } else {
+      overrides[key] = {
+        background: bg,
+        color: col,
+        borderColor: border
+      };
+    }
+
+    saveStoredOverrides(overrides);
+  }
+
+  function removeElementOverride(el) {
+    if (!el) return;
+    const key = getElementKey(el);
+    if (!key) return;
+
+    const overrides = getStoredOverrides();
+    if (overrides[key]) {
+      delete overrides[key];
+      saveStoredOverrides(overrides);
+    }
+  }
+
+  function restoreAllStyles() {
+    const overrides = getStoredOverrides();
+    if (!overrides || Object.keys(overrides).length === 0) return;
+
+    const allSlides = Array.from(document.querySelectorAll('.slide'));
+
+    Object.entries(overrides).forEach(([key, styleObj]) => {
+      try {
+        let targetEl = null;
+        if (key.startsWith('slide-')) {
+          const parts = key.split(' > ');
+          const slideHeader = parts[0];
+          if (slideHeader.includes('#')) {
+            const id = slideHeader.split('#')[1];
+            targetEl = document.getElementById(id);
+          } else {
+            const slideIdx = parseInt(slideHeader.replace('slide-', ''), 10);
+            const slide = allSlides[slideIdx];
+            if (slide && parts.length > 1) {
+              const relSelector = parts.slice(1).join(' > ');
+              targetEl = slide.querySelector(relSelector);
+            }
+          }
+        }
+
+        if (targetEl && styleObj && typeof styleObj === 'object') {
+          if (styleObj.background) {
+            targetEl.style.background = styleObj.background;
+            targetEl.style.backgroundColor = styleObj.background;
+          }
+          if (styleObj.color) {
+            targetEl.style.color = styleObj.color;
+          }
+          if (styleObj.borderColor) {
+            targetEl.style.borderColor = styleObj.borderColor;
+          }
+        }
+      } catch (e) {
+        console.warn('Erreur restauration style pour', key, e);
+      }
+    });
+  }
+
+  function resetAllStyles() {
+    saveStoredOverrides({});
+    // Supprime les styles inline sur tous les éléments stylisés
+    document.querySelectorAll('[style]').forEach(el => {
+      if (el.closest('.slide')) {
+        el.style.background = '';
+        el.style.backgroundColor = '';
+        el.style.color = '';
+        el.style.borderColor = '';
+        if (el.getAttribute('style') === '') el.removeAttribute('style');
+      }
+    });
+    updateActiveSwatchHighlight();
+    showToast('Tous les styles personnalisés ont été réinitialisés');
   }
 
   function getElementBadgeLabel(el) {
@@ -255,7 +402,7 @@ window.DeckEngine.Styler = (function () {
         <button class="styler-action-btn" id="stylerCopyHtmlBtn" title="Copier le code HTML complet du composant">
           &lt;/&gt; Copier HTML
         </button>
-        <button class="styler-action-btn" id="stylerResetBtn" title="Réinitialiser les styles personnalisés">
+        <button class="styler-action-btn" id="stylerResetBtn" title="Rétablir le style par défaut de cet élément">
           🔄 Reset
         </button>
       </div>
@@ -306,7 +453,7 @@ window.DeckEngine.Styler = (function () {
       if (val) {
         if (addCustomColor(val)) {
           applyColor(val);
-          showToast(`✓ Nuance ${normalizeHexColor(val)} enregistrée !`);
+          showToast(`✓ Nuance ${normalizeHexColor(val)} enregistrée et conservée !`);
         } else {
           showToast('Code hexadécimal invalide');
         }
@@ -356,7 +503,7 @@ window.DeckEngine.Styler = (function () {
       });
     });
 
-    // Réinitialiser
+    // Réinitialiser cet élément
     popoverEl.querySelector('#stylerResetBtn')?.addEventListener('click', () => {
       if (!selectedElement) return;
       selectedElement.style.background = '';
@@ -366,8 +513,9 @@ window.DeckEngine.Styler = (function () {
       if (selectedElement.getAttribute('style') === '') {
         selectedElement.removeAttribute('style');
       }
+      removeElementOverride(selectedElement);
       updateActiveSwatchHighlight();
-      showToast('Styles personnalisés réinitialisés');
+      showToast('Style réinitialisé pour cet élément');
     });
 
     // Empêcher les clics à l'intérieur du popover d'être interceptés par le document
@@ -441,6 +589,9 @@ window.DeckEngine.Styler = (function () {
       selectedElement.style.borderColor = colorVal;
     }
 
+    // Persistance automatique immédiate dans localStorage
+    saveElementOverride(selectedElement);
+
     updateActiveSwatchHighlight();
   }
 
@@ -448,8 +599,8 @@ window.DeckEngine.Styler = (function () {
     if (!popoverEl || !targetEl) return;
 
     const rect = targetEl.getBoundingClientRect();
-    const popoverWidth = 320;
-    const popoverHeight = 410;
+    const popoverWidth = 326;
+    const popoverHeight = 430;
     const margin = 12;
 
     let top = rect.bottom + margin;
@@ -554,6 +705,9 @@ window.DeckEngine.Styler = (function () {
   function init() {
     createStylerDOM();
 
+    // Restauration automatique de tous les styles personnalisés précédemment sauvegardés
+    restoreAllStyles();
+
     // Clic global pour intercepter les éléments quand le mode est actif
     window.addEventListener('click', (e) => {
       if (!isModeActive) return;
@@ -599,6 +753,8 @@ window.DeckEngine.Styler = (function () {
     selectElement,
     addCustomColor,
     deleteCustomColor,
-    getCustomColors
+    getCustomColors,
+    restoreAllStyles,
+    resetAllStyles
   };
 })();
